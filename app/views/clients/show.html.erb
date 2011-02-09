@@ -1,0 +1,7 @@
+<h1>Show Application Detail</h1>
+<p><label>Application Name : </label><%= @client.application_name%></p>
+<p><label>Redirect URI : </label><%= @client.redirect_uri%></p>
+<p><label>Client ID : </label><%= @client.client_id%></p>
+<p><label>Client Secret : </label><%= @client.client_secret%></p>
+
+<%= link_to "Go index", clients_path %>

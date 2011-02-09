@@ -1,0 +1,9 @@
+<%= form_for(@client ,:method=>"put") do %>
+  <%= label_tag "Application name"%>
+  <%= label_tag @client.application_name %>
+  <br/>
+  <%= label_tag "Redirect URI"%>  
+  <%= text_field_tag :redirect_uri, @client.redirect_uri %>
+  <br/>  
+  <%= submit_tag "Send" %>
+<% end %>

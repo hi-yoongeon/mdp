@@ -1,0 +1,33 @@
+<% if @user.nil? %>
+<%= link_to 'Login', '/login' %>
+<%= link_to 'create a new user', new_user_path %>
+<% else %>
+<%= link_to 'Logout', '/logout' %>
+<%= link_to 'Manage applications', clients_path %>
+<% end %>
+<h1>Listing users</h1>
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td>id</td>
+    <td><%= user.id %></td>
+    <td><%= user.userid %></td>
+    <td><%= link_to 'Show', user %></td>
+    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+    <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br/>
+
+

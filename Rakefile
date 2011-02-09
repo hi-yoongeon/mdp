@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-Mdp::Application.load_tasks
+OAuthProvider::Application.load_tasks

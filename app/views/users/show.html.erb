@@ -1,0 +1,7 @@
+<h1>Show User Detail</h1>
+<p><label>userID : </label><%= @user.userid %></p>
+<p><label>nickname : </label><%= @user.nick %></p>
+<p><label>email : </label><%= @user.email %></p>
+<p><label>hashed_password : </label><%= @user.hashed_password %></p>
+<p><label>salt : </label><%= @user.salt %></p>
+<%= link_to "Go index", users_path %>
