@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :login_required, :except => [:index, :login, :logout]
+  before_filter :login_required, :except => [:index, :login, :logout, :new, :create]
   before_filter :user_authentication_required, :only => [:show, :edit, :update, :destroy]
   respond_to :html, :json, :xml
 
