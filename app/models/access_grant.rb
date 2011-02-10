@@ -1,10 +1,21 @@
 class AccessGrant < ActiveRecord::Base
   
   protected
+  def self.access_token_exists?(token)
+    if count(:conditions => ["access_token = ?", token]) > 0
+      unless AccessGrant.access_token_expired?(token)
+        true
+      end
+    end
+    false
+  end
+
+  
   def self.access_token_expired?(token)
-    access_grant = find(:first, :conditions => ["access_token = ?", token])
+    access_grant = find(:first, :select => "access_token_expires_at", :conditions => ["access_token = ?", token])
     return DateTime.now.to_f > access_grant.access_token_expires_at.to_f
   end
+
   
   def self.random_string(len)
     #generat a random password consisting of strings and digits
@@ -25,6 +36,7 @@ class AccessGrant < ActiveRecord::Base
     nil
   end
 
+  
   def self.revoke(token)
     access_grant = find(:first, :select => "id", :conditions => ["access_token = ?", token])
     delete(access_grant.id)
@@ -36,10 +48,10 @@ class AccessGrant < ActiveRecord::Base
     plaintext = text + security_salt
 
     unique_token_generated = false
-    token = nil
+    token = plaintext
 
     while !unique_token_generated do
-      token = Digest::SHA1.hexdigest plaintext
+      token = Digest::SHA1.hexdigest token
       # validate duplication of generated token
       if count(:conditions => ["access_token = ?", token]) == 0
         unique_token_generated = true

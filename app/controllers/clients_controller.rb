@@ -20,7 +20,7 @@ class ClientsController < ApplicationController
   end
 
   def create
-    plaintext = params[:application_name] + Time.now.to_time.to_f.to_s + params[:redirect_uri]
+    plaintext = params[:application_name] + DateTime.now.to_f.to_s + params[:redirect_uri]
     token = AccessGrant.generate_token(plaintext)
     client_id = token[0,10]
     client_secret = token[10, 40]

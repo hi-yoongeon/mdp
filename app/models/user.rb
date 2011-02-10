@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
     self.hashed_password = User.encrypt(@password, self.salt)
   end
 
+
   def send_new_password
     new_pass = AccessGrant.random_string(10)
     self.password = self.password_confirmation = new_pass

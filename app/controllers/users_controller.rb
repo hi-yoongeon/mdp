@@ -36,13 +36,16 @@ class UsersController < ApplicationController
     end
   end
 
+
   def edit
     @user = User.find(params[:id])    
   end
 
+
   def update
     @user = User.find(params[:id])
   end
+
   
   def destroy
     @user = User.find(params[:id])
@@ -53,6 +56,15 @@ class UsersController < ApplicationController
 
 
   def login
+    if current_user
+      if !params[:response_type].nil? && params[:response_type] == "code"
+        session[:code] = code = AccessGrant.random_string(10)
+        session[:return_to] = params[:redirect_uri] + "?code=" + code
+      end
+      redirect_to_stored
+      return
+    end
+
     if request.post?
       if session[:user] = User.authenticate(params[:user][:userid], params[:user][:password])
         flash[:message]  = "Login successful"
@@ -61,18 +73,20 @@ class UsersController < ApplicationController
           session[:return_to] = params[:redirect_uri] + "?code=" + code
         end
         redirect_to_stored
+        return
       else
         flash[:warning] = "Login unsuccessful"
       end
     end
   end
 
-
+  
   def logout
     session[:user] = nil
     flash[:message] = 'Logged out'
     redirect_to :action => 'index'
   end
+
 
   def forgot_password
     if request.post?
@@ -86,6 +100,7 @@ class UsersController < ApplicationController
     end
   end
 
+
   def change_password
     @user=session[:user]
     if request.post?
@@ -95,6 +110,7 @@ class UsersController < ApplicationController
       end
     end
   end
+
 
   protected
   def user_authentication_required
@@ -107,6 +123,8 @@ class UsersController < ApplicationController
     @msg = 'Non authentication'
     render :template => 'errors/error'
     return false
-  end  
+  end
+
+  
 
 end

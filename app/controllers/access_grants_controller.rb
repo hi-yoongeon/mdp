@@ -41,15 +41,21 @@ class AccessGrantsController < ApplicationController
     grant_type = params[:grant_type]
 
     if response_type == "code"
-      @redirect_uri = params[:redirect_uri]
-      render
-      return
+      if current_user
+        redirect_to "/login?response_type=code&redirect_uri=" + params[:redirect_uri]
+        return 
+      else
+        @redirect_uri = params[:redirect_uri]
+        render
+        return
+      end
       # render login view for application
     elsif response_type == "password" || grant_type == "authorization_code"
       redirect_to (params[:redirect_uri] +"?access_token=#{access_token}&token_type=bearer")
       return
     end
   end
+
 
   protected
   def parameter_valid?
@@ -105,6 +111,7 @@ class AccessGrantsController < ApplicationController
     if invalid
       @code = 0
       render :template => 'errors/error'
+      return
     end
   end
 
@@ -182,16 +189,12 @@ class AccessGrantsController < ApplicationController
   
   def access_token
     access_grant = AccessGrant.find(:first, :select => "access_token", :conditions => ["user_id = ? AND client_id = ?", @user.id, @client.id])
-    token = access_grant.token
-    if token.nil?
-      token = access_grant_generator.access_token
+
+    if access_grant
+      return access_grant.access_token
     else
-      # refresh access token
-      token = AccessGrant.refresh(token)
+      return access_grant_generator.access_token
     end
-    
-    token
   end
-  
 
 end

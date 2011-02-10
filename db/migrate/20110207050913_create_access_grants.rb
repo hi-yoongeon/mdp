@@ -1,9 +1,9 @@
 class CreateAccessGrants < ActiveRecord::Migration
   def self.up
     create_table :access_grants do |t|
-      t.string :code
-      t.string :access_token
-      t.string :refresh_token
+      t.string :code # non use
+      t.string :access_token 
+      t.string :refresh_token # non use
       t.datetime :access_token_expires_at
       t.integer :user_id
       t.integer :client_id
