@@ -1,0 +1,28 @@
+<%= form_tag(:controller => "users", :action => "create", :method => "post") do %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= label_tag "ID" %>
+  <%= text_field "user", "userid" %>
+  <br/>
+  <%= label_tag "Nickname" %>  
+  <%= text_field "user", "nick" %>
+  <br/>
+  <%= label_tag "Password" %>    
+  <%= password_field "user", "password" %>
+  <br/>    
+  <%= label_tag "Password Confirmation" %>    
+  <%= password_field "user", "password_confirmation" %>
+  <br/>    
+  <%= label_tag "Email" %>
+  <%= text_field "user", "email" %>
+  <br/>  
+  <%= submit_tag "Create"%>
+<% end %>

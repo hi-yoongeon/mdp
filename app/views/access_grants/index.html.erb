@@ -1,0 +1,23 @@
+<h1>Listing user application</h1>
+<table>
+  <tr>
+    <th>column id</th>
+    <th>client id</th>
+    <th>expires at</th>
+    <th></th>
+    <th></th>
+    <th></th>    
+  </tr>
+<% no = 0 %>
+<% @access_grants.each do |grant| %>
+<% no = no + 1 %>
+  <tr>
+    <td><%= no %></td>
+    <td><%= grant.client_id %></td>
+    <td><%= grant.access_token_expires_at %></td>    
+    <td><%= link_to 'Show', grant %></td>
+    <td><%= link_to 'Edit', edit_access_grant_path(grant) %></td>
+    <td><%= link_to 'Destroy', grant, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>

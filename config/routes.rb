@@ -1,4 +1,15 @@
-Mdp::Application.routes.draw do
+OAuthProvider::Application.routes.draw do  resources :clients
+  
+  resources :clients
+  resources :users
+  resources :access_grants
+
+  match '/authorize', :to => 'access_grants#authorize' 
+  match '/login', :to => 'users#login'
+  match '/logout', :to => 'users#logout'
+  match '/temp', :to => 'clients#temp'
+  match ':controller/:action'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

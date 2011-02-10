@@ -1,0 +1,22 @@
+<%= form_tag(:controller => "clients", :action => "create" , :method =>"post") do %>
+  <% if @client.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@client.errors.count, "error") %> prohibited this client from being saved:</h2>
+
+      <ul>
+      <% @client.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= label_tag "Application name"%>
+  <%= text_field_tag :application_name %>
+  <br/>
+  <%= label_tag "Redirect URI"%>  
+  <%= text_field_tag :redirect_uri %>
+  <br/>  
+  <%= submit_tag "Create" %>
+  
+<% end %>
+

@@ -1,0 +1,14 @@
+<h1>Login</h1>
+<h2><%= @client.application_name %></h2>
+<p>"애플리케이션이 맛있는 지도 아이디를 이용하여 로그인을 요청하였습니다." </p>
+<%= form_tag(:controller => "users", :action => "login", :method => "post") do %>
+  <%= label_tag "ID" %>
+  <%= text_field "user", "userid" %>
+  <br/>
+  <%= label_tag "PassWord" %>
+  <%= password_field "user", "password" %>
+  <br/>
+  <%= hidden_field_tag "response_type", "code" %>
+  <%= hidden_field_tag "redirect_uri", @redirect_uri %>
+  <%= submit_tag "Login" %>
+<% end %>
