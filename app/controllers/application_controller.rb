@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
 
-  def authentication_requied
+  def authentication_required
     if params[:access_token]
       # Validate access_token whether exists and not expired
       if AccessGrant.access_token_exists?(params[:access_token])

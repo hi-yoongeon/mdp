@@ -1,5 +1,6 @@
 class ClientsController < ApplicationController
-  before_filter :login_required
+  before_filter :authentication_required , :only => :temp
+  before_filter :login_required , :except => :temp
   before_filter :client_authentication_required , :only => [:show, :edit, :update, :destroy]
   respond_to :html, :xml, :json
   
@@ -48,14 +49,17 @@ class ClientsController < ApplicationController
     end
   end
 
+
   def destroy
     client = Client.find(params[:id])
     client.destroy
     redirect_to( :action => "index" )
   end
 
+
   def temp
-    render :json => params
+    user = AccessGrant.user_for_access_token(params[:access_token])
+    render :json => user
   end
 
 
