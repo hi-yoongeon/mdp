@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
 #         else
 #           @msg = "Access token is expired"
 #         end
+        session[:user] = AccessGrant.user_for_access_token(params[:access_token])
         return true
       else
         @msg = "The access token is invalid"

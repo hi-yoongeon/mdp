@@ -58,8 +58,7 @@ class ClientsController < ApplicationController
 
 
   def temp
-    user = AccessGrant.user_for_access_token(params[:access_token])
-    render :json => user
+    render :json => current_user
   end
 
 

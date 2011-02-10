@@ -139,7 +139,7 @@ class AccessGrantsController < ApplicationController
         invalid = true
         @msg = "client_id or client_secret is incorrect"
       end
-
+      
       @user = User.authenticate(params[:userid], params[:password])
       if @user.nil?
         invalid = true
