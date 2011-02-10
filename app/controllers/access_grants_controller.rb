@@ -160,7 +160,10 @@ class AccessGrantsController < ApplicationController
       if params[:code] != session[:code]
         invalid = true
         @msg = "code is incorrect"
+      else
+        @user = current_user
       end
+      
     end
 
 

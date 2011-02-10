@@ -3,9 +3,7 @@ class AccessGrant < ActiveRecord::Base
   protected
   def self.access_token_exists?(token)
     if count(:conditions => ["access_token = ?", token]) > 0
-      unless AccessGrant.access_token_expired?(token)
-        true
-      end
+      return true
     end
     false
   end
@@ -14,6 +12,12 @@ class AccessGrant < ActiveRecord::Base
   def self.access_token_expired?(token)
     access_grant = find(:first, :select => "access_token_expires_at", :conditions => ["access_token = ?", token])
     return DateTime.now.to_f > access_grant.access_token_expires_at.to_f
+  end
+
+
+  def self.user_for_access_token(token)
+    access_grant = find(:first, :select => "user_id", :conditions => ["access_token = ?", token])
+    User.find(access_grant.user_id)
   end
 
   
