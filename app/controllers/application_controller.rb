@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-
+  
 
   def authentication_required
     if params[:access_token]
@@ -53,6 +53,26 @@ class ApplicationController < ActionController::Base
   end
 
 
+  
 
+  def __find(model)
+    conditions = {}
+    offset = 0
+    limit = 5
+    
+    if params[:id]
+      conditions[:id] = params[:id].split(",")
+    end
+    if params[:limit]
+      limit = params[:limit].to_i
+    end
+    if params[:page]
+      offset = (params[:page].to_i - 1) * limit
+    end
+
+
+    ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset)
+    respond_with ret
+  end
   
 end

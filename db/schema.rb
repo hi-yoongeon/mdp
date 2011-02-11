@@ -108,11 +108,11 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   end
 
   create_table "posts", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "user_id",                      :null => false
     t.integer  "store_id"
     t.integer  "activities_id"
-    t.text     "post"
-    t.integer  "image_count"
+    t.text     "post",                         :null => false
+    t.integer  "image_count",   :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -157,6 +157,11 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
     t.string   "tag"
     t.integer  "count"
     t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_tests", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

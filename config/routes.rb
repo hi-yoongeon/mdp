@@ -7,8 +7,9 @@ OAuthProvider::Application.routes.draw do  resources :clients
   match '/authorize', :to => 'access_grants#authorize' 
   match '/login', :to => 'users#login'
   match '/logout', :to => 'users#logout'
-  match '/temp', :to => 'clients#temp' # temporary
+  #match '/temp', :to => 'clients#temp'
   match ':controller/:action'
+  match '/v2/:controller/:action'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

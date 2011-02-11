@@ -1,13 +1,14 @@
 class CreateUsers < ActiveRecord::Migration
   def self.up
     create_table :users do |t|
-      t.string :userid
-      t.string :hashed_password
-      t.string :nick
-      t.string :email
-      t.string :salt
+      t.string :userid, :null => false
+      t.string :hashed_password, :null => false
+      t.string :old_hashed_password, :null => true
+      t.string :nick, :null => false
+      t.string :email, :null => false
+      t.string :salt, :null => false
 
-      t.timestamps
+      t.timestampso
     end
   end
 

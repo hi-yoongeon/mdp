@@ -1,9 +1,9 @@
 class User < ActiveRecord::Base
   has_many :clients
 
-  validates_length_of :userid, :within => 4..40
-  validates_length_of :password, :within => 5..40
-  validates_length_of :nick, :within => 5..40
+  validates_length_of :userid, :within => 4..20
+  validates_length_of :password, :within => 4..20
+  validates_length_of :nick, :within => 1..20
   validates_presence_of :userid, :email, :nick, :password, :password_confirmation, :salt
   validates_uniqueness_of :userid, :email
   validates_confirmation_of :password
@@ -11,10 +11,9 @@ class User < ActiveRecord::Base
 
   attr_protected :id, :salt
   attr_accessor :password, :password_confirmation
-
-
+ 
   def self.authenticate(userid, pass)
-    user = find(:first, :conditions=>["userid = ?", userid])
+   user = find(:first, :conditions=>["userid = ?", userid])
     return nil if user.nil?
     return user if User.encrypt(pass, user.salt) == user.hashed_password
     nil
