@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe PostsController do
- 
-  describe "GET 'show_post'" do
+describe UsersController do
+  
+  describe "GET 'idnex'" do
     it "should be successful" do
-      get 'show_post'
+      get 'index'
       response.should be_success
     end
   end
-
 
 end
