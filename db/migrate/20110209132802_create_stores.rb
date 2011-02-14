@@ -1,20 +1,20 @@
 class CreateStores < ActiveRecord::Migration
   def self.up
     create_table :stores do |t|
-      t.integer :user_id
-      t.integer :region_id
-      t.string :name
-      t.string :tel
-      t.string :address
-      t.string :add_address
-      t.string :website
-      t.text :cover
-      t.string :lat
-      t.string :lng
-      t.integer :bookmark_count
-      t.integer :like_count
-      t.integer :memo_count
-      t.integer :image_count
+      t.string :name, :null => false
+      t.integer :reg_user_id, :null => false
+      t.integer :region_id, :null => false
+      t.string :tel, :null => true
+      t.string :address, :null => false
+      t.string :add_address, :null => true
+      t.string :website, :null => true
+      t.text :cover, :null => true
+      t.string :lat, :null => false
+      t.string :lng, :null => false
+      t.integer :bookmark_count, :null => false, :default => 0 
+      t.integer :like_count, :null => false, :default => 0
+      t.integer :memo_count, :null => false, :default => 0
+      t.integer :image_count, :null => false, :default => 0
       t.integer :sequence
 
       t.timestamps

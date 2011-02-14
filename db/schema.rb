@@ -24,30 +24,27 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   end
 
   create_table "activities", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "store_id"
-    t.integer  "like_id"
-    t.integer  "bookmark_id"
+    t.integer  "user_id",     :null => false
+    t.integer  "foreign_key", :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "attach_files", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "user_id",    :null => false
     t.integer  "store_id"
-    t.integer  "post_id"
-    t.string   "filename"
-    t.string   "webpath"
+    t.integer  "post_id",    :null => false
+    t.string   "filename",   :null => false
+    t.string   "webpath",    :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "bookmarks", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "post_id"
-    t.integer  "store_id"
+    t.integer  "user_id",     :null => false
+    t.integer  "foreign_key", :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -64,44 +61,43 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   end
 
   create_table "followings", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "followed_user_id"
+    t.integer  "user_id",          :null => false
+    t.integer  "followed_user_id", :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "foods", :force => true do |t|
+    t.string   "name",       :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "likes", :force => true do |t|
-    t.integer  "store_id"
-    t.integer  "post_id"
-    t.integer  "food_id"
-    t.integer  "store_food_id"
+    t.integer  "user_id",     :null => false
+    t.integer  "foreign_key", :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "messages", :force => true do |t|
-    t.integer  "sent_user_id"
-    t.integer  "received_user_id"
-    t.text     "message"
+    t.integer  "sent_user_id",     :null => false
+    t.integer  "received_user_id", :null => false
+    t.text     "message",          :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "notices", :force => true do |t|
-    t.string   "subject"
-    t.text     "content"
-    t.string   "target"
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.string   "subject",    :null => false
+    t.text     "content",    :null => false
+    t.string   "target",     :null => false
+    t.datetime "start_date", :null => false
+    t.datetime "end_date",   :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -119,59 +115,56 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   end
 
   create_table "regions", :force => true do |t|
+    t.string   "position",   :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "store_foods", :force => true do |t|
-    t.integer  "food_id"
-    t.integer  "store_id"
-    t.string   "food_name"
+    t.integer  "food_id",    :null => false
+    t.integer  "store_id",   :null => false
+    t.string   "food_name",  :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "stores", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "region_id"
-    t.string   "name"
+    t.integer  "user_id",                       :null => false
+    t.integer  "region_id",                     :null => false
+    t.string   "name",                          :null => false
     t.string   "tel"
-    t.string   "address"
+    t.string   "address",                       :null => false
     t.string   "add_address"
     t.string   "website"
     t.text     "cover"
-    t.string   "lat"
-    t.string   "lng"
-    t.integer  "bookmark_count"
-    t.integer  "like_count"
-    t.integer  "memo_count"
-    t.integer  "image_count"
+    t.string   "lat",                           :null => false
+    t.string   "lng",                           :null => false
+    t.integer  "bookmark_count", :default => 0, :null => false
+    t.integer  "like_count",     :default => 0, :null => false
+    t.integer  "memo_count",     :default => 0, :null => false
+    t.integer  "image_count",    :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "tags", :force => true do |t|
-    t.string   "tag"
-    t.integer  "count"
+    t.string   "tag",                       :null => false
+    t.integer  "count",      :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "user_tests", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", :force => true do |t|
-    t.string   "userid"
-    t.string   "hashed_password"
-    t.string   "nick"
-    t.string   "email"
-    t.string   "salt"
+    t.string   "userid",              :null => false
+    t.string   "hashed_password",     :null => false
+    t.string   "old_hashed_password"
+    t.string   "nick",                :null => false
+    t.string   "email",               :null => false
+    t.string   "salt",                :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

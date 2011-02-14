@@ -1,6 +1,7 @@
 class CreateFoods < ActiveRecord::Migration
   def self.up
     create_table :foods do |t|
+      t.string :name, :null => false
       t.integer :sequence
 
       t.timestamps
