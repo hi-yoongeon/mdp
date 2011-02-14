@@ -1,6 +1,6 @@
 class MessagesController < ApplicationController
   before_filter :authentication_required
-  repond_to :xml, :json
+  respond_to :xml, :json
 
 
   def list_message
