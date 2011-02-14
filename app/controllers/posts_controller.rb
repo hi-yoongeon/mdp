@@ -2,6 +2,7 @@ class PostsController < ApplicationController
   before_filter :authentication_required, :only => [:new, :delete, :like]
   respond_to :xml, :json
 
+
   def show
     if request.get? and parameters_required :post_id
       params[:id] = params[:post_id]

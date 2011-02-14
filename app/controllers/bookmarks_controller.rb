@@ -1,6 +1,6 @@
 class BookmarksController < ApplicationController
   before_filter :authentication_required, :only => []
-  reapond_to :xml, :json
+  respond_to :xml, :json
 
 
   def new

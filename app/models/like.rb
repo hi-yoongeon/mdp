@@ -1,5 +1,5 @@
 class Like < ActiveRecord::Base
-  has_many :activities, :depentent => :destroy
+  has_many :activities, :dependent => :destroy
 
   belongs_to :users, :class_name => "User", :foreign_key => "user_id"
   belongs_to :stores, :class_name => "Store", :foreign_key => "foreign_key"
