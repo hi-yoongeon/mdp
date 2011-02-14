@@ -38,6 +38,34 @@ class ApplicationController < ActionController::Base
   end
 
 
+
+  def parameters_required(*args)
+    invalid = false
+    args.each do |arg| 
+      if arg.class == String
+        if params[arg.to_sym].nil?
+          invalid = true
+          break
+        end
+      elsif arg.class == Symbol
+        if params[arg].nil?
+          invalid = true
+          break
+        end
+      else
+        invalid = true
+        break
+      end
+    end
+    
+    if invalid
+      return false
+    end
+    
+    return true
+  end
+
+
   def current_user
     session[:user]
   end
@@ -55,8 +83,7 @@ class ApplicationController < ActionController::Base
 
   
 
-  def __find(model)
-    conditions = {}
+  def __find(model, conditions = {})
     offset = 0
     limit = 5
     
@@ -72,7 +99,7 @@ class ApplicationController < ActionController::Base
 
 
     ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset)
-    respond_with ret
+    return ret
   end
   
 end
