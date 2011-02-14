@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :clients
+  has_many :clients, :dependent => :destroy
   has_many :likes, :dependent => :destroy
   has_many :bookmarks, :dependent => :destroy
   has_many :posts
