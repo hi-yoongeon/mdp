@@ -1,7 +1,6 @@
 class PostsController < ApplicationController
-  before_filter :authentication_required, :only => [:write_post]
+  before_filter :authentication_required, :only => [:new, :delete, :like]
   respond_to :xml, :json
-
 
   def show
     if request.get? and parameters_required :post_id
@@ -11,7 +10,6 @@ class PostsController < ApplicationController
     
     respond_with ret
   end
-
 
 
   def new
@@ -34,12 +32,9 @@ class PostsController < ApplicationController
   end
 
 
-
-
   def delete
-    
-  end
 
+  end
 
 
   def like
@@ -47,7 +42,7 @@ class PostsController < ApplicationController
   end
 
 
-  
+
   def list
     if request.get?
       ret = __find(Post)
@@ -75,4 +70,14 @@ class PostsController < ApplicationController
   
 
   
+  def nearby_list
+
+  end
+
+
+  def region_list
+
+  end
+
+
 end
