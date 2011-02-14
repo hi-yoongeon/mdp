@@ -1,18 +1,9 @@
 class PostsController < ApplicationController
-  before_filter :authentication_required, :only => [:write_post]
+  before_filter :authentication_required, :only => [:new, :delete, :like]
   respond_to :xml, :json
 
-  def show_post
-    if request.get? and parameters_required :post_id
-      params[:id] = params[:post_id]
-      ret = __find(Post)
-    end
-    
-    respond_with ret
-  end
 
-  
-  def write_post
+  def new
     if request.post? and parameters_required :post
       data = {}
       data[:post] = params[:post]
@@ -34,7 +25,27 @@ class PostsController < ApplicationController
   end
 
 
-  def public_timeline
+  def delete
+
+  end
+
+
+  def like
+
+  end
+
+
+  def show
+    if request.get? and parameters_required :post_id
+      params[:id] = params[:post_id]
+      ret = __find(Post)
+    end
+    
+    respond_with ret
+  end
+
+
+  def list
     if request.get?
       ret = __find(Post)
     end
@@ -42,4 +53,14 @@ class PostsController < ApplicationController
   end
 
   
+  def nearby_list
+
+  end
+
+
+  def region_list
+
+  end
+
+
 end

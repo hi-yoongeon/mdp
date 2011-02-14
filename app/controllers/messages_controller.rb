@@ -3,19 +3,19 @@ class MessagesController < ApplicationController
   repond_to :xml, :json
 
 
-  def list_message
+  def new
+
+  end
+
+
+  def show
     if request.get?
       __find(Post)
     end
   end
 
 
-  def send_message
-
-  end
-
-
-  def show_message
+  def list
     if request.get?
       __find(Post)
     end
