@@ -1,11 +1,11 @@
 class CreateNotices < ActiveRecord::Migration
   def self.up
     create_table :notices do |t|
-      t.string :subject
-      t.text :content
-      t.string :target
-      t.datetime :start_date
-      t.datetime :end_date
+      t.string :subject, :null => false
+      t.text :content, :null => false
+      t.string :target, :null => false
+      t.datetime :start_date, :null => false
+      t.datetime :end_date, :null => false
       t.integer :sequence
 
 

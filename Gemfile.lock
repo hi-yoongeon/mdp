@@ -34,6 +34,7 @@ GEM
     diff-lcs (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
+    faker (0.3.1)
     i18n (0.5.0)
     mail (2.2.14)
       activesupport (>= 2.3.6)
@@ -87,15 +88,18 @@ GEM
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
       rack-test (>= 0.5.3)
+    will_paginate (3.0.pre2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   annotate-models (= 1.0.4)
+  faker (= 0.3.1)
   rails (= 3.0.3)
   rspec (= 2.4.0)
   rspec-rails (= 2.4.1)
   spork (= 0.8.4)
   sqlite3-ruby
   webrat (= 0.7.1)
+  will_paginate (= 3.0.pre2)

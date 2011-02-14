@@ -1,8 +1,8 @@
 class CreateTags < ActiveRecord::Migration
   def self.up
     create_table :tags do |t|
-      t.string :tag
-      t.integer :count
+      t.string :tag, :null => false 
+      t.integer :count, :null => false, :default => 0
       t.integer :sequence
 
       t.timestamps

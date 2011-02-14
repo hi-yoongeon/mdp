@@ -1,5 +1,13 @@
 class User < ActiveRecord::Base
   has_many :clients
+  has_many :likes, :dependent => :destroy
+  has_many :bookmarks, :dependent => :destroy
+  has_many :posts
+  has_many :attach_files
+  has_many :stores, :dependent => :nullify
+  has_many :activities, :dependent => :destroy
+  has_many :messages
+  has_many :followings, :dependent => :destroy
 
   validates_length_of :userid, :within => 4..20
   validates_length_of :password, :within => 4..20

@@ -8,7 +8,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :email, :null => false
       t.string :salt, :null => false
 
-      t.timestampso
+      t.timestamps
     end
   end
 
