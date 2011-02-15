@@ -9,5 +9,11 @@ class Post < ActiveRecord::Base
 
   validates_length_of :post, :within => 1..300
   validates_presence_of :user_id, :post
+  
+  after_create :update_sequence
+
+  def update_sequence
+    update_attribute(:sequence, id * -1)
+  end
     
 end

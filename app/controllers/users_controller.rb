@@ -119,9 +119,9 @@ class UsersController < ApplicationController
         return true
       end
     end
-    @code = 0
-    @msg = 'Non authentication'
-    render :template => 'errors/error'
+    
+    msg = 'Non authentication'
+    __error(:code => 0, :description => msg, :template => 'errors/error')
     return false
   end
 

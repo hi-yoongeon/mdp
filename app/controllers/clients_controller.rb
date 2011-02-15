@@ -1,6 +1,6 @@
 class ClientsController < ApplicationController
-  before_filter :authentication_required , :only => :temp
-  before_filter :login_required , :except => :temp
+  #before_filter :authentication_required , :only => :temp
+  before_filter :login_required , :except => [] #:temp
   before_filter :client_authentication_required , :only => [:show, :edit, :update, :destroy]
   respond_to :html, :xml, :json
   
@@ -58,7 +58,6 @@ class ClientsController < ApplicationController
 
 
   def temp
-    render :json => current_user
   end
 
 

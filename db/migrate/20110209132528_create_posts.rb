@@ -7,6 +7,9 @@ class CreatePosts < ActiveRecord::Migration
       t.integer :activity_id, :null => true
       t.text :post, :null => false
       t.integer :image_count, :null => false, :default => 0
+      t.integer :like_count, :null => false, :default => 0
+      t.float :lat, :default => 0
+      t.float :lng, :default => 0
       t.integer :sequence
 
       t.timestamps

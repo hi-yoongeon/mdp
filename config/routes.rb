@@ -9,7 +9,7 @@ OAuthProvider::Application.routes.draw do  resources :clients
   match '/authorize', :to => 'access_grants#authorize' 
   match '/login', :to => 'users#login'
   match '/logout', :to => 'users#logout'
-  #match '/temp', :to => 'clients#temp'
+  match '/temp', :to => 'clients#temp'
   match ':controller/:action'
   match '/v2/:controller/:action'
 

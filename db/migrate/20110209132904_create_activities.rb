@@ -3,7 +3,7 @@ class CreateActivities < ActiveRecord::Migration
     create_table :activities do |t|
       t.integer :user_id, :null => false
       t.integer :foreign_key, :null => false
-      # store, like, bookmark
+      t.string :type, :null => false # store, like, bookmark
       t.integer :sequence
 
       t.timestamps

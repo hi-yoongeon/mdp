@@ -14,14 +14,13 @@ class ApplicationController < ActionController::Base
         session[:user] = AccessGrant.user_for_access_token(params[:access_token])
         return true
       else
-        @msg = "The access token is invalid"
+        msg = "The access token is invalid"
       end
     else
-      @msg = "Access token parameter is required"
+      msg = "Access token parameter is required"
     end
     
-    @code = 0
-    render :template => 'errors/error'
+    __error(:code => 0, :description => msg)
     return false
   end
 
@@ -41,27 +40,21 @@ class ApplicationController < ActionController::Base
 
   def parameters_required(*args)
     invalid = false
+    parameter = nil
     args.each do |arg| 
-      if arg.class == String
-        if params[arg.to_sym].nil?
-          invalid = true
-          break
-        end
-      elsif arg.class == Symbol
-        if params[arg].nil?
-          invalid = true
-          break
-        end
-      else
+      parameter = arg.to_s
+      if params[arg.to_sym].nil?
         invalid = true
         break
       end
     end
     
     if invalid
+      msg = "Parameter '#{parameter}' is missing "
+      __error(:code => 0, :description => msg)
       return false
     end
-    
+
     return true
   end
 
@@ -85,7 +78,7 @@ class ApplicationController < ActionController::Base
 
   def __find(model, conditions = {})
     offset = 0
-    limit = 5
+    limit = 20
     
     if params[:id]
       conditions[:id] = params[:id].split(",")
@@ -100,6 +93,37 @@ class ApplicationController < ActionController::Base
 
     ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset)
     return ret
+  end
+  
+
+  def __error(arg = {})
+    if arg[:code].nil? or arg[:code].empty?
+      arg[:code] = 0
+    end
+    if arg[:template].nil? or arg[:template].empty?
+      arg[:template] = 'errors/error'
+    end
+
+    ret = {:code => arg[:code], :description => arg[:description]}
+    
+    respond_with(ret) do |format|
+      format.xml {render :xml => ret}
+      format.json {render :json => ret}
+      format.html do 
+        @code = arg[:code]
+        @msg = arg[:description]
+        render :template => arg[:template]
+      end
+    end
+  end
+
+
+  def __success(object)
+    ret = {:code => 200, :result => object}
+    respond_with(ret) do |format|
+      format.xml {render :xml => ret}
+      format.json {render :json => ret}
+    end
   end
   
 end

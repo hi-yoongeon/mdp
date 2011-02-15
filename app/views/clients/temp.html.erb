@@ -1,0 +1,10 @@
+<%= form_tag(:controller => "posts", :action => "new", :method =>
+  "post", :format => "json") do %>
+  <%= label_tag "post" %>
+  <%= text_field_tag "post" %>
+  <!-- Test code for post -->
+  <%= hidden_field_tag "access_token" ,"61c9ad86cb3c9ce74dbe4b647609f9e7a4f1f567" %>
+  <br/>
+  
+  <%= submit_tag "Send" %>
+<% end %>

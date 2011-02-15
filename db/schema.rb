@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   create_table "activities", :force => true do |t|
     t.integer  "user_id",     :null => false
     t.integer  "foreign_key", :null => false
+    t.string   "type",        :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -36,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
     t.integer  "store_id"
     t.integer  "post_id",    :null => false
     t.string   "filename",   :null => false
+    t.string   "fullpath",   :null => false
     t.string   "webpath",    :null => false
     t.integer  "sequence"
     t.datetime "created_at"
@@ -45,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   create_table "bookmarks", :force => true do |t|
     t.integer  "user_id",     :null => false
     t.integer  "foreign_key", :null => false
+    t.string   "type",        :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -61,16 +64,17 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   end
 
   create_table "followings", :force => true do |t|
-    t.integer  "user_id",          :null => false
-    t.integer  "followed_user_id", :null => false
+    t.integer  "following_user_id", :null => false
+    t.integer  "followed_user_id",  :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "foods", :force => true do |t|
-    t.string   "name",       :null => false
+    t.string   "name",                      :null => false
     t.integer  "sequence"
+    t.integer  "like_count", :default => 0, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -78,6 +82,7 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   create_table "likes", :force => true do |t|
     t.integer  "user_id",     :null => false
     t.integer  "foreign_key", :null => false
+    t.string   "type",        :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -104,36 +109,44 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   end
 
   create_table "posts", :force => true do |t|
-    t.integer  "user_id",                      :null => false
+    t.integer  "user_id",                         :null => false
+    t.integer  "parent_post_id"
     t.integer  "store_id"
-    t.integer  "activities_id"
-    t.text     "post",                         :null => false
-    t.integer  "image_count",   :default => 0, :null => false
+    t.integer  "activity_id"
+    t.text     "post",                            :null => false
+    t.integer  "image_count",    :default => 0,   :null => false
+    t.integer  "like_count",     :default => 0,   :null => false
+    t.float    "lat",            :default => 0.0
+    t.float    "lng",            :default => 0.0
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "regions", :force => true do |t|
-    t.string   "position",   :null => false
+    t.float    "lat_sw",     :null => false
+    t.float    "lng_sw",     :null => false
+    t.float    "lat_ne",     :null => false
+    t.float    "lng_ne",     :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "store_foods", :force => true do |t|
-    t.integer  "food_id",    :null => false
-    t.integer  "store_id",   :null => false
-    t.string   "food_name",  :null => false
+    t.integer  "food_id",                   :null => false
+    t.integer  "store_id",                  :null => false
+    t.string   "food_name",                 :null => false
+    t.integer  "like_count", :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "stores", :force => true do |t|
-    t.integer  "user_id",                       :null => false
-    t.integer  "region_id",                     :null => false
     t.string   "name",                          :null => false
+    t.integer  "reg_user_id",                   :null => false
+    t.integer  "region_id",                     :null => false
     t.string   "tel"
     t.string   "address",                       :null => false
     t.string   "add_address"
