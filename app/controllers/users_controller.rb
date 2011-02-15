@@ -7,7 +7,6 @@ class UsersController < ApplicationController
   def index
     @user = current_user
     respond_with(@users = User.all)
-      
   end
 
 
