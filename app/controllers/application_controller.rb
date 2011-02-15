@@ -97,10 +97,10 @@ class ApplicationController < ActionController::Base
   
 
   def __error(arg = {})
-    if arg[:code].nil? or arg[:code].empty?
+    if arg[:code].nil?
       arg[:code] = 0
     end
-    if arg[:template].nil? or arg[:template].empty?
+    if arg[:template].nil?
       arg[:template] = 'errors/error'
     end
 

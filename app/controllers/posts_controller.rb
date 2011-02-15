@@ -9,7 +9,6 @@ class PostsController < ApplicationController
       ret = __find(Post)
       respond_with ret
     end
-
   end
 
 
@@ -38,10 +37,6 @@ class PostsController < ApplicationController
         __error(:code => 0, :description => "Failed to save")
       end
 
-      respond_with(ret) do |format|
-        format.json { render :json => ret }
-        format.xml { render :xml => ret }
-      end
     end
   end
 
@@ -55,7 +50,6 @@ class PostsController < ApplicationController
       else
         __error(:code => 0, :description => "Failed to delete")
       end
-      respond_with ret
     end
   end
 
