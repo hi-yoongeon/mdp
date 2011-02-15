@@ -14,12 +14,39 @@ class StoresController < ApplicationController
 
 
   def new
+    
 
   end
 
 
   def like
+    if request.get? and parameters_required :store_id
+      # todo
+      # create like object
+      like = Like.new(:user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
+      if like.save
+        data = {}
+        data[:action] = "Like"
+        data[:user_id] = current_user.id
+        data[:user_name] = current_user.nick
+        data[:object_type] = "Store"
+        store = Store.find(params[:store_id])
+        data[:object_name] = store.name
+        data[:object_id] = store.id
+        
+        post = Activity.generate(data);
+        if post
+          __success(post)
+          return
+        else
+          __error(:code => 0, :description => "Failed to generate activity")
+          return
+        end
+      else
+        __error(:code => 0, :description => "Failed to save like")
+      end
 
+    end
   end
 
 

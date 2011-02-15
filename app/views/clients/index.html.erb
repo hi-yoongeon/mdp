@@ -23,9 +23,9 @@
     <td><%= link_to 'Destroy', client, :confirm => 'Are you sure?',
     :method => :delete %></td>
     <td><%= link_to 'Request Code',
-    "/authorize?response_type=code&redirect_uri=http://localhost:3000/clients&client_id=#{client.client_id}"%></td>
+    "/authorize?response_type=code&redirect_uri=http://localhost/clients&client_id=#{client.client_id}"%></td>
     <td><%=link_to "Send Code(#{params[:code]}) to request access_token" ,
-    "/authorize?grant_type=authorization_code&redirect_uri=http://localhost:3000/clients&code=#{params[:code]}&client_id=#{client.client_id}&client_secret=#{client.client_secret}"%></td>
+    "/authorize?grant_type=authorization_code&redirect_uri=http://localhost/clients&code=#{params[:code]}&client_id=#{client.client_id}&client_secret=#{client.client_secret}"%></td>
     <td>access_token = <%=params[:access_token]%></td>
   </tr>
 <% end %>

@@ -1,8 +1,9 @@
 class Activity < ActiveRecord::Base
-  belongs_to :user, :class_name => "User", :foreign_key => "user_id"
-  belongs_to :post, :class_name => "Post", :foreign_key => "foreign_key"
-  belongs_to :store, :class_name => "Store", :foreign_key => "foreign_key"
-  belongs_to :like, :class_name => "Like", :foreign_key => "foreign_key"
+#   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
+#   belongs_to :post, :class_name => "Post", :foreign_key => "foreign_key"
+#   belongs_to :store, :class_name => "Store", :foreign_key => "foreign_key"
+#   belongs_to :like, :class_name => "Like", :foreign_key => "foreign_key"
+  belongs_to :post
   
   validates_presence_of :user_id, :user_name, :object_type, :object_name, :object_id, :action
   validates_inclusion_of :action, :in => %w(Store Like Bookmark)
@@ -20,6 +21,7 @@ class Activity < ActiveRecord::Base
     if activity.save
       # create post
       data = {}
+      data[:user_id] = arg[:user_id]
       data[:post] = "activity"
       data[:activity_id] = activity.id
       data[:lat] = 0
@@ -50,6 +52,7 @@ class Activity < ActiveRecord::Base
       
       post = Post.new(data)
       if post.save
+        activity.update_attribute(:post_id, post.id)
         return post
       end
     end

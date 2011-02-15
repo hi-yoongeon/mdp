@@ -7,4 +7,21 @@
   <br/>
   
   <%= submit_tag "Send" %>
+
+<table>
+  <tr>
+    <th></th>
+  </tr>
+
+<% @posts.each do |post| %>
+  <tr>
+    <td>
+      <p>contents : <%= post.post %> |</p>
+    </td>
+    <td>
+      <p>activity id : <%= post.activity_id %></p>
+    </td>
+  </tr>
+<%  end %>
+</table>
 <% end %>

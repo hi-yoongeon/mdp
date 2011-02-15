@@ -58,6 +58,7 @@ class ClientsController < ApplicationController
 
 
   def temp
+    @posts = Post.all
   end
 
 

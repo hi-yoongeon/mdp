@@ -119,7 +119,7 @@ class ApplicationController < ActionController::Base
 
 
   def __success(object)
-    ret = {:code => 200, :result => object}
+    ret = {:result => object,:code => 200}
     respond_with(ret) do |format|
       format.xml {render :xml => ret}
       format.json {render :json => ret}

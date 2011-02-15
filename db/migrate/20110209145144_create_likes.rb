@@ -4,7 +4,7 @@ class CreateLikes < ActiveRecord::Migration
       t.integer :user_id, :null => false
       t.integer :foreign_key, :null => false
       # store, post, store_food, food
-      t.string :type, :null => false
+      t.string :object, :null => false
       t.integer :sequence
       
       t.timestamps

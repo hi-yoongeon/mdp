@@ -10,6 +10,7 @@ class CreateActivities < ActiveRecord::Migration
       t.string :object_complement_name
       t.string :object_complement_id
       t.string :action, :null => false
+      t.integer :post_id
       
       t.integer :sequence
 

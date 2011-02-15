@@ -54,11 +54,12 @@ class PostsController < ApplicationController
   end
 
 
+
   def like
     if request.get? and parameters_required :post_id
       # todo
       # create like object
-      like = Like.new(:user_id => current_user.id, :type => "Post", :foreign_key => params[:post_id])
+      like = Like.new(:user_id => current_user.id, :object => "Post", :foreign_key => params[:post_id])
       if like.save
         data = {}
         data[:action] = "Like"
@@ -74,9 +75,15 @@ class PostsController < ApplicationController
         post = Activity.generate(data);
         if post
           __success(post)
+          return
+        else
+          __error(:code => 0, :description => "Failed to generate activity")
+          return
         end
+      else
+        __error(:code => 0, :description => "Failed to save like ")
       end
-      __error(:code => 0, :description => "Failed to like post")
+
     end
   end
 
