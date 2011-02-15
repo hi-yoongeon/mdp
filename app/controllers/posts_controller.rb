@@ -61,17 +61,28 @@ class PostsController < ApplicationController
 
 
   def like
-    if request.post? and parameters_required :post_id
+    if request.get? and parameters_required :post_id
       # todo
       # create like object
-      like = Like.new(:type => "post", :user_id => current_user.id, :foreign_key => params[:post_id])
+      like = Like.new(:user_id => current_user.id, :type => "Post", :foreign_key => params[:post_id])
       if like.save
-        post = Activity.generate(:type => "like", :user_id => current_user.id, :foreign_key => like.id)
-        return post
+        data = {}
+        data[:action] = "Like"
+        data[:user_id] = current_user.id
+        data[:user_name] = current_user.nick
+        data[:object_type] = "User"
+        post = Post.find(params[:post_id])
+        data[:object_name] = post.user.nick
+        data[:object_id] = post.user.id
+        data[:object_complement_type] = "Post"
+        data[:object_complement_id] = params[:post_id]
+        data[:object_complement_name] = "" # unnessasary
+        post = Activity.generate(data);
+        if post
+          __success(post)
+        end
       end
-      nil
-      
-      
+      __error(:code => 0, :description => "Failed to like post")
     end
   end
 

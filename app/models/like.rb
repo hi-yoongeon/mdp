@@ -8,7 +8,7 @@ class Like < ActiveRecord::Base
   belongs_to :post, :class_name => "Post", :foreign_key => "foreign_key"
 
   validates_presence_of :user_id, :foreign_key, :type
-  validates_inclusion_of :type, :in => %w(store post store_food food)
+  validates_inclusion_of :type, :in => %w(Store Post StoreFood)
 
   after_create :increase_like_count
   
