@@ -33,7 +33,6 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
     t.string   "object_complement_name"
     t.string   "object_complement_id"
     t.string   "action",                                     :null => false
-    t.integer  "post_id"
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -54,7 +53,7 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   create_table "bookmarks", :force => true do |t|
     t.integer  "user_id",     :null => false
     t.integer  "foreign_key", :null => false
-    t.string   "type",        :null => false
+    t.string   "object",      :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -131,10 +130,11 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   end
 
   create_table "regions", :force => true do |t|
-    t.float    "lat_sw",     :null => false
-    t.float    "lng_sw",     :null => false
-    t.float    "lat_ne",     :null => false
-    t.float    "lng_ne",     :null => false
+    t.integer  "user_id",                     :null => false
+    t.float    "lat_sw",     :default => 0.0, :null => false
+    t.float    "lng_sw",     :default => 0.0, :null => false
+    t.float    "lat_ne",     :default => 0.0, :null => false
+    t.float    "lng_ne",     :default => 0.0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -1,4 +1,6 @@
 class AccessGrant < ActiveRecord::Base
+  belongs_to :user
+  belongs_to :client
   
   protected
   def self.access_token_exists?(token)

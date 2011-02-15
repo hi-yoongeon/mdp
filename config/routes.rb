@@ -1,6 +1,4 @@
 OAuthProvider::Application.routes.draw do  resources :clients
-  get "posts/shoW_post"
-
   
   resources :clients
   resources :users

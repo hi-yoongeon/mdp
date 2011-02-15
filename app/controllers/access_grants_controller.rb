@@ -5,9 +5,8 @@ class AccessGrantsController < ApplicationController
   
   def index
     @access_grants = AccessGrant.find_all_by_user_id(current_user.id)
-    if @access_grants.nil?
-      @access_grants = []
-    end
+    @access_grants = [] if @access_grants.nil?
+    
     respond_with(@access_grants)
   end
 
@@ -31,24 +30,28 @@ class AccessGrantsController < ApplicationController
     
   end
   
-  def destory
+  def destroy
+    grant = AccessGrant.find(params[:id])
+    if grant.user_id = current_user.id
+      grant.destroy
+    end
+    redirect_to access_grants_path
   end
     
 
-  
   def authorize
     response_type = params[:response_type]
     grant_type = params[:grant_type]
 
     if response_type == "code"
-      if current_user
-        redirect_to "/login?response_type=code&redirect_uri=" + params[:redirect_uri]
-        return 
-      else
-        @redirect_uri = params[:redirect_uri]
-        render
-        return
-      end
+#       if current_user
+#         redirect_to "/login?response_type=code&redirect_uri=" + params[:redirect_uri]
+#         return 
+#       else
+      @redirect_uri = params[:redirect_uri]
+      render
+      return
+#      end
       # render login view for application
     elsif response_type == "password" || grant_type == "authorization_code"
       redirect_to (params[:redirect_uri] +"?access_token=#{access_token}&token_type=bearer")

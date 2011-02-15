@@ -3,7 +3,7 @@ class CreateBookmarks < ActiveRecord::Migration
     create_table :bookmarks do |t|
       t.integer :user_id, :null => false
       t.integer :foreign_key, :null => false
-      t.string :type, :null => false # store, post, region
+      t.string :object, :null => false # store, post, region
       t.integer :sequence
 
       t.timestamps

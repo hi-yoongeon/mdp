@@ -55,14 +55,14 @@ class UsersController < ApplicationController
 
 
   def login
-    if current_user
-      if !params[:response_type].nil? && params[:response_type] == "code"
-        session[:code] = code = AccessGrant.random_string(10)
-        session[:return_to] = params[:redirect_uri] + "?code=" + code
-      end
-      redirect_to_stored
-      return
-    end
+#     if current_user
+#       if !params[:response_type].nil? && params[:response_type] == "code"
+#         session[:code] = code = AccessGrant.random_string(10)
+#         session[:return_to] = params[:redirect_uri] + "?code=" + code
+#       end
+#       redirect_to_stored
+#       return
+#     end
 
     if request.post?
       if session[:user] = User.authenticate(params[:user][:userid], params[:user][:password])
@@ -113,7 +113,7 @@ class UsersController < ApplicationController
 
   protected
   def user_authentication_required
-    if login_required
+    if current_user
       if params[:id].to_i == current_user.id
         return true
       end

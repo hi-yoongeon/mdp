@@ -48,7 +48,7 @@ class PostsController < ApplicationController
         post.destroy
         __success()
       else
-        __error(:code => 0, :description => "Failed to delete")
+        __error(:code => 0, :description => "Non authentication")
       end
     end
   end

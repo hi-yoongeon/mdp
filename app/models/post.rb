@@ -1,8 +1,9 @@
 class Post < ActiveRecord::Base
-  has_many :bookmarks, :dependent => :destroy
-  has_many :likes, :dependent => :destroy
+  has_many :bookmarks
+  has_many :likes
+  has_one :activity, :class_name => "Activity", :foreign_key => "id", :primary_key => "activity_id"
   has_many :attach_files, :dependent => :destroy
-  has_one :activity, :dependent => :destroy
+
 
   belongs_to :user, :class_name => "User", :foreign_key => 'user_id'
   belongs_to :store, :class_name => "Store", :foreign_key => 'store_id'

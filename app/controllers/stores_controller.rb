@@ -8,7 +8,6 @@ class StoresController < ApplicationController
       params[:id] = params[:store_id]
       ret = __find(Store)
     end
-
     respond_with ret
   end
 
@@ -20,7 +19,7 @@ class StoresController < ApplicationController
 
 
   def like
-    if request.get? and parameters_required :store_id
+    if request.post? and parameters_required :store_id
       # todo
       # create like object
       like = Like.new(:user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
@@ -50,6 +49,20 @@ class StoresController < ApplicationController
   end
 
 
+  def bookmark
+    if request.post? and parameters_required :store_id
+      # create bookmark object
+      bookmark = Bookmark.new(:object => "Store", :foreign_key => params[:store_id], :user_id => current_user.id)
+      if bookmark.save
+        # issue - generate activity??
+        __success(bookmark)
+      else
+        __error(:code => 0, :description => "Failed to bookmark store")
+      end
+    end
+  end
+
+
   def list
     if request.get?
       ret = __find(Store)
@@ -58,16 +71,7 @@ class StoresController < ApplicationController
     respond_with ret
   end
 
-
-  def my_list
-    if request.get?
-      ret = __find(Store)
-    end
-
-    respond_with ret
-  end
-
-
+  
   def nearby_list
     if request.get? and parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
       
@@ -82,13 +86,15 @@ class StoresController < ApplicationController
   end
 
 
-  def region_list
-
-  end
-
-
   def bookmarked_list
-
+    if request.get?
+      conditions = {}
+      conditions[:user_id] = current_user.id
+      conditions[:object] = "Store"
+      bookmarks = __find(Bookmark, conditions)
+      bookmarked_stores = bookmarks.map { |bookmark| bookmark.store }
+      respond_with bookmarked_stores
+    end
   end
 
 

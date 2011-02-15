@@ -52,8 +52,10 @@ class ClientsController < ApplicationController
 
   def destroy
     client = Client.find(params[:id])
-    client.destroy
-    redirect_to( :action => "index" )
+    if client.user_id == current_user.id
+      client.destroy
+    end
+    redirect_to clients_path
   end
 
 

@@ -1,21 +1,19 @@
-<h1>Listing clients</h1>
+<h1>Client list I created</h1>
 
 <table>
   <tr>
+    <th>ID</th>
+    <th>ApplicationName</th>
     <th></th>
     <th></th>
     <th></th>
     <th></th>
     <th></th>
     <th></th>
-    <th></th>
-    <th></th>
-    <th></th>    
   </tr>
 
 <% @clients.each do |client| %>
   <tr>
-    <td>id</td>
     <td><%= client.id %></td>
     <td><%= client.application_name %></td>
     <td><%= link_to 'Show', client %></td>
@@ -30,7 +28,10 @@
   </tr>
 <% end %>
 </table>
-
+<br/>
+<%= link_to 'create a new application', new_client_path %>
+<%= link_to 'applications I joined', access_grants_path %>
+<br/>
+<%= link_to 'Back', users_path %>
 <br/>
 
-<%= link_to 'create a new application', new_client_path %>

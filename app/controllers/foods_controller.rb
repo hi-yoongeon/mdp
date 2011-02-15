@@ -3,20 +3,18 @@ class FoodController < ApplicationController
   respond_to :xml, :json
 
 
-  def add_food
+  def new
     
   end
 
 
-  def like_food
-
+  def like
+    
   end
 
 
-  def list_food
-    if request.get?
-      __find(Post)
-    end
+  def list
+    
   end
 
 end
