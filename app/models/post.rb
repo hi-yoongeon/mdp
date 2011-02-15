@@ -4,8 +4,8 @@ class Post < ActiveRecord::Base
   has_many :attach_files, :dependent => :destroy
   has_one :activity, :dependent => :destroy
 
-  belongs_to :users, :class_name => "User", :foreign_key => 'user_id'
-  belongs_to :stores, :class_name => "Store", :foreign_key => 'store_id'
+  belongs_to :user, :class_name => "User", :foreign_key => 'user_id'
+  belongs_to :store, :class_name => "Store", :foreign_key => 'store_id'
 
   validates_length_of :post, :within => 1..300
   validates_presence_of :user_id, :post

@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     respond_with(@users = User.all)
   end
 
-
+  
   def show
     @user = User.find(params[:id])
     respond_with(@user)
