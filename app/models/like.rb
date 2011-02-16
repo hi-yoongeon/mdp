@@ -2,9 +2,9 @@ class Like < ActiveRecord::Base
   has_many :activities, :dependent => :destroy
 
   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
+  
   belongs_to :store, :class_name => "Store", :foreign_key => "foreign_key"
-  belongs_to :bookmark, :class_name => "Bookmark", :foreign_key => "foreign_key"
-  belongs_to :food, :class_name => "Food", :foreign_key => "foreign_key"
+  belongs_to :store_food, :class_name => "StoreFood", :foreign_key => "foreign_key"
   belongs_to :post, :class_name => "Post", :foreign_key => "foreign_key"
 
   validates_presence_of :user_id, :foreign_key, :object

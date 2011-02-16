@@ -1,4 +1,5 @@
 class Activity < ActiveRecord::Base
+  
   validates_presence_of :user_id, :user_name, :object_type, :object_name, :object_id, :action
   validates_inclusion_of :action, :in => %w(Store Like Bookmark)
   validates_inclusion_of :object_type, :in => %w(User Post Store StoreFood)

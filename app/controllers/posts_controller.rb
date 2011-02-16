@@ -130,4 +130,11 @@ class PostsController < ApplicationController
     end
   end
 
+
+  def food_list
+    if request.get? and parameters_required :food_name
+      # todo
+    end
+  end
+
 end
