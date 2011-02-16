@@ -1,13 +1,19 @@
 class User < ActiveRecord::Base
-  has_many :clients, :dependent => :destroy, :foreign_key => "user_id"
+  has_one :user_extra_info, :dependent => :destroy
+  has_many :clients, :dependent => :destroy
+  has_namy :access_grants, :dependent => :destroy
   has_many :likes, :dependent => :destroy
   has_many :bookmarks, :dependent => :destroy
-  has_many :posts
-  has_many :attach_files
-  has_many :stores, :dependent => :nullify
-  has_many :activities, :dependent => :destroy
-  has_many :messages
-  has_many :followings, :dependent => :destroy
+  has_many :posts, :dependent => :nullify
+  has_many :attach_files, :dependent => :nullify
+  has_many :stores, :dependent => :nullify, :class_name => "Store", :foreign_key => "reg_user_id"
+  has_many :activities, :dependent => :nullify
+  has_many :sent_messages, :dependent => :nullify, :class_name => "Message", :foreign_key => "sent_user_id"
+  has_many :received_messages, :dependent => :nullify, :class_name => "Message", :foreign_key => "received_user_id"  
+  has_many :followings, :dependent => :destroy, :class_name => "Following" ,:foreign_key => "following_user_id"
+  has_many :followeds, :dependent => :destroy, :class_name => "Following", :foreign_key => "followed_user_id"
+  has_many :user_external_accounts, :dependent => :destroy
+  has_many :user_tags, :dependent => :destroy
 
   validates_length_of :userid, :within => 4..20
   validates_length_of :password, :within => 4..20
