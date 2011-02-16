@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110210025356) do
+ActiveRecord::Schema.define(:version => 20110216084102) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -114,6 +114,14 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
     t.datetime "updated_at"
   end
 
+  create_table "post_tags", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "post_id"
+    t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "posts", :force => true do |t|
     t.integer  "user_id",                         :null => false
     t.integer  "parent_post_id"
@@ -150,6 +158,14 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
     t.datetime "updated_at"
   end
 
+  create_table "store_tags", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "store_id"
+    t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "stores", :force => true do |t|
     t.string   "name",                          :null => false
     t.integer  "reg_user_id",                   :null => false
@@ -173,6 +189,33 @@ ActiveRecord::Schema.define(:version => 20110210025356) do
   create_table "tags", :force => true do |t|
     t.string   "tag",                       :null => false
     t.integer  "count",      :default => 0, :null => false
+    t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_external_accounts", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "service"
+    t.text     "data"
+    t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_extra_infos", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.string   "intro"
+    t.string   "post_count"
+    t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_tags", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "user_id"
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
