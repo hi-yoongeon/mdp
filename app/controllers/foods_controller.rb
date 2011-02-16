@@ -32,7 +32,7 @@ class FoodController < ApplicationController
 
 
   def list
-    if request.get? and parameters_required :store_id
+    if request.get?
       params[:id] = nil
       ret = __find(StoreFood)
       respond_with ret

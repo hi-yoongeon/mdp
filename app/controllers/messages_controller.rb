@@ -8,8 +8,10 @@ class MessagesController < ApplicationController
       msg = Message.new(:sent_user_id => current_user.id, :received_user_id => params[:received_user_id], :message => params[:message])
       if msg.save
         __success(msg)
+        return
       else
         __error(:code => 0, :description => "Failed to send a message")
+        return
       end
     end
   end
