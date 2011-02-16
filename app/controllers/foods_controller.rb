@@ -1,5 +1,5 @@
 class FoodController < ApplicationController
-  before_filter :authentication_required, :only => [:add_food, :like_food]
+  before_filter :authentication_required, :only => [:new, :like]
   respond_to :xml, :json
 
 
@@ -18,3 +18,7 @@ class FoodController < ApplicationController
   end
 
 end
+
+
+
+
