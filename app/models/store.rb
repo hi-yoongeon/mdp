@@ -5,6 +5,7 @@ class Store < ActiveRecord::Base
   has_many :attach_files
   has_many :likes
   has_many :bookmarks
+  has_mant :store_tags, :dependent => :destroy
 
   belongs_to :region, :class_name => "Region", :foreign_key => "position"
   belongs_to :user, :class_name => "User", :foreign_key => "reg_user_id"
