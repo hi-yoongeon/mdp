@@ -30,20 +30,28 @@ class MessagesController < ApplicationController
 
 
   def list
-    if request.get? and parameters_required :type
+    if request.get?
+      ret = __find(Message)
+      respond_with ret
+    end
+  end
+
+
+  def received_list
+    if request.get?
       conditions = {}
-      case params[:type]
-      when "received"
-        conditions[:received_user_id] = current_user.id
-      when "sent"
-        conditions[:sent_user_id] = current_user.id
-      else
-        return
-      end
-      
+      conditions[:received_user_id] = current_user.id
       ret = __find(Message, conditions)
       respond_with ret
     end
+  end
+  
+  
+  def sent_list
+    conditions = {}
+    conditions[:sent_user_id] = current_user.id
+    ret = __find(Message, conditions)
+    respond_with ret    
   end
 
 
