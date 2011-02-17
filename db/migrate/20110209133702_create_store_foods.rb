@@ -4,7 +4,6 @@ class CreateStoreFoods < ActiveRecord::Migration
       t.integer :user_id, :null => false
       t.integer :food_id, :null => false
       t.integer :store_id, :null => false
-      t.string :food_name, :null => false
       t.integer :like_count, :null => false, :default => 0
       t.integer :sequence
 

@@ -1,8 +1,10 @@
 class CreateFoods < ActiveRecord::Migration
   def self.up
     create_table :foods do |t|
-      t.integer :sequence
+      t.string :name, :null => false
       t.integer :like_count, :null => false, :default => 0
+      t.integer :sequence
+
 
       t.timestamps
     end
