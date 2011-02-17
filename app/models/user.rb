@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   has_one :user_extra_info, :dependent => :destroy
   has_many :clients, :dependent => :destroy
-  has_namy :access_grants, :dependent => :destroy
+  has_many :access_grants, :dependent => :destroy
   has_many :likes, :dependent => :destroy
   has_many :bookmarks, :dependent => :destroy
   has_many :posts, :dependent => :nullify
