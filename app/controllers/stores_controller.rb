@@ -122,9 +122,11 @@ class StoresController < ApplicationController
       params[:id] = nil
       conditions = {}
       conditions[:store_id] = params[:store_id]
-      storefoods = __find(StoreFood, conditions)
-      foods = storefoods.map { |food| food.food }
-      respond_with foods
+      store_foods = __find(StoreFood, conditions)
+      foods = __find(Food, :id => store_foods.food_id)
+      foods_name = foods.map { |food| food.name }
+
+      respond_with foods_name
     end
   end
 
