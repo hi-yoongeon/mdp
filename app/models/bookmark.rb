@@ -1,5 +1,6 @@
 class Bookmark < ActiveRecord::Base
   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
+
   belongs_to :store, :class_name => "Store", :foreign_key => "foreign_key"
   belongs_to :region, :class_name => "Region", :foreign_key => "foreign_key"
   
