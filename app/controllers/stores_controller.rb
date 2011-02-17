@@ -13,10 +13,28 @@ class StoresController < ApplicationController
 
 
   def new
-    
+    if request.post? and parameters_required :store_name, :address, :lat, :lng
+      data = {}
+      data[:name] = params[:store_name]
+      data[:reg_user_id] = current_user.id
+      data[:address] = params[:address]
+      data[:lat] = params[:lat]
+      data[:lng] = params[:lng]
 
+      data[:tel] = params[:tel] if params[:tel]
+      data[:add_address] = params[:add_address] if params[:add_address]
+      data[:website] = params[:website] if params[:website]
+      data[:cover] = params[:cover] if params[:cover]
+
+      store = Store.new(data)
+      if store.save
+        __success(store)
+      else
+        __error(:code => 0, :description => "Failed to save")
+      end
+
+    end
   end
-
 
   def like
     if request.post? and parameters_required :store_id
@@ -99,8 +117,14 @@ class StoresController < ApplicationController
 
 
   def food_list
-    if request.get? and parameters_required :food_name
+    if request.get? and parameters_required :store_id
       # todo
+      params[:id] = nil
+      conditions = {}
+      conditions[:store_id] = params[:store_id]
+      storefoods = __find(StoreFood, conditions)
+      foods = storefoods.map { |food| food.food }
+      respond_with foods
     end
   end
 

@@ -79,8 +79,8 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
 
   create_table "foods", :force => true do |t|
     t.string   "name",                      :null => false
-    t.integer  "sequence"
     t.integer  "like_count", :default => 0, :null => false
+    t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -149,9 +149,9 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
   end
 
   create_table "store_foods", :force => true do |t|
+    t.integer  "user_id",                   :null => false
     t.integer  "food_id",                   :null => false
     t.integer  "store_id",                  :null => false
-    t.string   "food_name",                 :null => false
     t.integer  "like_count", :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
@@ -167,28 +167,26 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
   end
 
   create_table "stores", :force => true do |t|
-    t.string   "name",                          :null => false
-    t.integer  "reg_user_id",                   :null => false
-    t.integer  "region_id",                     :null => false
+    t.string   "name",                            :null => false
+    t.integer  "reg_user_id",                     :null => false
     t.string   "tel"
-    t.string   "address",                       :null => false
+    t.string   "address",                         :null => false
     t.string   "add_address"
     t.string   "website"
     t.text     "cover"
-    t.string   "lat",                           :null => false
-    t.string   "lng",                           :null => false
-    t.integer  "bookmark_count", :default => 0, :null => false
-    t.integer  "like_count",     :default => 0, :null => false
-    t.integer  "memo_count",     :default => 0, :null => false
-    t.integer  "image_count",    :default => 0, :null => false
+    t.float    "lat",            :default => 0.0, :null => false
+    t.float    "lng",            :default => 0.0, :null => false
+    t.integer  "bookmark_count", :default => 0,   :null => false
+    t.integer  "like_count",     :default => 0,   :null => false
+    t.integer  "memo_count",     :default => 0,   :null => false
+    t.integer  "image_count",    :default => 0,   :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "tags", :force => true do |t|
-    t.string   "tag",                       :null => false
-    t.integer  "count",      :default => 0, :null => false
+    t.string   "tag",        :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -56,7 +56,7 @@ class PostsController < ApplicationController
 
 
   def like
-    if request.get? and parameters_required :post_id
+    if request.post? and parameters_required :post_id
       # todo
       # create like object
       like = Like.new(:user_id => current_user.id, :object => "Post", :foreign_key => params[:post_id])
