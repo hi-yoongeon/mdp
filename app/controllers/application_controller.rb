@@ -17,7 +17,11 @@ class ApplicationController < ActionController::Base
         msg = "The access token is invalid"
       end
     else
-      msg = "Access token parameter is required"
+      if current_user
+        return true
+      else
+        msg = "Access token parameter is required"
+      end
     end
     
     __error(:code => 0, :description => msg)

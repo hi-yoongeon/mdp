@@ -109,7 +109,10 @@ class UsersController < ApplicationController
       end
     end
   end
+  
+  
 
+  
 
   protected
   def user_authentication_required
@@ -126,4 +129,7 @@ class UsersController < ApplicationController
 
   
 
+
+
+  
 end
