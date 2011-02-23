@@ -5,6 +5,7 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'will_paginate', '3.0.pre2'
 gem 'twitter'
 gem 'oauth'
+gem 'acts_as_api'
 
 group :development do
   gem 'rspec-rails', '2.4.1'

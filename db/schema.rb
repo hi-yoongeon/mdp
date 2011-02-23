@@ -115,8 +115,9 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
   end
 
   create_table "post_tags", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "post_id"
+    t.integer  "tag_id",                    :null => false
+    t.integer  "post_id",                   :null => false
+    t.integer  "count",      :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -159,8 +160,9 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
   end
 
   create_table "store_tags", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "store_id"
+    t.integer  "tag_id",                    :null => false
+    t.integer  "store_id",                  :null => false
+    t.integer  "count",      :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -212,8 +214,9 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
   end
 
   create_table "user_tags", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "user_id"
+    t.integer  "tag_id",                    :null => false
+    t.integer  "user_id",                   :null => false
+    t.integer  "count",      :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"

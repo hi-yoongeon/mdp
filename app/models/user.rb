@@ -1,4 +1,5 @@
-class User < ActiveRecord::Base
+class User < ApplicationModel#ActiveRecord::Base
+  
   has_one :user_extra_info, :dependent => :destroy
   has_many :clients, :dependent => :destroy
   has_many :access_grants, :dependent => :destroy
@@ -13,7 +14,7 @@ class User < ActiveRecord::Base
   has_many :followings, :dependent => :destroy, :class_name => "Following" ,:foreign_key => "following_user_id"
   has_many :followeds, :dependent => :destroy, :class_name => "Following", :foreign_key => "followed_user_id"
   has_many :user_external_accounts, :dependent => :destroy
-  has_many :user_tags, :dependent => :destroy
+  has_many :tags, :class_name => "UserTag", :foreign_key => "user_id",  :dependent => :destroy
 
   validates_length_of :userid, :within => 4..20
   validates_length_of :password, :within => 4..20
@@ -22,9 +23,12 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :userid, :email
   validates_confirmation_of :password
   validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "Invalid email"
-
   attr_protected :id, :salt
   attr_accessor :password, :password_confirmation
+
+  attr_render :public => [ :userid, :nick]
+  attr_render :private => [:salt, :hashed_password, :email]
+
  
   def self.authenticate(userid, pass)
    user = find(:first, :conditions=>["userid = ?", userid])
@@ -51,8 +55,6 @@ class User < ActiveRecord::Base
   def self.encrypt(pass, salt)
     Digest::SHA1.hexdigest(pass + salt)
   end
-
-  
 
 
 end
