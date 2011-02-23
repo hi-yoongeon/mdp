@@ -10,8 +10,7 @@ class Post < ApplicationModel#ActiveRecord::Base
   validates_presence_of :user_id, :post
   after_create :update_sequence  
 
-  attr_render :public => [ :user_id, :post ]
-  attr_render :private => [ :like_count ]
+  attr_render :private => []
 
   
   private

@@ -102,7 +102,7 @@ class PostsController < ApplicationController
     if request.get?
       params[:id] = nil # remove id parameter for correct result
       ret = __find(Post)
-      respond_with( ret, :include => [:user])
+      __respond_with ret, :include => [:user]
     end
   end
   
@@ -113,8 +113,7 @@ class PostsController < ApplicationController
       params[:id] = nil # remove id parameter for correct result
       conditions = {}
       ret = __find(Post, conditions)
-      
-      respond_with( ret, :show => [:public, :date], :except => [], :include => [:user])
+      __respond_with( ret, :show => [:public, :date], :except => [], :include => [:user])
     end    
   end
 

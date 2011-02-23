@@ -130,4 +130,22 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def __respond_with(resource, options={})
+    if current_user
+      options[:auth] = current_user
+    end
+
+    respond_to do |format|
+      format.json do 
+        options[:json] = resource
+        render options
+      end
+      format.xml do 
+        root = resource.is_a?(Array)? resource.first.class.to_s.downcase : resource.class.to_s.downcase
+        render :template => "xmls/xml", :text => resource.as_json(options).to_xml(:root => root)
+      end
+      format.html { render }
+    end
+  end
+    
 end

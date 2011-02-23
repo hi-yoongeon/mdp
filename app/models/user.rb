@@ -26,7 +26,6 @@ class User < ApplicationModel#ActiveRecord::Base
   attr_protected :id, :salt
   attr_accessor :password, :password_confirmation
 
-  attr_render :public => [ :userid, :nick]
   attr_render :private => [:salt, :hashed_password, :email]
 
  

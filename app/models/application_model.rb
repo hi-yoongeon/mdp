@@ -5,43 +5,46 @@ class ApplicationModel < ActiveRecord::Base
 
 
   def self.attr_render(attrs = {})
-    @attr_public = attrs[:public] if attrs[:public]
-    @attr_private = attrs[:private] if attrs[:private]
+    if attrs[:private] 
+      if attrs[:private].is_a?(Array)
+        @attr_private = attrs[:private]
+      else
+        @attr_private = [attrs[:private]]         
+      end
+    end
   end
   
-  def self.attr_public
-    @attr_public
-  end
-
   def self.attr_private
     @attr_private
   end
 
-  def as_json(options = {})
-    options[:show] = :default if options[:show].nil?
-
-    json = {}
-    attributes = DEFAULT
+  def resource_owner?(resource, current_user)
+    return false if current_user.nil?
     
-    options[:show] = [options[:show]] unless options[:show].is_a?(Array)
-    for mode in options[:show]
-      case mode.to_sym
-      when :private
-        attributes += self.class.attr_private
-      when :public
-        attributes += self.class.attr_public
-      when :date
-        attributes += DATE
-      when :all
-        attributes = self.class.column_names.map {|attr| attr.to_sym}
-      end
+    case resource.class
+    when User
+      return resource[:id] == current_user.id
+    else 
+      return resource[:user_id] == current_user.id
+    end
+  end
+  
+  def as_json(options)
+    if options.nil? 
+      options = {}
     end
 
-
+    json = {}
+    attributes = self.class.column_names.map {|attr| attr.to_sym}
+    
+    options[:except] = [] unless options[:except]
     options[:except] = [options[:except]] unless options[:except].is_a?(Array)
+    
+    if !self.class.attr_private.nil? and !resource_owner?(self, options[:auth])
+      options[:except] += self.class.attr_private
+    end
+
     attributes -= options[:except]
-    
-    
     
     for attr in attributes
       json[attr] = self[attr]
@@ -65,9 +68,4 @@ class ApplicationModel < ActiveRecord::Base
     return json
   end  
 
-
-   def to_xml(options = {}, &block)
-     super
-   end
-   
 end
