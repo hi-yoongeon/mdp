@@ -1,8 +1,5 @@
 class ApplicationModel < ActiveRecord::Base
   self.abstract_class = true
-  DATE = [:created_at, :updated_at]
-  DEFAULT = [:id]
-
 
   def self.attr_render(attrs = {})
     if attrs[:private] 
