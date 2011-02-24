@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 class MatjiFileCacheManager
 
   def initialize(user_id)
@@ -13,47 +14,37 @@ class MatjiFileCacheManager
 
   def add_follower(user_id)
     filename = @full_path + "/follower"
-    @contents = ""
-
-    File.new(filename, "w") unless File.exist? filename
-    
-    File.open(filename, "r") do |file|
-      @contents = file.gets.to_s
-      @contents << user_id.to_s
+    File.new(filename, "w") unless File.exist? filename    
+    File.open(filename, "a") do |file|
+      file << user_id.to_s + ","
     end
-
-    File.open(filename, "w") do |file|
-      file.puts @contents
-
-    end
-
-
-
-
   end
+
 
   def add_following(user_id)
     filename = @full_path + "/following"
-    
     File.new(filename, "w") unless File.exist? filename
-    File.open(filename, "w") do |file|
-      puts file
+    File.open(filename, "a") do |file|
+      file << user_id.to_s + ","
     end
   end
 
   def remove_follower(user_id)
-    File.open(filename, "w") do |file|
-      puts file
+    filename = @full_path + "/follower"
+    File.open(filename, "a") do |file|
+      file.split(",")
     end
   end
 
   def remove_following(user_id)
-    File.open(filename, "w") do |file|
+    filename = @full_path + "/following"
+    File.open(filename, "a") do |file|
       puts file
     end
   end
 
   def add_profile_img(img)
+
   end
 
   def follower
@@ -92,7 +83,7 @@ end
 
 
 mfcm = MatjiFileCacheManager.new(100000004)
-mfcm.add_follower(100000005)
+mfcm.remove_follower(100000005)
 
 
 
