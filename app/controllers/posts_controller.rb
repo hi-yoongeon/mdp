@@ -32,6 +32,14 @@ class PostsController < ApplicationController
       
       post = Post.new(data)
       if post.save
+        # todo !!
+        # attachfile process
+        
+        if params[:tags] and !params[:tags].empty?
+          # add tags
+          Tag.generate(:tags => params[:tags], :user_id => current_user.id, :post_id => post.id)
+        end
+
         __success(post)
       else
         __error(:code => 0, :description => "Failed to save")
@@ -46,6 +54,7 @@ class PostsController < ApplicationController
       post = Post.find(params[:post_id])
       if post.user_id == current_user.id
         post.destroy
+
         __success()
       else
         __error(:code => 0, :description => "Non authentication")
@@ -56,7 +65,7 @@ class PostsController < ApplicationController
 
 
   def like
-    if request.post? and parameters_required :post_id
+    if request.get? and parameters_required :post_id
       # todo
       # create like object
       like = Like.new(:user_id => current_user.id, :object => "Post", :foreign_key => params[:post_id])
@@ -93,7 +102,7 @@ class PostsController < ApplicationController
     if request.get?
       params[:id] = nil # remove id parameter for correct result
       ret = __find(Post)
-      respond_with ret
+      __respond_with ret, :include => [:user]
     end
   end
   
@@ -104,7 +113,7 @@ class PostsController < ApplicationController
       params[:id] = nil # remove id parameter for correct result
       conditions = {}
       ret = __find(Post, conditions)
-      respond_with ret
+      __respond_with( ret, :except => [], :include => [:user])
     end    
   end
 
@@ -129,6 +138,9 @@ class PostsController < ApplicationController
       respond_with ret
     end
   end
+
+
+  
 
 
 end

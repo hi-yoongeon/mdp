@@ -1,5 +1,5 @@
 class StoreFood < ActiveRecord::Base
-  has_many :likes
+  has_many :likes, :conditions => {:object => "StoreFood"}, :foreign_key => "foreign_key"
 
   belongs_to :store, :class_name => "Store", :foreign_key => "store_id"
   belongs_to :food, :class_name => "Food", :foreign_key => "food_id"

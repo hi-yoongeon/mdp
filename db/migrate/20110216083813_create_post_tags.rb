@@ -1,9 +1,8 @@
 class CreatePostTags < ActiveRecord::Migration
   def self.up
     create_table :post_tags do |t|
-      t.integer :id
-      t.integer :tag_id
-      t.integer :post_id
+      t.integer :tag_id, :null => false
+      t.integer :post_id, :null => false
       t.integer :sequence
       t.datetime :created_at
       t.datetime :updated_at

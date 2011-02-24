@@ -39,7 +39,7 @@ class ExternalAccountsController < ApplicationController
     end
   end
   
-  def destroy
+  def delete
     if request.post? and parameters_required :external_account_id
       extAccount = UserExternalAccount.find(params[:external_account_id])
       if extAccount.user_id == current_user.id
@@ -86,7 +86,7 @@ class ExternalAccountsController < ApplicationController
   def __callback_twitter
     request_token = OAuth::RequestToken.new(twitter, session['request_token'], session['request_secret'])
     access_token = request_token.get_access_token(:oauth_verfier => params[:oauth_verifier])
-      
+    
     #reset_session
     access_token = access_token.token
     access_secret = access_token.secret

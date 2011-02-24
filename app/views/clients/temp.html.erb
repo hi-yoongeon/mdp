@@ -1,11 +1,16 @@
 <%= form_tag(:controller => "posts", :action => "new", :method =>
   "post", :format => "json") do %>
-  <%= label_tag "post" %>
+  <%= label_tag "Post" %>
   <%= text_field_tag "post" %>
   <!-- Test code for post -->
+  <br/>
+  <%= label_tag "Tag (using ',' delimeter)" %>
+  <%= text_field_tag "tags" %>
+  <br/>
+  <%= label_tag "AccessToken" %> 
   <%= text_field_tag "access_token" ,"" %>
   <br/>
-  
+ 
   <%= submit_tag "Send" %>
 
 <table>
