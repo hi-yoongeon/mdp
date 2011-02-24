@@ -94,7 +94,6 @@ class ApplicationController < ActionController::Base
       offset = (params[:page].to_i - 1) * limit
     end
 
-
     ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset)
     return ret
   end
@@ -135,6 +134,10 @@ class ApplicationController < ActionController::Base
       options[:auth] = current_user
     end
 
+    if params[:except]
+       except_attrs = params[:except].split(",").map {|attr| attr.to_sym}
+       options[:except] += except_attrs
+    end	
     respond_to do |format|
       format.json do 
         options[:json] = resource

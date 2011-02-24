@@ -113,7 +113,7 @@ class PostsController < ApplicationController
       params[:id] = nil # remove id parameter for correct result
       conditions = {}
       ret = __find(Post, conditions)
-      __respond_with( ret, :show => [:public, :date], :except => [], :include => [:user])
+      __respond_with( ret, :except => [], :include => [:user])
     end    
   end
 
