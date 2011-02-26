@@ -133,6 +133,19 @@ class ApplicationController < ActionController::Base
     if current_user
       options[:auth] = current_user
     end
+    if options[:include].nil?
+      options[:include] = nil
+    end
+    if options[:except].nil?
+      options[:except] = nil
+    end
+    if params[:include]
+      options[:include] += params[:include].split(",").map(&:to_sym)
+    end
+    if params[:except]
+      options[:except] += params[:except].split(",")
+    end
+      
 
     if params[:except]
        except_attrs = params[:except].split(",").map {|attr| attr.to_sym}

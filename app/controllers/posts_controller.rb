@@ -7,7 +7,7 @@ class PostsController < ApplicationController
     if request.get? and parameters_required :post_id
       params[:id] = params[:post_id]
       ret = __find(Post)
-      respond_with ret
+      __respond_with ret
     end
   end
 
@@ -101,19 +101,29 @@ class PostsController < ApplicationController
   def list
     if request.get?
       params[:id] = nil # remove id parameter for correct result
-      ret = __find(Post)
-      __respond_with ret, :include => [:user]
+      conditions = {:parent_post_id => nil}
+      ret = __find(Post, conditions)
+      __respond_with ret, :include => [], :except => []
     end
   end
   
 
+  def reply_list
+    if request.get? and parameters_required :post_id
+      params[:id] = nil
+      conditions = {:parent_post_id => params[:post_id]}
+      ret = __find(Post, conditions)
+      __respond_with ret, :include => [], :except => []
+    end
+  end
+  
 
   def my_list
     if request.get?
       params[:id] = nil # remove id parameter for correct result
-      conditions = {}
+      conditions = {:parent_post_id => nil}
       ret = __find(Post, conditions)
-      __respond_with( ret, :except => [], :include => [:user])
+      __respond_with( ret, :except => [], :include => [])
     end    
   end
 
@@ -124,8 +134,9 @@ class PostsController < ApplicationController
       conditions = {}
       conditions[:lat] = params[:lat_sw].to_f .. params[:lat_ne].to_f
       conditions[:lng] = params[:lng_sw].to_f .. params[:lng_ne].to_f
+      conditions[:parent_post_id] = nil
       ret = __find(Post, conditions)
-      respond_with ret
+      __respond_with ret
     end
   end
   
@@ -133,9 +144,9 @@ class PostsController < ApplicationController
   def region_list
     if request.get? and parameters_required # to do
       params[:id] = nil
-      condnitions = {}
+      condnitions = {:parent_post_id => nil}
       ret = __find(Post, conditions)
-      respond_with ret
+      __respond_with ret
     end
   end
 
