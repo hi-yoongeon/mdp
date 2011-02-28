@@ -1,4 +1,4 @@
-class Store < ActiveRecord::Base
+class Store < ApplicationModel#ActiveRecord::Base
   has_many :posts , :dependent => :nullify
   has_many :activities
   has_many :store_foods, :dependent => :destroy

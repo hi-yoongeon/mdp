@@ -47,6 +47,7 @@ class ApplicationModel < ActiveRecord::Base
       
       for model in options[:include]
         opt = {}
+        opt[:auth] = options[:auth]
         opt[:except] = []
         for attr in options[:except]
           temp = attr.split(".")
@@ -57,17 +58,27 @@ class ApplicationModel < ActiveRecord::Base
 
         options[:except] -= opt[:except]
         
-        ret = self.method(model).call.as_json(opt)
-        if !ret.empty? and !ret.first.empty?
-          json[model.to_s] = ret
+        begin
+          ret = self.method(model).call.as_json(opt)
+          if !ret.empty? and !ret.first.empty?
+            json[model.to_s] = ret
+          else
+            json[model.to_s] = nil
+          end      
+          
+        rescue Exception => e  
         end
+
       end
     end
 
     options[:except].map!(&:to_sym)
-    unless resource_owner?(self, options[:auth])
+    if !resource_owner?(self, options[:auth])
       options[:except] += self.class.get_attr_private
+    else
+
     end
+    
     attributes -= options[:except]
     for attr in attributes
       json[attr] = self[attr]

@@ -1,4 +1,4 @@
-class Message < ActiveRecord::Base
+class Message < ApplicationModel#ActiveRecord::Base
   belongs_to :sent_user, :class_name => "User", :foreign_key => "sent_user_id"
   belongs_to :received_user, :class_name => "User", :foreign_key => "received_user_id"
 

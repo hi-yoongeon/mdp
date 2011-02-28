@@ -1,4 +1,4 @@
-class AttachFile < ActiveRecord::Base
+class AttachFile < ApplicationModel#ActiveRecord::Base
   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
   belongs_to :store, :class_name => "Store", :foreign_key => "store_id"
   belongs_to :post, :class_name => "Post", :foreign_key => "post_id"
