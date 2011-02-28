@@ -6,13 +6,13 @@ class UsersController < ApplicationController
 
   def index
     @user = current_user
-    respond_with(@users = User.all)
+    __respond_with(@users = User.all)
   end
 
   
   def show
     @user = User.find(params[:id])
-    respond_with(@user)
+    __respond_with(@user)
   end
 
 
@@ -109,10 +109,9 @@ class UsersController < ApplicationController
       end
     end
   end
-  
-  
+ 
 
-  
+ 
 
   protected
   def user_authentication_required
@@ -127,9 +126,7 @@ class UsersController < ApplicationController
     return false
   end
 
-  
 
 
 
-  
 end

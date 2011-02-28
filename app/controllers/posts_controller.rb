@@ -92,7 +92,6 @@ class PostsController < ApplicationController
       else
         __error(:code => 0, :description => "Failed to save like ")
       end
-
     end
   end
 

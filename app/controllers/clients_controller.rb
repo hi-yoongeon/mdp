@@ -12,7 +12,7 @@ class ClientsController < ApplicationController
 
   def show
     @client = Client.find(params[:id])
-    respond_with(@client)
+    __respond_with(@client)
   end
 
   def new
@@ -27,17 +27,14 @@ class ClientsController < ApplicationController
     client_secret = token[10, 40]
     @client = Client.new(:application_name => params[:application_name], :redirect_uri => params[:redirect_uri], :client_id => client_id , :client_secret => client_secret, :user_id => current_user.id)
     
-
     if @client.save
-      respond_with(@client)
+     redirect_to (@client)
     end
   end
-
 
   def edit
     @client = Client.find(params[:id])
   end
-
 
   def update
     @client = Client.find(params[:id])
@@ -63,7 +60,6 @@ class ClientsController < ApplicationController
     @posts = Post.all
   end
 
-
   protected
   def client_authentication_required
     if login_required
@@ -77,7 +73,5 @@ class ClientsController < ApplicationController
     render :template => 'errors/error'
     return false
   end  
-
-
   
 end

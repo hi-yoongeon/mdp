@@ -32,7 +32,7 @@ class MessagesController < ApplicationController
   def list
     if request.get?
       ret = __find(Message)
-      respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
 
@@ -42,7 +42,7 @@ class MessagesController < ApplicationController
       conditions = {}
       conditions[:received_user_id] = current_user.id
       ret = __find(Message, conditions)
-      respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
   
@@ -51,7 +51,7 @@ class MessagesController < ApplicationController
     conditions = {}
     conditions[:sent_user_id] = current_user.id
     ret = __find(Message, conditions)
-    respond_with ret    
+    __respond_with ret, :include => [], :except => []
   end
 
 
@@ -66,6 +66,5 @@ class MessagesController < ApplicationController
       end
     end
   end
-
 
 end

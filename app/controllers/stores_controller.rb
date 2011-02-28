@@ -8,7 +8,7 @@ class StoresController < ApplicationController
       params[:id] = params[:store_id]
       ret = __find(Store)
     end
-    respond_with ret
+    __respond_with ret, :include => [], :except => []
   end
 
 
@@ -86,7 +86,7 @@ class StoresController < ApplicationController
       ret = __find(Store)
     end
 
-    respond_with ret
+    __respond_with ret, :include => [], :except => []
   end
 
   
@@ -100,7 +100,7 @@ class StoresController < ApplicationController
       ret = __find(Store, conditions)
     end
     
-    respond_with ret
+    __respond_with ret, :include => [], :except => []
   end
 
 
@@ -111,7 +111,7 @@ class StoresController < ApplicationController
       conditions[:object] = "Store"
       bookmarks = __find(Bookmark, conditions)
       bookmarked_stores = bookmarks.map { |bookmark| bookmark.store }
-      respond_with bookmarked_stores
+      __respond_with bookmarked_stores, :include => [], :except => []
     end
   end
 
@@ -126,7 +126,7 @@ class StoresController < ApplicationController
       foods = __find(Food, :id => store_foods.food_id)
       foods_name = foods.map { |food| food.name }
 
-      respond_with foods_name
+      __respond_with foods_name, :include => [], :except => []
     end
   end
 

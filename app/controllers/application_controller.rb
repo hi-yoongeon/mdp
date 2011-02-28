@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   
 
   def authentication_required
-    if params[:access_token]
+    if params[:access_token] and !params[:access_token].empty?
       # Validate access_token whether exists and not expired
       if AccessGrant.access_token_exists?(params[:access_token])
 #         if AccessGrant.access_token_expired?(params[:access_token])
@@ -126,13 +126,17 @@ class ApplicationController < ActionController::Base
     respond_with(ret) do |format|
       format.xml {render :xml => ret}
       format.json {render :json => ret}
+      format.html {render :template => 'xmls/xml'}
     end
   end
   
   def __respond_with(resource, options={})
-    if current_user
-      options[:auth] = current_user
+    if options.nil? 
+      options = {}
     end
+    
+    options[:auth] = current_user
+
     if options[:include].nil?
       options[:include] = nil
     end

@@ -24,7 +24,7 @@ class ExternalAccountsController < ApplicationController
       params[:id] = params[:external_account_id]
       extAccount = __find(UserExternalAccount)
       if extAccount.user_id == current_user.id
-        respond_with extAccount
+        __respond_with extAccount, :include => [], :except => []
       else
         __error(:code => 0, :description => "Non authentication")
       end

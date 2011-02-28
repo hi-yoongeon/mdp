@@ -14,15 +14,12 @@ class FoodController < ApplicationController
           __error(:code => 0, :description => "Failed to save food")
           return
         end
-        
       else
         create_store_food(food.id)
         return
       end
     end
   end
-
-
 
   def like
     if request.post? and parameters_required :store_id, :store_food_id
@@ -61,7 +58,7 @@ class FoodController < ApplicationController
     if request.get?
       params[:id] = nil
       ret = __find(StoreFood)
-      respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
 
@@ -74,7 +71,7 @@ class FoodController < ApplicationController
       conditions[:store_id] = params[:store_id]
       ret = __find(StoreFood, conditions)
 
-      respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
 
@@ -110,9 +107,4 @@ class FoodController < ApplicationController
     end
   end
 
-
 end
-
-
-
-

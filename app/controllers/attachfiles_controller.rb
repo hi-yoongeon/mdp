@@ -12,7 +12,7 @@ class AttachfilesController < ApplicationController
       end
 
       ret = __find(AttachFile, conditions)
-      respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
 
