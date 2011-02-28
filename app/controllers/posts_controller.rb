@@ -7,7 +7,7 @@ class PostsController < ApplicationController
     if request.get? and parameters_required :post_id
       params[:id] = params[:post_id]
       ret = __find(Post)
-      __respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
 
@@ -19,7 +19,6 @@ class PostsController < ApplicationController
       data[:user_id] = current_user.id
       data[:lat] = 0
       data[:lng] = 0
-      
       if params[:store_id]
         data[:store_id] = params[:store_id]
         store = Store.find(params[:store_id])
@@ -29,22 +28,18 @@ class PostsController < ApplicationController
         data[:lat] = params[:lat] if params[:lat]
         data[:lng] = params[:lng] if params[:lng]
       end
-      
       post = Post.new(data)
       if post.save
         # todo !!
         # attachfile process
-        
         if params[:tags] and !params[:tags].empty?
           # add tags
           Tag.generate(:tags => params[:tags], :user_id => current_user.id, :post_id => post.id)
         end
-
         __success(post)
       else
         __error(:code => 0, :description => "Failed to save")
       end
-
     end
   end
 
@@ -54,14 +49,12 @@ class PostsController < ApplicationController
       post = Post.find(params[:post_id])
       if post.user_id == current_user.id
         post.destroy
-
         __success()
       else
         __error(:code => 0, :description => "Non authentication")
       end
     end
   end
-
 
 
   def like
@@ -94,7 +87,6 @@ class PostsController < ApplicationController
       end
     end
   end
-
 
 
   def list
@@ -135,22 +127,19 @@ class PostsController < ApplicationController
       conditions[:lng] = params[:lng_sw].to_f .. params[:lng_ne].to_f
       conditions[:parent_post_id] = nil
       ret = __find(Post, conditions)
-      __respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
-  
+
 
   def region_list
     if request.get? and parameters_required # to do
       params[:id] = nil
       condnitions = {:parent_post_id => nil}
       ret = __find(Post, conditions)
-      __respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
-
-
-  
 
 
 end

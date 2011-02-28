@@ -2,6 +2,7 @@ class FoodController < ApplicationController
   before_filter :authentication_required, :except => [:list]
   respond_to :xml, :json
 
+
   def new
     if request.post? and parameters_required :store_id, :food_name
       food = Food.find(:first, :conditions => ["name = ?", params[:food_name]])
@@ -21,6 +22,7 @@ class FoodController < ApplicationController
     end
   end
 
+
   def like
     if request.post? and parameters_required :store_id, :store_food_id
       like = Like.new(:user_id => current_user.id, :object => "Store", :foreign_key => param[:store_id])
@@ -37,16 +39,14 @@ class FoodController < ApplicationController
         data[:object_complement_id] = params[:store_food_id]
         food = Food.find(params[:store_food_id])
         data[:object_complement_name] = food.name
-
         post = Activity.generate(data);
-        if 
+        if post
           __success(post)
           return
         else
           __error(:code => 0, :description => "Failed to generate activity")
           return
         end
-
       else
         __error(:code => 0, :description => "Failed to save like ")
       end
@@ -63,18 +63,15 @@ class FoodController < ApplicationController
   end
 
 
-
   def store_list
     if request.get? and parameters_required :store_id
       params[:id] = nil
       conditions = {}
       conditions[:store_id] = params[:store_id]
       ret = __find(StoreFood, conditions)
-
       __respond_with ret, :include => [], :except => []
     end
   end
-
 
 
   def delete
@@ -106,5 +103,6 @@ class FoodController < ApplicationController
       __error(:code => 0, :description => "Failed to save store_food")
     end
   end
+
 
 end

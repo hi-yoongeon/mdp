@@ -17,5 +17,4 @@ class NoticesController < ApplicationController
       __respond_with ret
     end
   end
-
 end

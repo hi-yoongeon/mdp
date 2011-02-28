@@ -5,7 +5,6 @@ class CreateFoods < ActiveRecord::Migration
       t.integer :like_count, :null => false, :default => 0
       t.integer :sequence
 
-
       t.timestamps
     end
   end

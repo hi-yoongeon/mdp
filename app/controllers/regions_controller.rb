@@ -32,5 +32,6 @@ class RegionsController < ApplicationController
       __respond_with bookmarked_retions, :include => [], :except => []
     end
   end
+
   
 end
