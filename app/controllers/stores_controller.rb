@@ -1,5 +1,5 @@
 class StoresController < ApplicationController
-  before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmarked_list]
+  before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmark, :bookmarked_list]
   respond_to :xml, :json
 
 
@@ -7,8 +7,8 @@ class StoresController < ApplicationController
     if request.get? and parameters_required :store_id
       params[:id] = params[:store_id]
       ret = __find(Store)
-    end
     __respond_with ret, :include => [], :except => []
+    end
   end
 
 
@@ -117,6 +117,16 @@ class StoresController < ApplicationController
       foods = __find(Food, :id => store_foods.food_id)
       foods_name = foods.map { |food| food.name }
       __respond_with foods_name, :include => [], :except => []
+    end
+  end
+
+
+  def my_list
+    if request.get?
+      params[:id] = nil
+      conditions[:user_id] = current_user.id
+      ret = __find(Store, conditions)
+      __respond_with ret, :include => [], :except => []
     end
   end
 

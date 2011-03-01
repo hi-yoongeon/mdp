@@ -1,5 +1,5 @@
 class FoodController < ApplicationController
-  before_filter :authentication_required, :except => [:list]
+  before_filter :authentication_required, :except => [:list, :store_list]
   respond_to :xml, :json
 
 

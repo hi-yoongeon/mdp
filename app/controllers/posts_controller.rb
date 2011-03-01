@@ -112,9 +112,9 @@ class PostsController < ApplicationController
   def my_list
     if request.get?
       params[:id] = nil # remove id parameter for correct result
-      conditions = {:parent_post_id => nil}
+      conditions[:user_id] = current_user.id
       ret = __find(Post, conditions)
-      __respond_with( ret, :except => [], :include => [])
+      __respond_with ret, :include => [], :except => [] 
     end    
   end
 

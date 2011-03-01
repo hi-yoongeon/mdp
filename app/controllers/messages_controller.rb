@@ -48,10 +48,12 @@ class MessagesController < ApplicationController
   
   
   def sent_list
-    conditions = {}
-    conditions[:sent_user_id] = current_user.id
-    ret = __find(Message, conditions)
-    __respond_with ret, :include => [], :except => []
+    if request.get?
+      conditions = {}
+      conditions[:sent_user_id] = current_user.id
+      ret = __find(Message, conditions)
+      __respond_with ret, :include => [], :except => []
+    end
   end
 
 
@@ -66,5 +68,6 @@ class MessagesController < ApplicationController
       end
     end
   end
+
 
 end

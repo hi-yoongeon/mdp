@@ -30,7 +30,6 @@ class UsersController < ApplicationController
         redirect_to :action => "index"
       else
         flash[:warning] = "Signup unsuccessful"
-
       end
     end
   end
@@ -79,7 +78,7 @@ class UsersController < ApplicationController
     end
   end
 
-  
+
   def logout
     session[:user] = nil
     flash[:message] = 'Logged out'
@@ -92,9 +91,9 @@ class UsersController < ApplicationController
       u= User.find_by_email(params[:user][:email])
       if u and u.send_new_password
         flash[:message]  = "A new password has been sent by email."
-        redirect_to :action=>'login'
+        redirect_to :action => 'login'
       else
-        flash[:warning]  = "Couldn't send password"
+        flash[:warning] = "Couldn't send password"
       end
     end
   end
@@ -105,13 +104,11 @@ class UsersController < ApplicationController
     if request.post?
       @user.update_attributes(:password=>params[:user][:password], :password_confirmation => params[:user][:password_confirmation])
       if @user.save
-        flash[:message]="Password Changed"
+        flash[:message] = "Password Changed"
       end
     end
   end
- 
 
- 
 
   protected
   def user_authentication_required
@@ -120,13 +117,10 @@ class UsersController < ApplicationController
         return true
       end
     end
-    
     msg = 'Non authentication'
     __error(:code => 0, :description => msg, :template => 'errors/error')
     return false
   end
-
-
 
 
 end

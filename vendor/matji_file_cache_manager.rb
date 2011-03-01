@@ -96,6 +96,6 @@ class MatjiFileCacheManager
 end
 
 mfcm = MatjiFileCacheManager.new(100000004)
-#mfcm.add_profile_img(123)
+mfcm.add_follower(100000005)
 #mfcm.remove_follower(100000005)
-
+mfcm.follower
