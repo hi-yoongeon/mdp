@@ -7,7 +7,7 @@ class TagsController < ApplicationController
     if request.get? and parameters_required :tag_id
       params[:id] = params[:tag_id]
       ret = __find(Tag)
-      respond_with ret
+      respond_with ret, :include => [], :except => []
     end
   end
   
@@ -15,7 +15,7 @@ class TagsController < ApplicationController
     if request.get?
       params[:id] = nil
       ret = __find(Tag)
-      respond_with ret
+      respond_with ret, :include => [], :except => []
     end
   end
   
@@ -24,8 +24,7 @@ class TagsController < ApplicationController
       params[:id] = nil
       conditions = {:store_id => params[:store_id]}
       ret = __find(Tag,conditions)
-      respond_with ret 
-      conditions
+      respond_with ret, :include => [], :except => []
     end
   end
 
@@ -34,7 +33,7 @@ class TagsController < ApplicationController
       params[:id] = nil
       conditions = {:user_id => params[:user_id]}
       ret = __find(Tag,conditions)
-      respond_with ret
+      respond_with ret, :include => [], :except => []
     end
   end
   
@@ -43,10 +42,9 @@ class TagsController < ApplicationController
       params[:id] = nil
       conditions = {:post_id => params[:post_id]}
       ret = __find(Tag,conditions)
-      respond_with ret
+      respond_with ret, :include => [], :except => []
     end
   end
-  
   
 
 end

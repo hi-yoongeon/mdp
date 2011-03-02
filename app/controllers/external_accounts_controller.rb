@@ -15,22 +15,23 @@ class ExternalAccountsController < ApplicationController
       when "facebook"
         ret = __create_facebook
       end
-
     end
   end
-  
+
+
   def show
     if reqeust.get? and parameters_required :external_account_id
       params[:id] = params[:external_account_id]
       extAccount = __find(UserExternalAccount)
       if extAccount.user_id == current_user.id
-        respond_with extAccount
+        __respond_with extAccount, :include => [], :except => []
       else
         __error(:code => 0, :description => "Non authentication")
       end
     end
   end
-  
+
+ 
   def list
     if request.get?
       params[:id] = nil
@@ -38,7 +39,8 @@ class ExternalAccountsController < ApplicationController
       extAccount = __find(UserExternalAccount, conditions)
     end
   end
-  
+
+
   def delete
     if request.post? and parameters_required :external_account_id
       extAccount = UserExternalAccount.find(params[:external_account_id])
@@ -49,7 +51,6 @@ class ExternalAccountsController < ApplicationController
         __error(:code => 0, :description => "Non authentication")
       end
     end
-      
   end
 
 
@@ -68,7 +69,8 @@ class ExternalAccountsController < ApplicationController
   def twitter
     twitter ||= OAuth::Consumer.new(@@twitter_consumer_key, @@twitter_consumer_secret, :site => "http://api.twitter.com", :request_endpoint => "http://api.twitter.com", :sign_in => true)
   end
-  
+
+
   def __create_twitter
     request_token = twitter.get_request_token(:oauth_callback => "http://matji.com/external_services/callback?service=twitter")
     session["request_token"] = request_token.token
@@ -79,27 +81,22 @@ class ExternalAccountsController < ApplicationController
 
   
   def __create_facebook
-    
   end
 
 
   def __callback_twitter
     request_token = OAuth::RequestToken.new(twitter, session['request_token'], session['request_secret'])
     access_token = request_token.get_access_token(:oauth_verfier => params[:oauth_verifier])
-    
     #reset_session
     access_token = access_token.token
     access_secret = access_token.secret
-
     oauth_data = ActiveSupport::JSON.encode({:access_token => access_token, :access_secret => access_secret})
     twitterAccount = UserExternalAccount.find(:first, :conditions => ["user_id = ? AND service = ?", current_user.id, "twitter"])
-    
     if twitterAccount.nil?
       twitterAccount = UserExternalAccount.new(:user_id => current_user.id, :service => "twitter", :data => oauth_data)
     else
       twitterAccount.data = oauth_data
     end
-    
     if extAccount.save
       __success(twitterAccount)
     else
@@ -118,7 +115,6 @@ class ExternalAccountsController < ApplicationController
   end
 
 
-  
   def tweet
     twitterAccount = UserExternalAccount.find(:first, :conditions => ["user_id = ? AND service = ?", current_user.id, "twitter"])
     oauth_data = ActiveSupport::JSON.decode(twitterAccount.data)
@@ -128,10 +124,8 @@ class ExternalAccountsController < ApplicationController
       config.oauth_token = oauth_data['access_token']
       config.oauth_token_secret = oauth_data['access_secret']
     end
-    
     Twitter.update("Testing..")
-    
   end
-  
-  
+
+
 end

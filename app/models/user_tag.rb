@@ -1,4 +1,4 @@
-class UserTag < ActiveRecord::Base
+class UserTag < ApplicationModel#ActiveRecord::Base
   belongs_to :tag, :class_name => "Tag", :foreign_key => "tag_id"
   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
 

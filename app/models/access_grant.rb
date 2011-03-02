@@ -1,6 +1,8 @@
-class AccessGrant < ActiveRecord::Base
+class AccessGrant < ApplicationModel
   belongs_to :user
   belongs_to :client
+
+  attr_private_all
   
   protected
   def self.access_token_exists?(token)

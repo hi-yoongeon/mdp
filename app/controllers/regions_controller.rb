@@ -29,8 +29,9 @@ class RegionsController < ApplicationController
       conditions[:object] = "Region"
       bookmarks = __find(Bookmark, conditions)
       bookmarked_regions = bookmarks.map { |bookmark| bookmark.region }
-      respond_with bookmarked_retions
+      __respond_with bookmarked_retions, :include => [], :except => []
     end
   end
+
   
 end

@@ -7,7 +7,7 @@ class AccessGrantsController < ApplicationController
     @access_grants = AccessGrant.find_all_by_user_id(current_user.id)
     @access_grants = [] if @access_grants.nil?
     
-    respond_with(@access_grants)
+    __respond_with(@access_grants)
   end
 
   def show
@@ -64,13 +64,13 @@ class AccessGrantsController < ApplicationController
   def parameter_valid?
     invalid = false
     if params[:response_type]
-        if params[:client_id].nil?
-          invalid = true
-          @msg = "client_id is missing"
-        elsif params[:redirect_uri].nil?
-          invalid = true
-          @msg = "redirect_uri is missing"          
-        end
+      if params[:client_id].nil?
+        invalid = true
+        @msg = "client_id is missing"
+      elsif params[:redirect_uri].nil?
+        invalid = true
+        @msg = "redirect_uri is missing"          
+      end
       if params[:response_type] == "code"
       elsif params[:response_type] == "password"
         if params[:client_secret].nil?
@@ -78,39 +78,39 @@ class AccessGrantsController < ApplicationController
           @msg = "client_secret is missing"
         elsif params[:userid].nil?
           invalid = true
-          @msg = "userid is missing"          
+          @msg = "userid is missing"
         elsif params[:password].nil?
           invalid = true
-          @msg = "password is missing"          
-        end        
+          @msg = "password is missing"
+        end
       else
         invalid = true
         @msg = "invalid response_type"
       end
       
     elsif params[:grant_type]
-        if params[:grant_type] == "authorization_code"
-          if params[:client_id].nil?
-          elsif params[:client_secret].nil?
-            invalid = true
-            @msg = "client_secret is missing"            
-          elsif params[:code].nil?
-            invalid = true
-            @msg = "code is missing"
-          elsif params[:redirect_uri].nil?
-            invalid = true
-            @msg = "redirect_uri is missing"
-          end
-        else
+      if params[:grant_type] == "authorization_code"
+        if params[:client_id].nil?
+        elsif params[:client_secret].nil?
           invalid = true
-          @msg = "invalid grant_type"
+          @msg = "client_secret is missing"            
+        elsif params[:code].nil?
+          invalid = true
+          @msg = "code is missing"
+        elsif params[:redirect_uri].nil?
+          invalid = true
+          @msg = "redirect_uri is missing"
         end
+      else
+        invalid = true
+        @msg = "invalid grant_type"
+      end
       
     else
       invalid = true
       @msg = "Required parameters are missing(response_type / grant_type)"
     end
-
+    
     if invalid
       @code = 0
       render :template => 'errors/error'
@@ -137,7 +137,7 @@ class AccessGrantsController < ApplicationController
       #====================================
       # response_type "password" validation
       #====================================
-      @client = Client.find(:first, :conditions => ["client_id = ? AND client_secret = ?", params[:client_id],params[:client_secret]])        
+      @client = Client.find(:first, :conditions => ["client_id = ? AND client_secret = ?", params[:client_id],params[:client_secret]])
       if @client.nil?
         invalid = true
         @msg = "client_id or client_secret is incorrect"
@@ -151,10 +151,10 @@ class AccessGrantsController < ApplicationController
 
 
     elsif grant_type == "authorization_code"
-      #============================================      
+      #============================================
       # grant_type "authorization_code" validation
       #============================================
-      @client = Client.find(:first, :conditions => ["client_id = ? AND client_secret = ?", params[:client_id],params[:client_secret]])              
+      @client = Client.find(:first, :conditions => ["client_id = ? AND client_secret = ?", params[:client_id],params[:client_secret]])
       if @client.nil?
         invalid = true
         @msg = "client_id or client_secret is incorrect"

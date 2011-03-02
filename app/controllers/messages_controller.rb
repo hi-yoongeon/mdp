@@ -21,7 +21,7 @@ class MessagesController < ApplicationController
     if request.get? and parameters_required :message_id
       msg = Messasge.find(params[:message_id])
       if msg.sent_user_id == current_user.id or msg.received_user_id == current_user.id
-        respond_with msg
+        __respond_with msg, :include => [], :except => []
       else
         __error(:code => 0, :description => "Non authentication")
       end
@@ -32,7 +32,7 @@ class MessagesController < ApplicationController
   def list
     if request.get?
       ret = __find(Message)
-      respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
 
@@ -42,16 +42,18 @@ class MessagesController < ApplicationController
       conditions = {}
       conditions[:received_user_id] = current_user.id
       ret = __find(Message, conditions)
-      respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
   
   
   def sent_list
-    conditions = {}
-    conditions[:sent_user_id] = current_user.id
-    ret = __find(Message, conditions)
-    respond_with ret    
+    if request.get?
+      conditions = {}
+      conditions[:sent_user_id] = current_user.id
+      ret = __find(Message, conditions)
+      __respond_with ret, :include => [], :except => []
+    end
   end
 
 

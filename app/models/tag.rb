@@ -1,4 +1,4 @@
-class Tag < ActiveRecord::Base
+class Tag < ApplicationModel#ActiveRecord::Base
   has_many :post_tags, :dependent => :destroy
   has_many :user_tags, :dependent => :destroy
   has_many :store_tags, :dependent => :destroy

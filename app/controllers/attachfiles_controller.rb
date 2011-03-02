@@ -10,9 +10,8 @@ class AttachfilesController < ApplicationController
       elsif params[:store_id]
         conditions = {:store_id => params[:store_id]}      
       end
-
       ret = __find(AttachFile, conditions)
-      respond_with ret
+      __respond_with ret, :include => [], :except => []
     end
   end
 

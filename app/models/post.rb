@@ -11,7 +11,7 @@ class Post < ApplicationModel#ActiveRecord::Base
   after_create :update_sequence  
 
   ## private field setting
-  #  attr_private :field
+  #  attr_private :some_field
 
   
   private

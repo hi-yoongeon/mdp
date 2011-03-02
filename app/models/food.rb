@@ -1,4 +1,4 @@
-class Food < ActiveRecord::Base
+class Food < ApplicationModel#ActiveRecord::Base
   has_many :store_food, :dependent => :destroy
   has_many :like
 

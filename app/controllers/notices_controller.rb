@@ -5,7 +5,7 @@ class NoticesController < ApplicationController
   def show
     if reqeust.get? and parameters_required :notice_id
       ret = Notice.find(params[:notice_id])
-      respond_with ret
+      __respond_with ret
     end
   end
 
@@ -14,9 +14,7 @@ class NoticesController < ApplicationController
     if request.get?
       conditions = {}
       ret = __find(Notice, conditions)
-      respond_with ret
+      __respond_with ret
     end
   end
-
-
 end

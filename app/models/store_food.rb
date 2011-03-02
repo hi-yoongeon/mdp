@@ -1,4 +1,4 @@
-class StoreFood < ActiveRecord::Base
+class StoreFood < ApplicationModel#ActiveRecord::Base
   has_many :likes, :conditions => {:object => "StoreFood"}, :foreign_key => "foreign_key"
 
   belongs_to :store, :class_name => "Store", :foreign_key => "store_id"

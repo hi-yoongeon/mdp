@@ -27,7 +27,8 @@ class User < ApplicationModel#ActiveRecord::Base
   attr_accessor :password, :password_confirmation
 
   # private field setting
-  attr_private :salt, :hashed_password, :email
+  #attr_private_all
+  attr_private :salt, :hashed_password, :email, :old_hashed_password
 
  
   def self.authenticate(userid, pass)
