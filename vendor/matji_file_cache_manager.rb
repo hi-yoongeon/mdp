@@ -54,8 +54,7 @@ class MatjiFileCacheManager
       f.write img.read
     end    
     require 'RMagick'
-    include Magick
-    thum_img = ImageList.new("#{ori_img_path}/#{timestamp}")
+    thum_img = Magick::ImageList.new("#{ori_img_path}/#{timestamp}")
     thum_img.resize!(48,48)
     thum_img.write("#{thum_img_path}/#{timestamp}")
   end

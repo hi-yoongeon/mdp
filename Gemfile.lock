@@ -75,6 +75,7 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.8.7)
+    rmagick (2.13.1)
     rspec (2.4.0)
       rspec-core (~> 2.4.0)
       rspec-expectations (~> 2.4.0)
@@ -118,6 +119,7 @@ DEPENDENCIES
   faker (= 0.3.1)
   oauth
   rails (= 3.0.3)
+  rmagick
   rspec (= 2.4.0)
   rspec-rails (= 2.4.1)
   spork (= 0.8.4)
