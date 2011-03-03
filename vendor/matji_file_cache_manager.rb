@@ -3,72 +3,64 @@
 class MatjiFileCacheManager
 
   def initialize(user_id)
-    Dir.chdir("..");
-    @user_id = user_id.to_s
-    @base_path = Dir.getwd
-    @full_path = user_dir
+    
+    Dir.chdir(Rails.root.to_s)
 
-    make_file_cache_dir unless Dir.exist? @full_path
+    @user_id = user_id.to_s
+    @user_path = user_dir
+    make_file_cache_dir unless Dir.exist? @user_path
   end
 
 
   def add_follower(user_id)
-    filename = @full_path + "/follower"
+    filename = @user_path + "/follower"
     File.new(filename, "w") unless File.exist? filename    
-    File.open(filename, "a") do |file|
-      file << user_id.to_s + "," 
-    end
+    add_user(filename, user_id)
   end
 
 
   def add_following(user_id)
-    filename = @full_path + "/following"
+    filename = @user_path + "/following"
     File.new(filename, "w") unless File.exist? filename
-    File.open(filename, "a") do |file|
-      file << user_id.to_s + ","
-    end
+    add_user(filename, user_id)
   end
 
   def remove_follower(user_id)
-    filename = @full_path + "/follower"
-    File.rename filename, filename+".bak"
-    old_file = File.open(filename+".bak")
-    new_file = File.open(filename, "w")
-    while line = old_file.gets do
-      remove = line.gsub(/#{user_id},/, "")
-      new_file.write(remove)
-    end
+    filename = @user_path + "/follower"
+    remove_user(filename, user_id)
   end  
 
+  def remove_follower(user_id)
+    filename = @user_path + "/follower"
+    File.open(filename,"w")
+    remove_user(filename, user_id)
+  end  
+
+
   def remove_following(user_id)
-    filename = @full_path + "/following"
-    File.rename filename, filename+".bak"
-    old_file = File.open(filename+".bak")
-    new_file = File.open(filename, "w")
-    while line = old_file.gets do
-      remove = line.gsub(/#{user_id},/, "")
-      new_file.write(remove)
-    end
+    filename = @user_path + "/following"
+    File.open(filename,"w")
+    remove_user(filename, user_id)
   end  
 
   def add_profile_img(img)
-    filename = @full_path + "/#{img}.jpg"
+    filename = @user_path + "/#{img}.jpg"
     File.new(filename, "w") unless File.exist? filename
-    
   end
 
   def follower
-    filename = @full_path + "/follower"
-    File.open(filename).each { |line| puts line}
+    filename = @user_path + "/follower"
+    File.open(filename).each { |line| $str = line}
+    $str
   end
 
   def following
-    filename = @full_path + "/following"
+    filename = @user_path + "/following"
     File.open(filename).each { |line| puts line}
   end
 
   def profile_img
-    filename = @full_path + "/image"
+    filename = @user_path + "/image"
   end
 
 
@@ -76,8 +68,32 @@ class MatjiFileCacheManager
   
   private
 
+  def add_user(filename, user_id)
+    arr = Array.new()
+    File.open(filename, "r") do |f|
+      unless (text = f.read.chomp).nil? 
+        arr = text.split(",")
+      end
+      puts arr.size
+    end
+    arr.push(user_id.to_s).uniq!
+
+    File.open(filename, File::RDWR|File::TRUNC) { |f| 
+      puts arr.join(",")
+      f.write arr.join(",") + "\n" 
+    }
+
+  end
+
+  def remove_user(filename, user_id)
+    arr = Array.new()
+    File.open(filename, "r") { |f|  arr = f.read.chomp.split(",") unless f.read.chomp.nil?  }
+    arr.delete_if { |f| f = user_id}
+    File.open(filename, File::RDWR|File::TRUNC) { |f| f.write arr.join(",") + "\n" }
+  end
+
   def user_dir
-    @base_path + "/file_cache/user/" + @user_id[0..1]+"/"+@user_id[2..3]+"/"+@user_id[4..5]+"/"+@user_id[6..7]+"/"+@user_id[8..9]
+    "file_cache/user/" + @user_id[0..1]+"/"+@user_id[2..3]+"/"+@user_id[4..5]+"/"+@user_id[6..7]+"/"+@user_id[8..9]
   end
 
   def make_file_cache_dir
@@ -95,7 +111,8 @@ class MatjiFileCacheManager
 
 end
 
-mfcm = MatjiFileCacheManager.new(100000004)
-mfcm.add_follower(100000005)
+#Usage
+#mfcm = MatjiFileCacheManager.new(100000004)
+#mfcm.add_follower(100000005)
 #mfcm.remove_follower(100000005)
-mfcm.follower
+#mfcm.follower
