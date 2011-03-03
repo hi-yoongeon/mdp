@@ -44,6 +44,9 @@ class MatjiFileCacheManager
   end  
 
   def add_profile_img(img)
+
+    img.
+
     filename = @user_path + "/#{img}.jpg"
     File.new(filename, "w") unless File.exist? filename
   end

@@ -13,6 +13,7 @@ OAuthProvider::Application.routes.draw do  resources :clients
 
   ########ygmaster's Test############
   match '/test', :to => 'test#test'
+  match '/test/upload', :to=> 'test#upload'
   ###################################
 
   
