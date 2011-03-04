@@ -43,20 +43,16 @@ class MatjiFileCacheManager
 
 
   def add_profile_img(img)
-    ori_img_path = "#{@user_path}/profile_img_original" 
-    thum_img_path = "#{@user_path}/profile_img_thumbnail"
-    Dir.mkdir(ori_img_path) unless Dir.exist? ori_img_path
-    Dir.mkdir(thum_img_path) unless Dir.exist? thum_img_path
     timestamp = Time.new.to_i
-    filename = ori_img_path + "/#{timestamp}"
+    filename = "profile_img_original/#{timestamp}"
     File.new(filename, "w") unless File.exist? filename
     File.open(filename, "wb") do |f|
       f.write img.read
     end    
     require 'RMagick'
-    thum_img = Magick::ImageList.new("#{ori_img_path}/#{timestamp}")
+    thum_img = Magick::ImageList.new("profile_img_original/#{timestamp}")
     thum_img.resize!(48,48)
-    thum_img.write("#{thum_img_path}/#{timestamp}")
+    thum_img.write("profile_img_thumnail/#{timestamp}")
   end
 
   def follower
@@ -116,6 +112,12 @@ class MatjiFileCacheManager
         Dir.chdir(w)
       end
     end
+    # ori_img_path = "#{@user_path}/profile_img_original" 
+    # thum_img_path = "#{@user_path}/profile_img_thumbnail"
+    # Dir.mkdir(ori_img_path) unless Dir.exist? ori_img_path
+    # Dir.mkdir(thum_img_path) unless Dir.exist? thum_img_path
+    Dir.mkdir("profile_img_original") unless Dir.exist? "profile_img_original"
+    Dir.mkdir("profile_img_thumnail") unless Dir.exist? "profile_img_thumnail"
   end
 
 
