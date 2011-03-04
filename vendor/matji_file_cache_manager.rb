@@ -3,9 +3,7 @@
 class MatjiFileCacheManager
 
   def initialize(user_id)
-    
     Dir.chdir(Rails.root.to_s)
-
     @user_id = user_id.to_s
     @user_path = user_dir
     make_file_cache_dir unless Dir.exist? @user_path
@@ -43,12 +41,22 @@ class MatjiFileCacheManager
     remove_user(filename, user_id)
   end  
 
+
   def add_profile_img(img)
-
-    img.
-
-    filename = @user_path + "/#{img}.jpg"
+    ori_img_path = "#{@user_path}/profile_img_original" 
+    thum_img_path = "#{@user_path}/profile_img_thumbnail"
+    Dir.mkdir(ori_img_path) unless Dir.exist? ori_img_path
+    Dir.mkdir(thum_img_path) unless Dir.exist? thum_img_path
+    timestamp = Time.new.to_i
+    filename = ori_img_path + "/#{timestamp}"
     File.new(filename, "w") unless File.exist? filename
+    File.open(filename, "wb") do |f|
+      f.write img.read
+    end    
+    require 'RMagick'
+    thum_img = Magick::ImageList.new("#{ori_img_path}/#{timestamp}")
+    thum_img.resize!(48,48)
+    thum_img.write("#{thum_img_path}/#{timestamp}")
   end
 
   def follower
@@ -57,18 +65,17 @@ class MatjiFileCacheManager
     $str
   end
 
+
   def following
     filename = @user_path + "/following"
     File.open(filename).each { |line| puts line}
   end
 
+
   def profile_img
     filename = @user_path + "/image"
   end
 
-
-
-  
   private
 
   def add_user(filename, user_id)
@@ -118,4 +125,4 @@ end
 #mfcm = MatjiFileCacheManager.new(100000004)
 #mfcm.add_follower(100000005)
 #mfcm.remove_follower(100000005)
-#mfcm.follower
+#mfcm.add_profile_img
