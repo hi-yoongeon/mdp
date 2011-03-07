@@ -116,6 +116,8 @@ class MatjiFileCacheManager
         Dir.chdir(w)
       end
     end
+    Dir.mkdir("profile_img_thumbnail")
+    Dir.mkdir("profile_img_original")
   end
 
 
