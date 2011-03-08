@@ -11,6 +11,13 @@ OAuthProvider::Application.routes.draw do  resources :clients
   match ':controller/:action'
   match '/v2/:controller/:action'
 
+  ########ygmaster's Test############
+  match '/test', :to => 'test#test'
+  match '/test/upload', :to=> 'test#upload'
+  ###################################
+
+  
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -6,6 +6,7 @@ gem 'will_paginate', '3.0.pre2'
 gem 'twitter'
 gem 'oauth'
 gem 'fb_graph'
+gem 'rmagick'
 
 group :development do
   gem 'rspec-rails', '2.4.1'
