@@ -19,14 +19,17 @@ class TestController < ApplicationController
 
 
   def upload
+
+    require "matji_file_cache_manager"
+    mfcm = MatjiFileCacheManager.new(100000002)
     uploaded_file = params[:upload_file]
-    unless uploaded_file.nil?
-      require "matji_file_cache_manager"
-      mfcm = MatjiFileCacheManager.new(100000002)
+
+    unless params[:upload_file].nil?
       mfcm.add_profile_img(uploaded_file)
       @img = mfcm.profile_img
     end
-      render
+    render
+
   end
 
 
