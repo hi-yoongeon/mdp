@@ -12,8 +12,8 @@ OAuthProvider::Application.routes.draw do  resources :clients
   match '/v2/:controller/:action'
 
   ########ygmaster's Test############
-  match '/test', :to => 'test#test'
-  match '/test/upload', :to=> 'test#upload'
+  #match '/test', :to => 'test#test'
+  #match '/test/upload', :to=> 'test#upload'
   ###################################
 
   

@@ -1,25 +1,23 @@
-# -*- coding: utf-8 -*-
-
 class MatjiFileCacheManager
 
   def initialize(user_id)
-    Dir.chdir(Rails.root.to_s)
+    Dir.chdir(Rails.root.to_s << '/public')
     @user_id = user_id.to_s
-    @user_path = user_dir
+    @user_webPath = user_dir
+    @user_path = "public/" + @user_webPath
+
     make_file_cache_dir unless Dir.exist? @user_path
   end
 
 
   def add_follower(user_id)
     filename = @user_path + "/follower"
-    File.new(filename, "w") unless File.exist? filename    
     add_user(filename, user_id)
   end
 
 
   def add_following(user_id)
     filename = @user_path + "/following"
-    File.new(filename, "w") unless File.exist? filename
     add_user(filename, user_id)
   end
 
@@ -29,16 +27,9 @@ class MatjiFileCacheManager
     remove_user(filename, user_id)
   end  
 
-  def remove_follower(user_id)
-    filename = @user_path + "/follower"
-    File.open(filename,"w")
-    remove_user(filename, user_id)
-  end  
-
 
   def remove_following(user_id)
     filename = @user_path + "/following"
-    File.open(filename,"w")
     remove_user(filename, user_id)
   end  
 
@@ -59,44 +50,60 @@ class MatjiFileCacheManager
 
   def follower
     filename = @user_path + "/follower"
-    File.open(filename).each { |line| $str = line}
-    $str
+    line = ""
+    line = IO.readlines(filename)[0] if File.exist?(filename)
   end
 
 
   def following
     filename = @user_path + "/following"
-    File.open(filename).each { |line| puts line}
+    line = ""
+    line = IO.readlines(filename)[0] if File.exist?(filename)
   end
 
 
   def profile_img
-    filename = @user_path + "/profile_img_thumnail"
-    
+    filename = @user_webPath + "/profile_img_thumnail"
+    Dir.chdir(filename)
+    img = "/" + Dir.glob("*").max
+    img_path = filename + img
   end
 
 
   private
-
+  
   def add_user(filename, user_id)
-    arr = Array.new()
-    File.open(filename, "r") do |f|
-      unless (text = f.read.chomp).nil? 
-        arr = text.split(",")
-      end
+    if File.exist? filename
+      text = IO.readlines(filename)[0]
     end
+    
+    text = "" if text.nil?
+
+    arr = text.split(",")
+
     arr.push(user_id.to_s).uniq!
-    File.open(filename, File::RDWR|File::TRUNC) { |f| 
-      f.write arr.join(",") + "\n" 
+
+    File.open(filename, "w") { |f| 
+      f.syswrite(arr.join(","))
     }
   end
 
 
   def remove_user(filename, user_id)
-    arr = Array.new()
-    File.open(filename, "r") { |f|  arr = f.read.chomp.split(",") unless f.read.chomp.nil?  }
-    arr.delete_if { |f| f = user_id}
-    File.open(filename, File::RDWR|File::TRUNC) { |f| f.write arr.join(",") + "\n" }
+
+    if File.exist? filename
+      text = IO.readlines(filename)[0]
+    end
+    
+    text = "" if text.nil?
+    
+    arr = text.split(",")
+    arr.delete(user_id.to_s)
+    
+    File.open(filename, "w") { |f| 
+      f.syswrite(arr.join(","))
+    }
+
   end
 
 
@@ -106,23 +113,18 @@ class MatjiFileCacheManager
 
 
   def make_file_cache_dir
-    puts "#{@user_id}에 맞게 디렉토리 생성";
     ud = user_dir.split("/")
+    File.umask(0)
     ud.each do |w| 
       unless w == ""      
-        Dir.mkdir(w) unless Dir.exist? w
+        Dir.mkdir(w, 0777) unless Dir.exist? w
         Dir.chdir(w)
       end
     end
     Dir.mkdir("profile_img_original") unless Dir.exist? "profile_img_original"
     Dir.mkdir("profile_img_thumnail") unless Dir.exist? "profile_img_thumnail"
+    Dir.chdir(Rails.root.to_s)
   end
 
 
 end
-
-#Usage
-#mfcm = MatjiFileCacheManager.new(100000004)
-#mfcm.add_follower(100000005)
-#mfcm.remove_follower(100000005)
-#mfcm.add_profile_img
