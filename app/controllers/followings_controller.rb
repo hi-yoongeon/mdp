@@ -56,7 +56,7 @@ class FollowingsController < ApplicationController
     if request.get?
       conditions = {:followed_user_id => current_user.id}
       ret = __find(Following, conditions)
-      __respond_with ret :include => [], :except => []
+      __respond_with ret, :include => [], :except => []
     end
   end  
 

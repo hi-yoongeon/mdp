@@ -5,7 +5,8 @@ class ExternalAccountsController < ApplicationController
 
   @@twitter_consumer_key = "SGjiU1MYRLEZ8bP0dcgnmA"
   @@twitter_consumer_secret = "uXmeeELnsAO5kh1wTNFgChHwuVDwoDrFfs4zy9mdNa0"
-
+  @@facebook_app_id = "180331691984384"
+  @@facebook_app_secret = "f0030841813f238ea9fe7a2aa163f540"
   
   def new
     if request.get? and parameters_required :service
@@ -67,12 +68,17 @@ class ExternalAccountsController < ApplicationController
 
 
   def twitter
-    twitter ||= OAuth::Consumer.new(@@twitter_consumer_key, @@twitter_consumer_secret, :site => "http://api.twitter.com", :request_endpoint => "http://api.twitter.com", :sign_in => true)
+    @twitter ||= OAuth::Consumer.new(@@twitter_consumer_key, @@twitter_consumer_secret, :site => "http://api.twitter.com", :request_endpoint => "http://api.twitter.com", :sign_in => true)
+  end
+
+
+  def facebook
+    @facebook ||= FbGraph::Auth.new(@@facebook_app_id, @@facebook_app_secret)    
   end
 
 
   def __create_twitter
-    request_token = twitter.get_request_token(:oauth_callback => "http://matji.com/external_services/callback?service=twitter")
+    request_token = twitter.get_request_token(:oauth_callback => "http://matji.com/external_accounts/callback.json?service=twitter")
     session["request_token"] = request_token.token
     session["request_secret"] = request_token.secret
     
@@ -81,23 +87,24 @@ class ExternalAccountsController < ApplicationController
 
   
   def __create_facebook
+    redirect_to facebook.client.web_server.authorize_url(
+                                                         :redirect_uri => "http://matji.com/external_accounts/callback.json?service=facebook",
+                                                         :scope => "publish_stream,offline_access,email")
+    
   end
 
 
   def __callback_twitter
     request_token = OAuth::RequestToken.new(twitter, session['request_token'], session['request_secret'])
     access_token = request_token.get_access_token(:oauth_verfier => params[:oauth_verifier])
-    #reset_session
-    access_token = access_token.token
-    access_secret = access_token.secret
-    oauth_data = ActiveSupport::JSON.encode({:access_token => access_token, :access_secret => access_secret})
+    oauth_data = ActiveSupport::JSON.encode({:access_token => access_token.token, :access_secret => access_token.secret, :screen_name => access_token.params[:screen_name]})
     twitterAccount = UserExternalAccount.find(:first, :conditions => ["user_id = ? AND service = ?", current_user.id, "twitter"])
     if twitterAccount.nil?
       twitterAccount = UserExternalAccount.new(:user_id => current_user.id, :service => "twitter", :data => oauth_data)
     else
       twitterAccount.data = oauth_data
     end
-    if extAccount.save
+    if twitterAccount.save
       __success(twitterAccount)
     else
       __error(:code => 0, :description => "Failed to connect twitter account")
@@ -106,6 +113,23 @@ class ExternalAccountsController < ApplicationController
 
 
   def __callback_facebook
+    access_token = facebook.client.web_server.get_access_token(
+                                                params[:code],
+                                                :redirect_uri => "http://matji.com/external_accounts/callback.json?service=facebook")
+    facebookAccount = UserExternalAccount.find(:first, :conditions => ["user_id = ? AND service = ?", current_user.id, "facebook"])
+    user = FbGraph::User.me(access_token).fetch
+    
+    oauth_data = ActiveSupport::JSON.encode({:access_token => access_token.token, :screen_name => user.email})
+    if facebookAccount.nil?
+      facebookAccount = UserExternalAccount.new(:user_id => current_user.id, :service => "facebook", :data => oauth_data)
+    else
+      facebookAccount.data = oauth_data
+    end
+    if facebookAccount.save
+      __success(facebookAccount)
+    else
+      __error(:code => 0, :description => "Failed to connect facebook account")
+    end
   end
 
   
