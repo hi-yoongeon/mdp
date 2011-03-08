@@ -110,6 +110,11 @@ class UsersController < ApplicationController
   end
 
 
+  def profile_image
+    redirect_to "profile_image_path"
+  end
+
+
   protected
   def user_authentication_required
     if current_user

@@ -19,21 +19,25 @@ class TagsController < ApplicationController
     end
   end
   
+
   def store_tag_list
     if request.get? and parameters_required :store_id
       params[:id] = nil
       conditions = {:store_id => params[:store_id]}
-      ret = __find(Tag,conditions)
-      respond_with ret, :include => [], :except => []
+      storeTags = __find(StoreTag,conditions)
+      tags = storeTags.map { |storeTag| storeTag.tag }
+      respond_with tags, :include => [], :except => []
     end
   end
+
 
   def user_tag_list
     if request.get? and parameters_required :user_id
       params[:id] = nil
       conditions = {:user_id => params[:user_id]}
-      ret = __find(Tag,conditions)
-      respond_with ret, :include => [], :except => []
+      userTags = __find(UserTag,conditions)
+      tags = userTags.map { |userTag| userTag.tag }
+      respond_with tags, :include => [], :except => []
     end
   end
   
@@ -41,8 +45,9 @@ class TagsController < ApplicationController
     if request.get? and parameters_required :post_id
       params[:id] = nil
       conditions = {:post_id => params[:post_id]}
-      ret = __find(Tag,conditions)
-      respond_with ret, :include => [], :except => []
+      postTags = __find(PostTag,conditions)
+      tags = postTags.map { |postTag| postTag.tag }
+      respond_with tags, :include => [], :except => []
     end
   end
   

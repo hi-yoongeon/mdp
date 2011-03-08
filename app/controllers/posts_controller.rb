@@ -31,9 +31,12 @@ class PostsController < ApplicationController
       post = Post.new(data)
       if post.save
         # todo !!
-        # attachfile process
+        # Attachfile
+        
+        
+        
+        # Tag
         if params[:tags] and !params[:tags].empty?
-          # add tags
           Tag.generate(:tags => params[:tags], :user_id => current_user.id, :post_id => post.id)
         end
         __success(post)
