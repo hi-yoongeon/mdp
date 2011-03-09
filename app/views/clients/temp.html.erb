@@ -1,5 +1,4 @@
-<%= form_tag(:controller => "posts", :action => "new", :method =>
-  "post", :format => "json") do %>
+<form action="/posts/new.json" method="post" enctype="multipart/form-data">
   <%= label_tag "Post" %>
   <%= text_field_tag "post" %>
   <!-- Test code for post -->
@@ -9,9 +8,14 @@
   <br/>
   <%= label_tag "AccessToken" %> 
   <%= text_field_tag "access_token" ,"" %>
+  
+  <input type="file" name="upload_file" />
+  
   <br/>
  
   <%= submit_tag "Send" %>
+</form>
+
 
 <table>
   <tr>
@@ -29,4 +33,3 @@
   </tr>
 <%  end %>
 </table>
-<% end %>

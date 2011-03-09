@@ -32,6 +32,22 @@ class PostsController < ApplicationController
       if post.save
         # todo !!
         # attachfile process
+        if params[:upload_file]
+          require "attach_file_cache_manager"
+          fcm = AttachFileCacheManager.new(post.id)
+          uploaded_file = params[:upload_file]
+          fcm.add_img(params[:upload_file])
+          attach_file_data = {
+                           :user_id => current_user.id,
+                           :store_id => params[:store_id],
+                           :post_id => post.id,
+                           :fullpath => fcm.img_path(:fullpath => true),
+                           :webpath => fcm.img_path
+          }
+          
+          AttachFile.new(attach_file_data).save
+        end
+        
         if params[:tags] and !params[:tags].empty?
           # add tags
           Tag.generate(:tags => params[:tags], :user_id => current_user.id, :post_id => post.id)

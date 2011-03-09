@@ -1,8 +1,8 @@
 class TestController < ApplicationController
   
   def test
-    require "matji_file_cache_manager"
-    mfcm = MatjiFileCacheManager.new(100000002)
+    require "user_file_cache_manager"
+    mfcm = UserFileCacheManager.new(100000002)
     mfcm.add_follower(params[:friend_id]) 
     t = mfcm.follower
     render :text => t
@@ -10,8 +10,8 @@ class TestController < ApplicationController
   end
 
   def test2
-    require "matji_file_cache_manager"
-    mfcm = MatjiFileCacheManager.new(100000002)
+    require "user_file_cache_manager"
+    mfcm = UserFileCacheManager.new(100000002)
     mfcm.remove_follower(params[:friend_id])
     t = mfcm.follower
     render :text => t
@@ -20,13 +20,13 @@ class TestController < ApplicationController
 
   def upload
 
-    require "matji_file_cache_manager"
-    mfcm = MatjiFileCacheManager.new(100000002)
+    require "attach_file_cache_manager"
+    mfcm = AttachFileCacheManager.new(12342)
     uploaded_file = params[:upload_file]
 
     unless params[:upload_file].nil?
-      mfcm.add_profile_img(uploaded_file)
-      @img = mfcm.profile_img
+      mfcm.add_img(uploaded_file)
+      @img = mfcm.img_path
     end
     render
 
