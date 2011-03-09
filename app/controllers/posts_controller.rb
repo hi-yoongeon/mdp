@@ -31,7 +31,6 @@ class PostsController < ApplicationController
       post = Post.new(data)
       if post.save
         # todo !!
-<<<<<<< HEAD
         # attachfile process
         if params[:upload_file]
           require "attach_file_cache_manager"
@@ -48,14 +47,8 @@ class PostsController < ApplicationController
           
           AttachFile.new(attach_file_data).save
         end
-        
-=======
         # Attachfile
-        
-        
-        
         # Tag
->>>>>>> 9191e0b6b45c67fb73f984571ea16ad9c81e68ea
         if params[:tags] and !params[:tags].empty?
           Tag.generate(:tags => params[:tags], :user_id => current_user.id, :post_id => post.id)
         end
