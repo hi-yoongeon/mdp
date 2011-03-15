@@ -59,7 +59,6 @@ class UserFileCacheManager < MatjiFileCacheManager
     text = "" if text.nil?
 
     arr = text.split(",")
-
     arr.push(user_id.to_s).uniq!
 
     File.open(filename, "w") { |f| 
