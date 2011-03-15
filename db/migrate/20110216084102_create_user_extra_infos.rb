@@ -5,7 +5,7 @@ class CreateUserExtraInfos < ActiveRecord::Migration
       t.integer :user_id
       t.string :title
       t.string :intro
-      t.string :post_count
+      t.integer :post_count
       t.integer :sequence
       t.datetime :created_at
       t.datetime :updated_at

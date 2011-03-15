@@ -6,7 +6,7 @@ class UsersController < ApplicationController
 
   def index
     @user = current_user
-    __respond_with(@users = User.all)
+    __respond_with(@users = User.find(:all, :limit => 5))
   end
 
   

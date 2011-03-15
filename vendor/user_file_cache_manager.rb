@@ -8,7 +8,7 @@ class UserFileCacheManager < MatjiFileCacheManager
     @webPath = user_dir(user_id)
     @path = "public/" + @webPath
     
-    make_file_cache_dir unless Dir.exist? @path
+    make_file_cache_dir unless File.exist? @path
   end
 
 

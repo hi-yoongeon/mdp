@@ -18,20 +18,34 @@ class MatjiFileCacheManager
     thum_img = Magick::ImageList.new("#{@path}/img_original/#{timestamp}")
     thum_img.resize!(48,48)
     thum_img.write("#{@path}/img_thumbnail/#{timestamp}")
+    
   end
 
 
-  def img_path(opt={})
-    filename = @path + "/img_thumbnail"
-    Dir.chdir(filename)
+  def img_filename
+    Dir.chdir(@path + "/img_original")
     img = Dir.glob("*").max
-    Dir.chdir(Rails.root.to_s)
+    Dir.chdir(Rails.root.to_s)    
+    return img
+  end
+  
+
+  def img_path(path_symbol, opt={})
+    #filename = @path #+ "/img_thumbnail"
+    img = img_filename
     
-    if (opt[:fullpath] == true)
-      path = @path + "/img_thumbnail/" + img
+    if (path_symbol == :fullpath)
+      path = @path + "/"# + "/img_thumbnail/" + img
     else
-      path = @webPath + "/img_thumbnail/" + img
+      path = @webPath + "/" # + "/img_thumbnail/" + img
     end
+      
+    if (opt[:thumbnail] == true)
+      path << "img_thumbnail/" << img
+    else
+      path << "img_original/" << img      
+    end
+
     return path
   end
 
@@ -42,12 +56,12 @@ class MatjiFileCacheManager
     File.umask(0)
     ud.each do |w| 
       unless w == ""
-        Dir.mkdir(w, 0777) unless Dir.exist? w
+        Dir.mkdir(w, 0777) unless File.exist? w
         Dir.chdir(w)
       end
     end
-    Dir.mkdir("img_original") unless Dir.exist? "img_original"
-    Dir.mkdir("img_thumbnail") unless Dir.exist? "img_thumbnail"
+    Dir.mkdir("img_original") unless File.exist? "img_original"
+    Dir.mkdir("img_thumbnail") unless File.exist? "img_thumbnail"
     Dir.chdir(Rails.root.to_s)
   end
 

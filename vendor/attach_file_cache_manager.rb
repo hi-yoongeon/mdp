@@ -6,7 +6,7 @@ class AttachFileCacheManager < MatjiFileCacheManager
     @webPath = file_dir(id)
     @path = "public/" + @webPath
 
-    make_file_cache_dir unless Dir.exist? @path
+    make_file_cache_dir unless File.exist? @path
   end
 
 

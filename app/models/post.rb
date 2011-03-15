@@ -6,8 +6,10 @@ class Post < ApplicationModel#ActiveRecord::Base
   belongs_to :user, :class_name => "User", :foreign_key => 'user_id'
   belongs_to :store, :class_name => "Store", :foreign_key => 'store_id'
   belongs_to :parent_post, :class_name => "Post", :foreign_key => 'parent_post_id'
+  
+  validates_inclusion_of :from_where, :in => %w(WEB ANDROID IPHONE)
   validates_length_of :post, :within => 1..300
-  validates_presence_of :user_id, :post
+  validates_presence_of :user_id, :post, :from_where
   after_create :update_sequence  
 
   ## private field setting

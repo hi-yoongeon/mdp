@@ -57,7 +57,7 @@ class ClientsController < ApplicationController
 
 
   def temp
-    @posts = Post.all
+    @posts = Post.find(:all, :limit => 50);
   end
 
   protected

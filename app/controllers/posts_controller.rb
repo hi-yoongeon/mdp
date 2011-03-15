@@ -19,6 +19,12 @@ class PostsController < ApplicationController
       data[:user_id] = current_user.id
       data[:lat] = 0
       data[:lng] = 0
+      
+      # test code
+      data[:from_where] = "IPHONE" if data[:from_where].nil?
+      data[:from_where].upcase!
+      #
+      
       if params[:store_id]
         data[:store_id] = params[:store_id]
         store = Store.find(params[:store_id])
@@ -38,11 +44,13 @@ class PostsController < ApplicationController
           uploaded_file = params[:upload_file]
           fcm.add_img(params[:upload_file])
           attach_file_data = {
-                           :user_id => current_user.id,
-                           :store_id => params[:store_id],
-                           :post_id => post.id,
-                           :fullpath => fcm.img_path(:fullpath => true),
-                           :webpath => fcm.img_path
+            :user_id => current_user.id,
+            :store_id => params[:store_id],
+            :post_id => post.id,
+            :filename => fcm.img_filename,
+            :fullpath => fcm.img_path(:fullpath),
+            :webpath => fcm.img_path(:webpath),
+            :thumbnail => fcm.img_path(:webpath, :thumbnail => true)
           }
           
           AttachFile.new(attach_file_data).save

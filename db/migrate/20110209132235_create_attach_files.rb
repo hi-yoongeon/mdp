@@ -3,7 +3,8 @@ class CreateAttachFiles < ActiveRecord::Migration
     create_table :attach_files do |t|
       t.integer :user_id, :null => false
       t.integer :store_id, :null => true
-      t.integer :post_id, :null => false
+      t.integer :post_id, :null => true
+      t.string :filename, :null => false
       t.string :fullpath, :null => false
       t.string :webpath, :null => false
       t.integer :sequence

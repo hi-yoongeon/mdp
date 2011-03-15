@@ -10,6 +10,7 @@ class CreatePosts < ActiveRecord::Migration
       t.integer :like_count, :null => false, :default => 0
       t.float :lat, :default => 0
       t.float :lng, :default => 0
+      f.string :from, :null => false
       t.integer :sequence
 
       t.timestamps

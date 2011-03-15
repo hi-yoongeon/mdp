@@ -2,7 +2,7 @@ class CreateStores < ActiveRecord::Migration
   def self.up
     create_table :stores do |t|
       t.string :name, :null => false
-      t.integer :reg_user_id, :null => false
+      t.integer :reg_user_id, :null => true
       t.string :tel, :null => true
       t.string :address, :null => false
       t.string :add_address, :null => true

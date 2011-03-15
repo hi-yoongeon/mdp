@@ -29,6 +29,7 @@ class User < ApplicationModel#ActiveRecord::Base
   # private field setting
   #attr_private_all
   attr_private :salt, :hashed_password, :email, :old_hashed_password
+  after_create :set_sequence
 
  
   def self.authenticate(userid, pass)
@@ -57,5 +58,9 @@ class User < ApplicationModel#ActiveRecord::Base
     Digest::SHA1.hexdigest(pass + salt)
   end
 
+  private
+  def set_sequence
+    self.update_attribute(:sequence, self.id * -1)
+  end
 
 end

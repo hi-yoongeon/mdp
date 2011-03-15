@@ -227,6 +227,7 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
     t.string   "nick",                :null => false
     t.string   "email",               :null => false
     t.string   "salt",                :null => false
+    t.integer  "sequence",            :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
