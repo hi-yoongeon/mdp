@@ -14,6 +14,8 @@ OAuthProvider::Application.routes.draw do  resources :clients
   ########ygmaster's Test############
   #match '/test', :to => 'test#test'
   #match '/test/upload', :to=> 'test#upload'
+  match '/dummy', :to => 'dummy_dbs#index'
+  match '/user_mileage', :to => 'dummy_dbs#user_mileage'
   ###################################
 
   

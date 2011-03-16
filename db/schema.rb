@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110216084102) do
+ActiveRecord::Schema.define(:version => 20110316100624) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -41,7 +41,8 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
   create_table "attach_files", :force => true do |t|
     t.integer  "user_id",    :null => false
     t.integer  "store_id"
-    t.integer  "post_id",    :null => false
+    t.integer  "post_id"
+    t.string   "filename",   :null => false
     t.string   "fullpath",   :null => false
     t.string   "webpath",    :null => false
     t.integer  "sequence"
@@ -102,6 +103,15 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
     t.datetime "updated_at"
   end
 
+  create_table "mileage_stack_datas", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "flag"
+    t.integer  "point"
+    t.integer  "from_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "notices", :force => true do |t|
     t.string   "subject",    :null => false
     t.text     "content",    :null => false
@@ -131,6 +141,7 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
     t.integer  "like_count",     :default => 0,   :null => false
     t.float    "lat",            :default => 0.0
     t.float    "lng",            :default => 0.0
+    t.string   "from",                            :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -168,7 +179,7 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
 
   create_table "stores", :force => true do |t|
     t.string   "name",                            :null => false
-    t.integer  "reg_user_id",                     :null => false
+    t.integer  "reg_user_id"
     t.string   "tel"
     t.string   "address",                         :null => false
     t.string   "add_address"
@@ -205,8 +216,18 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
     t.integer  "user_id"
     t.string   "title"
     t.string   "intro"
-    t.string   "post_count"
+    t.integer  "post_count"
     t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_mileages", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "total_point"
+    t.string   "grade"
+    t.boolean  "special_user"
+    t.boolean  "blacklist_user"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -227,7 +248,7 @@ ActiveRecord::Schema.define(:version => 20110216084102) do
     t.string   "nick",                :null => false
     t.string   "email",               :null => false
     t.string   "salt",                :null => false
-    t.integer  "sequence",            :null => false
+    t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

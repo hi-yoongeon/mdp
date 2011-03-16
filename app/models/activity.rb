@@ -1,3 +1,23 @@
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: activities
+#
+#  id                     :integer         not null, primary key
+#  user_name              :string(255)     not null
+#  user_id                :string(255)     not null
+#  object_type            :string(255)     not null
+#  object_name            :string(255)     not null
+#  object_id              :string(255)     not null
+#  object_complement_type :string(255)     default("None"), not null
+#  object_complement_name :string(255)
+#  object_complement_id   :string(255)
+#  action                 :string(255)     not null
+#  sequence               :integer
+#  created_at             :datetime
+#  updated_at             :datetime
+#
+
 class Activity < ApplicationModel#ActiveRecord::Base
   
   validates_presence_of :user_id, :user_name, :object_type, :object_name, :object_id, :action

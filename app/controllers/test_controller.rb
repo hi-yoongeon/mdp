@@ -1,5 +1,5 @@
 class TestController < ApplicationController
-  
+
   def test
     require "user_file_cache_manager"
     mfcm = UserFileCacheManager.new(100000002)

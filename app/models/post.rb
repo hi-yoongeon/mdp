@@ -1,3 +1,24 @@
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: posts
+#
+#  id             :integer         not null, primary key
+#  user_id        :integer         not null
+#  parent_post_id :integer
+#  store_id       :integer
+#  activity_id    :integer
+#  post           :text            not null
+#  image_count    :integer         default(0), not null
+#  like_count     :integer         default(0), not null
+#  lat            :float           default(0.0)
+#  lng            :float           default(0.0)
+#  from           :string(255)     not null
+#  sequence       :integer
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+
 class Post < ApplicationModel#ActiveRecord::Base
   has_one :activity, :class_name => "Activity", :foreign_key => "id", :primary_key => "activity_id"
   has_many :likes, :conditions => {:object => "Post"}, :foreign_key => "foreign_key"

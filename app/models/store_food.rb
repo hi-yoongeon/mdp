@@ -1,3 +1,18 @@
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: store_foods
+#
+#  id         :integer         not null, primary key
+#  user_id    :integer         not null
+#  food_id    :integer         not null
+#  store_id   :integer         not null
+#  like_count :integer         default(0), not null
+#  sequence   :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class StoreFood < ApplicationModel#ActiveRecord::Base
   has_many :likes, :conditions => {:object => "StoreFood"}, :foreign_key => "foreign_key"
 
