@@ -167,5 +167,10 @@ class ApplicationController < ActionController::Base
       format.html { render }
     end
   end
+
+
+  def mileage_setting
+
+  end
     
 end
