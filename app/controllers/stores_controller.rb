@@ -1,7 +1,7 @@
 class StoresController < ApplicationController
   before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmark, :bookmarked_list]
   before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :my_list, :detail_list]
-  before_filter :http_post, :only => [:show, :new, :like, :bookmark]
+  before_filter :http_post, :only => [:new, :like, :bookmark]
   respond_to :xml, :json
 
 
@@ -99,7 +99,6 @@ class StoresController < ApplicationController
 
 
   def bookmarked_list
-
     params[:id] = nil
     conditions = {}
     conditions[:user_id] = current_user.id
@@ -107,7 +106,6 @@ class StoresController < ApplicationController
     bookmarks = __find(Bookmark, conditions)
     bookmarked_stores = bookmarks.map { |bookmark| bookmark.store }
     __respond_with bookmarked_stores, :include => [], :except => []
-
   end
 
 
@@ -142,7 +140,6 @@ class StoresController < ApplicationController
       __respond_with ret
     end
   end
-
   
   
 end

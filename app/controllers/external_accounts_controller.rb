@@ -1,5 +1,7 @@
 class ExternalAccountsController < ApplicationController
   before_filter :authentication_required
+  before_filter :http_get, :only => [:show, :list, :callback]
+  before_filter :http_post, :only => [:new, :delete]
   #rescue_from Twitter::Unauthorized, :with => :force_sign_in
   respond_to :xml, :json
 
@@ -7,9 +9,10 @@ class ExternalAccountsController < ApplicationController
   @@twitter_consumer_secret = "uXmeeELnsAO5kh1wTNFgChHwuVDwoDrFfs4zy9mdNa0"
   @@facebook_app_id = "180331691984384"
   @@facebook_app_secret = "f0030841813f238ea9fe7a2aa163f540"
+
   
   def new
-    if request.get? and parameters_required :service
+    if parameters_required :service
       case params[:service]
       when "twitter"
         ret = __create_twitter
@@ -21,7 +24,7 @@ class ExternalAccountsController < ApplicationController
 
 
   def show
-    if reqeust.get? and parameters_required :external_account_id
+    if parameters_required :external_account_id
       params[:id] = params[:external_account_id]
       extAccount = __find(UserExternalAccount)
       if extAccount.user_id == current_user.id
@@ -34,16 +37,14 @@ class ExternalAccountsController < ApplicationController
 
  
   def list
-    if request.get?
-      params[:id] = nil
-      conditions = {:user_id => current_user.id}
-      extAccount = __find(UserExternalAccount, conditions)
-    end
+    params[:id] = nil
+    conditions = {:user_id => current_user.id}
+    extAccount = __find(UserExternalAccount, conditions)
   end
 
 
   def delete
-    if request.post? and parameters_required :external_account_id
+    if parameters_required :external_account_id
       extAccount = UserExternalAccount.find(params[:external_account_id])
       if extAccount.user_id == current_user.id
         extAccount.destroy
@@ -56,7 +57,7 @@ class ExternalAccountsController < ApplicationController
 
 
   def callback
-    if request.get? and current_user and parameters_required :service
+    if current_user and parameters_required :service
       case params[:service]
       when "twitter"
         __callback_twitter

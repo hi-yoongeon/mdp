@@ -2,6 +2,8 @@ class ClientsController < ApplicationController
   #before_filter :authentication_required , :only => :temp
   before_filter :login_required , :except => [] #:temp
   before_filter :client_authentication_required , :only => [:show, :edit, :update, :destroy]
+  before_filter :http_get, :only => [:index, :show, :temp]
+  before_filter :http_post, :only => [:new, :create, :edit, :update, :destroy]
   respond_to :html, :xml, :json
   
   def index
