@@ -1,0 +1,6 @@
+class Alarm < ApplicationModel
+  
+  validates_presence_of :sent_user_id, :received_user_id, :type
+  validates_inclusion_of :type, :in => %w()
+
+end

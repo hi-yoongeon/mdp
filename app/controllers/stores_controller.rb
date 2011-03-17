@@ -1,10 +1,12 @@
 class StoresController < ApplicationController
   before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmark, :bookmarked_list]
+  before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :my_list, :detail_list]
+  before_filter :http_post, :only => [:show, :new, :like, :bookmark]
   respond_to :xml, :json
 
 
   def show
-    if request.get? and parameters_required :store_id
+    if parameters_required :store_id
       params[:id] = params[:store_id]
       ret = __find(Store)
     __respond_with ret, :include => [], :except => []
@@ -13,7 +15,7 @@ class StoresController < ApplicationController
 
 
   def new
-    if request.post? and parameters_required :store_name, :address, :lat, :lng
+    if parameters_required :store_name, :address, :lat, :lng
       data = {}
       data[:name] = params[:store_name]
       data[:reg_user_id] = current_user.id
@@ -35,7 +37,7 @@ class StoresController < ApplicationController
 
 
   def like
-    if request.post? and parameters_required :store_id
+    if parameters_required :store_id
       # todo
       # create like object
       like = Like.new(:user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
@@ -64,7 +66,7 @@ class StoresController < ApplicationController
 
 
   def bookmark
-    if request.post? and parameters_required :store_id
+    if parameters_required :store_id
       # create bookmark object
       bookmark = Bookmark.new(:object => "Store", :foreign_key => params[:store_id], :user_id => current_user.id)
       if bookmark.save
@@ -78,15 +80,15 @@ class StoresController < ApplicationController
 
 
   def list
-    if request.get?
-      ret = __find(Store)
-      __respond_with ret, :include => [], :except => []
-    end
+    params[:id] = nil
+    ret = __find(Store)
+    __respond_with ret, :include => [], :except => []
   end
 
 
   def nearby_list
-    if request.get? and parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
+    if parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
+      params[:id] = nil
       conditions = {}
       conditions[:lat] = params[:lat_sw].to_f .. params[:lat_ne].to_f
       conditions[:lng] = params[:lng_sw].to_f .. params[:lng_ne].to_f
@@ -97,19 +99,20 @@ class StoresController < ApplicationController
 
 
   def bookmarked_list
-    if request.get?
-      conditions = {}
-      conditions[:user_id] = current_user.id
-      conditions[:object] = "Store"
-      bookmarks = __find(Bookmark, conditions)
-      bookmarked_stores = bookmarks.map { |bookmark| bookmark.store }
-      __respond_with bookmarked_stores, :include => [], :except => []
-    end
+
+    params[:id] = nil
+    conditions = {}
+    conditions[:user_id] = current_user.id
+    conditions[:object] = "Store"
+    bookmarks = __find(Bookmark, conditions)
+    bookmarked_stores = bookmarks.map { |bookmark| bookmark.store }
+    __respond_with bookmarked_stores, :include => [], :except => []
+
   end
 
 
   def food_list
-    if request.get? and parameters_required :store_id
+    if parameters_required :store_id
       params[:id] = nil
       conditions = {}
       conditions[:store_id] = params[:store_id]
@@ -122,13 +125,24 @@ class StoresController < ApplicationController
 
 
   def my_list
-    if request.get?
-      params[:id] = nil
-      conditions[:user_id] = current_user.id
-      ret = __find(Store, conditions)
-      __respond_with ret, :include => [], :except => []
-    end
+    params[:id] = nil
+    conditions = {}
+    conditions[:user_id] = current_user.id
+    ret = __find(Store, conditions)
+    __respond_with ret, :include => [], :except => []
   end
 
 
+  def detail_list
+    if parameters_required :store_id
+      params[:id] = nil
+      conditions = {}
+      conditions[:store_id] = params[:store_id]
+      ret = __find(StoreDetailInfo, conditions)
+      __respond_with ret
+    end
+  end
+
+  
+  
 end

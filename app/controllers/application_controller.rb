@@ -1,7 +1,24 @@
 class ApplicationController < ActionController::Base
   #protect_from_forgery
   
+  def http_post
+    if request.post?
+      true
+    else
+      __error(:code => 0, :description => "This request requires http post method")
+      false
+    end
+  end
 
+  def http_get
+    if request.get?
+      true
+    else
+      __error(:code => 0, :description => "This request requires http get method")
+      false
+    end
+  end
+  
   def authentication_required
     if params[:access_token] and !params[:access_token].empty?
       # Validate access_token whether exists and not expired
@@ -122,7 +139,8 @@ class ApplicationController < ActionController::Base
 
 
   def __success(object)
-    ret = {:result => object,:code => 200}
+    ret = {:code => 200}
+    ret[:result] = object if object
     respond_with(ret) do |format|
       format.xml {render :xml => ret}
       format.json {render :json => ret}

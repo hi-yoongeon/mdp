@@ -1,4 +1,4 @@
-class User < ApplicationModel#ActiveRecord::Base
+class User < ApplicationModel
   
   has_one :user_extra_info, :dependent => :destroy
   has_many :clients, :dependent => :destroy
@@ -8,6 +8,8 @@ class User < ApplicationModel#ActiveRecord::Base
   has_many :posts, :dependent => :nullify
   has_many :attach_files, :dependent => :nullify
   has_many :stores, :dependent => :nullify, :class_name => "Store", :foreign_key => "reg_user_id"
+  has_many :store_detail_infos, :class_name => "StoreDetailInfo", :foreign_key => "user_id", :dependent => :nullify
+  
   has_many :activities, :dependent => :nullify
   has_many :sent_messages, :dependent => :nullify, :class_name => "Message", :foreign_key => "sent_user_id"
   has_many :received_messages, :dependent => :nullify, :class_name => "Message", :foreign_key => "received_user_id"  
