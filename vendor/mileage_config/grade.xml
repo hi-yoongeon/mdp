@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<user_mileage_grades>
+  <grade percentage="100" name="E">
+    <label lang="ko">5등급</label>
+  </grade>
+  <grade percentage="50" name="D">
+    <label lang="ko">4등급</label>
+  </grade>
+  <grade percentage="20" name="C">
+    <label lang="ko">3등급</label>
+  </grade>
+  <grade percentage="10" name="B">
+    <label lang="ko">2등급</label>
+  </grade>
+  <grade percentage="5" name="A">
+    <label lang="ko">1등급</label>
+  </grade>
+</user_mileage_grades>

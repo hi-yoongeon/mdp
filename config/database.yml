@@ -8,15 +8,21 @@
 
 
 development:
-  adapter : mysql
-  database : matji_v2
-  username : root
-  password : database2002
-  host: localhost
-  socket : /var/run/mysqld/mysqld.sock
-  pool : 5
-  encoding : utf8
+  adapter: sqlite3
+  database: db/development.sqlit3
+  pool: 5
   timeout: 5000
+
+#development:
+#  adapter : mysql
+#  database : matji_v2
+#  username : root
+#  password : database2002
+#  host: localhost
+#  socket : /var/run/mysqld/mysqld.sock
+#  pool : 5
+#  encoding : utf8
+#  timeout: 5000
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
