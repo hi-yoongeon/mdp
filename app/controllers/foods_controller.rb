@@ -1,6 +1,5 @@
 class FoodsController < ApplicationController
   before_filter :authentication_required, :except => [:list]
-  #before_filter :http_post, :only => [:new, :update, :like, :delete]
   before_filter :http_get, :only => [:list]
   before_filter :http_post, :only => [:new, :update, :delete, :like]
   respond_to :xml, :json

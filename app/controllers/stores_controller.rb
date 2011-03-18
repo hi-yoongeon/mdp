@@ -142,8 +142,6 @@ class StoresController < ApplicationController
       __respond_with ret
     end
   end
-<<<<<<< HEAD
-
 
   def new_detail
     if parameters_required :store_id, :note   # --> 일단은 노트만.. 추후에 더 많은 필드 필요할 예정 
@@ -169,8 +167,6 @@ class StoresController < ApplicationController
     end
     
   end
-=======
-  
->>>>>>> a0ef32a5917201e231a8c57008958c176db5ef81
+
   
 end
