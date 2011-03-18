@@ -1,10 +1,12 @@
 class RegionsController < ApplicationController
   before_filter :authentication_required
+  before_filter :http_get, :only => [:bookmarked_list]
+  before_filter :http_post, :only => [:bookmark]
   respond_to :xml, :json
   
 
   def bookmark
-    if request.post? and parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
+    if parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
       region = Region.new(:user_id => current_user.id, :lat_sw => params[:lat_sw], :lat_ne => params[:lat_ne], :lng_sw => params[:lng_sw], :lng_ne => params[:lng_ne])
       if region.save
         bookmark = Bookmark.new(:object => "Region", :foreign_key => region.id, :user_id => current_user.id)
@@ -23,14 +25,12 @@ class RegionsController < ApplicationController
 
   
   def bookmarked_list
-    if request.get?
-      conditions = {}
-      conditions[:user_id] = current_user.id
-      conditions[:object] = "Region"
-      bookmarks = __find(Bookmark, conditions)
-      bookmarked_regions = bookmarks.map { |bookmark| bookmark.region }
-      __respond_with bookmarked_retions, :include => [], :except => []
-    end
+    conditions = {}
+    conditions[:user_id] = current_user.id
+    conditions[:object] = "Region"
+    bookmarks = __find(Bookmark, conditions)
+    bookmarked_regions = bookmarks.map { |bookmark| bookmark.region }
+    __respond_with bookmarked_retions, :include => [], :except => []
   end
 
   

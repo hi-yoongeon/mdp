@@ -2,6 +2,7 @@ class FoodsController < ApplicationController
   before_filter :authentication_required, :except => [:list]
   #before_filter :http_post, :only => [:new, :update, :like, :delete]
   before_filter :http_get, :only => [:list]
+  before_filter :http_post, :only => [:new, :update, :delete, :like]
   respond_to :xml, :json
 
 
@@ -15,7 +16,6 @@ class FoodsController < ApplicationController
           return
         end
       end
-      
       new_store_food = create_store_food(params[:store_id], food.id)
       if new_store_food
         data = {}
@@ -24,8 +24,6 @@ class FoodsController < ApplicationController
         data[:add] = new_store_food.id
         StoreFoodLog.logging(data) 
       end
-
-
       return
     end
   end
@@ -38,20 +36,16 @@ class FoodsController < ApplicationController
         food = Food.new(:name => params[:food_name])
         food.save
       end
-      
       store_food = StoreFood.find(params[:store_food_id])
       store_food.update_attribute(:blind, 0)
       new_store_food = create_store_food(store_food.store.id, food.id)
-      
       if new_store_food
         data = {}
         data[:user_id] = current_user.id
         data[:store_id] = store_food.store_id
         data[:mod] = "#{store_food.id},#{new_store_food.id}"
-        
         StoreFoodLog.logging(data)
       end
-
     end
   end
 
@@ -68,7 +62,6 @@ class FoodsController < ApplicationController
           data[:store_id] = store_food.store_id
           data[:del] = store_food.id
           StoreFoodLog.logging(data)          
-
           __success()
           return
         else
@@ -83,7 +76,6 @@ class FoodsController < ApplicationController
   end
 
     
-    
   def like
     if parameters_required :store_food_id
       store_food = StoreFood.find(params[:store_food_id])
@@ -91,7 +83,6 @@ class FoodsController < ApplicationController
         __error(:code => 0, :descriptions => "Invalid store food id..")
         return
       end
-      
       like = Like.new(:user_id => current_user.id, :object => "StoreFood", :foreign_key => param[:store_food_id])
       if like.save
         data = {}
@@ -104,7 +95,6 @@ class FoodsController < ApplicationController
         data[:object_complement_type] = "Food"
         data[:object_complement_id] = store_food.food.id
         data[:object_complement_name] = store_food.food.name
-        
         post = Activity.generate(data);
         if post
           __success(post)
@@ -133,7 +123,6 @@ class FoodsController < ApplicationController
 
 
 
-
   private 
   def create_store_food(store_id, food_id)
     store_food = StoreFood.new(:food_id => food_id, :store_id => store_id, :user_id => current_user.id, :blind => 1)
@@ -145,6 +134,5 @@ class FoodsController < ApplicationController
       return false
     end
   end
-
 
 end

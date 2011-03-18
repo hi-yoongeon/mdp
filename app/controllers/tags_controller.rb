@@ -1,10 +1,12 @@
 class TagsController < ApplicationController
   #before_filter :authentication_required
+  before_filter :http_get, :only => [:show, :list, :store_tag_list, :user_tag_list, :post_tag_list]
+  before_filter :http_post, :only => [:new]
   respond_to :xml, :json
 
   
   def show
-    if request.get? and parameters_required :tag_id
+    if parameters_required :tag_id
       params[:id] = params[:tag_id]
       ret = __find(Tag)
       respond_with ret, :include => [], :except => []
@@ -12,16 +14,14 @@ class TagsController < ApplicationController
   end
   
   def list
-    if request.get?
-      params[:id] = nil
-      ret = __find(Tag)
-      respond_with ret, :include => [], :except => []
-    end
+    params[:id] = nil
+    ret = __find(Tag)
+    respond_with ret, :include => [], :except => []
   end
   
 
   def store_tag_list
-    if request.get? and parameters_required :store_id
+    if parameters_required :store_id
       params[:id] = nil
       conditions = {:store_id => params[:store_id]}
       storeTags = __find(StoreTag,conditions)
@@ -32,7 +32,7 @@ class TagsController < ApplicationController
 
 
   def user_tag_list
-    if request.get? and parameters_required :user_id
+    if parameters_required :user_id
       params[:id] = nil
       conditions = {:user_id => params[:user_id]}
       userTags = __find(UserTag,conditions)
@@ -42,7 +42,7 @@ class TagsController < ApplicationController
   end
   
   def post_tag_list
-    if request.get? and parameters_required :post_id
+    if parameters_required :post_id
       params[:id] = nil
       conditions = {:post_id => params[:post_id]}
       postTags = __find(PostTag,conditions)

@@ -1,10 +1,12 @@
 class PostsController < ApplicationController
   before_filter :authentication_required, :only => [:new, :delete, :like, :my_list]
+  before_filter :http_get, :only => [:show, :list, :reply_list ,:my_list, :nearby_list, :region_list]
+  before_filter :http_post, :only => [:new, :delete, :like]
   respond_to :xml, :json
 
 
   def show
-    if request.get? and parameters_required :post_id
+    if parameters_required :post_id
       params[:id] = params[:post_id]
       ret = __find(Post)
       __respond_with ret, :include => [], :except => []
@@ -13,13 +15,13 @@ class PostsController < ApplicationController
 
 
   def new
-    if request.post? and parameters_required :post
+    if parameters_required :post
       data = {}
       data[:post] = params[:post]
       data[:user_id] = current_user.id
       data[:lat] = 0
       data[:lng] = 0
-      
+
       # test code
       data[:from_where] = "IPHONE" if data[:from_where].nil?
       data[:from_where].upcase!
@@ -52,7 +54,6 @@ class PostsController < ApplicationController
             :webpath => fcm.img_path(:webpath),
             :thumbnail => fcm.img_path(:webpath, :thumbnail => true)
           }
-          
           AttachFile.new(attach_file_data).save
         end
         # Attachfile
@@ -69,7 +70,7 @@ class PostsController < ApplicationController
 
 
   def delete
-    if reqeust.post? and parameters_required :post_id
+    if parameters_required :post_id
       post = Post.find(params[:post_id])
       if post.user_id == current_user.id
         post.destroy
@@ -82,7 +83,7 @@ class PostsController < ApplicationController
 
 
   def like
-    if request.get? and parameters_required :post_id
+    if parameters_required :post_id
       # todo
       # create like object
       like = Like.new(:user_id => current_user.id, :object => "Post", :foreign_key => params[:post_id])
@@ -114,17 +115,15 @@ class PostsController < ApplicationController
 
 
   def list
-    if request.get?
-      params[:id] = nil # remove id parameter for correct result
-      conditions = {:parent_post_id => nil}
-      ret = __find(Post, conditions)
-      __respond_with ret, :include => [], :except => []
-    end
+    params[:id] = nil # remove id parameter for correct result
+    conditions = {:parent_post_id => nil}
+    ret = __find(Post, conditions)
+    __respond_with ret, :include => [], :except => []
   end
   
 
   def reply_list
-    if request.get? and parameters_required :post_id
+    if parameters_required :post_id
       params[:id] = nil
       conditions = {:parent_post_id => params[:post_id]}
       ret = __find(Post, conditions)
@@ -134,17 +133,15 @@ class PostsController < ApplicationController
   
 
   def my_list
-    if request.get?
-      params[:id] = nil # remove id parameter for correct result
-      conditions[:user_id] = current_user.id
-      ret = __find(Post, conditions)
-      __respond_with ret, :include => [], :except => [] 
-    end    
+    params[:id] = nil # remove id parameter for correct result
+    conditions[:user_id] = current_user.id
+    ret = __find(Post, conditions)
+    __respond_with ret, :include => [], :except => [] 
   end
 
 
   def nearby_list
-    if request.get? and parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
+    if parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
       params[:id] = nil
       conditions = {}
       conditions[:lat] = params[:lat_sw].to_f .. params[:lat_ne].to_f
@@ -155,16 +152,17 @@ class PostsController < ApplicationController
     end
   end
 
-  
-  
-  # def region_list
-  #   if request.get? and parameters_required # to do
-  #     params[:id] = nil
-  #     conditions = {:parent_post_id => nil}
-  #     ret = __find(Post, conditions)
-  #     __respond_with ret, :include => [], :except => []
-  #   end
-  # end
+
+
+  def region_list
+    if parameters_required # to do
+      params[:id] = nil
+      condnitions = {:parent_post_id => nil}
+      ret = __find(Post, conditions)
+      __respond_with ret, :include => [], :except => []
+    end
+  end
+
 
 
 end

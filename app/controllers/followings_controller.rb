@@ -1,9 +1,11 @@
 class FollowingsController < ApplicationController
   before_filter :authentication_required, :only => [:new, :delete]
+  before_filter :http_get, :only => [:list, :following_list, :follower_list]
+  before_filter :http_post, :only => [:new, :delete]
 
 
   def new
-    if request.post? and parameters_required :followed_user_id
+    if parameters_required :followed_user_id
       following_user_id = current_user.id
       followed_user_id = params[:followed_user_id]
       
@@ -24,7 +26,7 @@ class FollowingsController < ApplicationController
   
   
   def delete
-    if request.post? and parameters_required :followed_user_id
+    if parameters_required :followed_user_id
       following_user_id = current_user.id
       followed_user_id = params[:followed_user_id]
       
@@ -48,15 +50,13 @@ class FollowingsController < ApplicationController
   
   
   def list
-    if request.get?
-      ret = __find(Following)
-      __respond_with ret, :include => [], :except => []
-    end
+    ret = __find(Following)
+    __respond_with ret, :include => [], :except => []
   end
   
 
   def following_list
-    if request.get? and parameters_required :user_id
+    if parameters_required :user_id
       following_user_id = params[:user_id]
       require "user_file_cache_manager"
       mfcm = UserFileCacheManager.new(following_user_id)
@@ -71,7 +71,7 @@ class FollowingsController < ApplicationController
 
   
   def follower_list
-    if request.get? and parameters_required :user_id
+    if parameters_required :user_id
       followed_user_id = params[:user_id]
       require "user_file_cache_manager"
       mfcm = UserFileCacheManager.new(followed_user_id)
