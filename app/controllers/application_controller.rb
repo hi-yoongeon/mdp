@@ -110,8 +110,13 @@ class ApplicationController < ActionController::Base
     if params[:page]
       offset = (params[:page].to_i - 1) * limit
     end
-
-    ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset)
+    
+    if params[:order]
+      ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset, :order => params[:order])
+    else
+      ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset)      
+    end
+    
     return ret
   end
   

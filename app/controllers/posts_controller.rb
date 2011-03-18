@@ -155,15 +155,16 @@ class PostsController < ApplicationController
     end
   end
 
-
-  def region_list
-    if request.get? and parameters_required # to do
-      params[:id] = nil
-      condnitions = {:parent_post_id => nil}
-      ret = __find(Post, conditions)
-      __respond_with ret, :include => [], :except => []
-    end
-  end
+  
+  
+  # def region_list
+  #   if request.get? and parameters_required # to do
+  #     params[:id] = nil
+  #     conditions = {:parent_post_id => nil}
+  #     ret = __find(Post, conditions)
+  #     __respond_with ret, :include => [], :except => []
+  #   end
+  # end
 
 
 end

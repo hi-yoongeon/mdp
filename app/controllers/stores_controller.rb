@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
 class StoresController < ApplicationController
-  before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmark, :bookmarked_list]
+  before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmark, :bookmarked_list, :new_detail]
   before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :my_list, :detail_list]
-  before_filter :http_post, :only => [:show, :new, :like, :bookmark]
+  before_filter :http_post, :only => [:new, :like, :bookmark]#, :new_detail]
   respond_to :xml, :json
 
 
+  # Store show API
   def show
     if parameters_required :store_id
       params[:id] = params[:store_id]
@@ -14,6 +16,8 @@ class StoresController < ApplicationController
   end
 
 
+
+  # New Store API
   def new
     if parameters_required :store_name, :address, :lat, :lng
       data = {}
@@ -36,6 +40,8 @@ class StoresController < ApplicationController
   end
 
 
+
+  # Store Like API
   def like
     if parameters_required :store_id
       # todo
@@ -65,6 +71,7 @@ class StoresController < ApplicationController
   end
 
 
+  # Store Bookmark API
   def bookmark
     if parameters_required :store_id
       # create bookmark object
@@ -79,6 +86,8 @@ class StoresController < ApplicationController
   end
 
 
+
+  # Store List API
   def list
     params[:id] = nil
     ret = __find(Store)
@@ -111,17 +120,7 @@ class StoresController < ApplicationController
   end
 
 
-  def food_list
-    if parameters_required :store_id
-      params[:id] = nil
-      conditions = {}
-      conditions[:store_id] = params[:store_id]
-      store_foods = __find(StoreFood, conditions)
-      foods = __find(Food, :id => store_foods.food_id)
-      foods_name = foods.map { |food| food.name }
-      __respond_with foods_name, :include => [], :except => []
-    end
-  end
+
 
 
   def my_list
@@ -133,6 +132,8 @@ class StoresController < ApplicationController
   end
 
 
+
+  # Store Detail API
   def detail_list
     if parameters_required :store_id
       params[:id] = nil
@@ -143,6 +144,30 @@ class StoresController < ApplicationController
     end
   end
 
-  
+
+  def new_detail
+    if parameters_required :store_id, :note   # --> 일단은 노트만.. 추후에 더 많은 필드 필요할 예정 
+      detail_info = StoreDetailInfo.new(:user_id => current_user.id, :store_id => params[:store_id], :note => params[:note])
+      if detail_info.save
+        __success(detail_info)
+      else
+        __error(:code => 0, :msg => "Failed to save store detail information")
+      end
+    end
+  end
+
+
+  def rollback_detail
+    if parameters_required :store_detail_info_id
+      detail_info = StoreDetailInfo.find(params[:store_detail_info_id])
+      if detail_info
+        time = Time.new
+        detail_info.update_attribute(:update_at, time)
+      else
+        
+      end
+    end
+    
+  end
   
 end

@@ -120,11 +120,17 @@ class FoodsController < ApplicationController
   end
 
 
+  
   def list
-    params[:id] = nil
-    ret = __find(StoreFood)
-    __respond_with ret, :include => [], :except => []
+    if parameters_required :store_id
+      params[:id] = nil
+      conditions = {}
+      conditions[:store_id] = params[:store_id]
+      store_foods = __find(StoreFood, conditions)
+      __respond_with store_foods, :include => [:food], :except => []
+    end
   end
+
 
 
 

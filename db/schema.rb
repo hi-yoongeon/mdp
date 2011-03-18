@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(:version => 20110316084243) do
   end
 
   create_table "store_detail_infos", :force => true do |t|
+    t.integer  "user_id",                   :null => false
     t.integer  "store_id",                  :null => false
     t.string   "note"
     t.integer  "sequence",   :default => 0, :null => false
