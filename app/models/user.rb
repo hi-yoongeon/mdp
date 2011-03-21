@@ -1,6 +1,3 @@
-<<<<<<< .merge_file_AwibPE
-class User < ApplicationModel
-=======
 # == Schema Information
 # Schema version: 20110316100624
 #
@@ -19,7 +16,6 @@ class User < ApplicationModel
 #
 
 class User < ApplicationModel#ActiveRecord::Base
->>>>>>> .merge_file_EeUC4b
   
   has_one :user_extra_info, :dependent => :destroy
   has_many :clients, :dependent => :destroy

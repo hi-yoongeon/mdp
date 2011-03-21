@@ -2,33 +2,11 @@
 require "matji_mileage_manager"
 
 class ApplicationController < ActionController::Base
-<<<<<<< .merge_file_SuRFXf
-  #protect_from_forgery
-  
-  def http_post
-    if request.post?
-      true
-    else
-      __error(:code => 0, :description => "This request requires http post method")
-      false
-    end
-  end
-=======
   # protect_from_forgery
 
   before_filter :mileage_setting
   after_filter :mileage_action
->>>>>>> .merge_file_OAowgS
 
-  def http_get
-    if request.get?
-      true
-    else
-      __error(:code => 0, :description => "This request requires http get method")
-      false
-    end
-  end
-  
   def authentication_required
     if params[:access_token] and !params[:access_token].empty?
       # Validate access_token whether exists and not expired
