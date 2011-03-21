@@ -1,3 +1,17 @@
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: likes
+#
+#  id          :integer         not null, primary key
+#  user_id     :integer         not null
+#  foreign_key :integer         not null
+#  object      :string(255)     not null
+#  sequence    :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+
 class Like < ApplicationModel#ActiveRecord::Base
   has_many :activities, :dependent => :destroy
 

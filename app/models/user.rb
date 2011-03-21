@@ -1,4 +1,25 @@
+<<<<<<< .merge_file_AwibPE
 class User < ApplicationModel
+=======
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: users
+#
+#  id                  :integer         not null, primary key
+#  userid              :string(255)     not null
+#  hashed_password     :string(255)     not null
+#  old_hashed_password :string(255)
+#  nick                :string(255)     not null
+#  email               :string(255)     not null
+#  salt                :string(255)     not null
+#  sequence            :integer
+#  created_at          :datetime
+#  updated_at          :datetime
+#
+
+class User < ApplicationModel#ActiveRecord::Base
+>>>>>>> .merge_file_EeUC4b
   
   has_one :user_extra_info, :dependent => :destroy
   has_many :clients, :dependent => :destroy

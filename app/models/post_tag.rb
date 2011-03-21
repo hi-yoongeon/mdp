@@ -1,3 +1,16 @@
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: post_tags
+#
+#  id         :integer         not null, primary key
+#  tag_id     :integer         not null
+#  post_id    :integer         not null
+#  sequence   :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class PostTag < ApplicationModel#ActiveRecord::Base
   belongs_to :tag, :class_name => "Tag", :foreign_key => "tag_id"
   belongs_to :post, :class_name => "Post", :foreign_key => "post_id"

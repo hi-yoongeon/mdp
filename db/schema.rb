@@ -10,7 +10,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+<<<<<<< .merge_file_IEchGW
 ActiveRecord::Schema.define(:version => 20110316084243) do
+=======
+ActiveRecord::Schema.define(:version => 20110316100624) do
+>>>>>>> .merge_file_foEHYP
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -51,10 +55,16 @@ ActiveRecord::Schema.define(:version => 20110316084243) do
     t.integer  "user_id",                   :null => false
     t.integer  "store_id"
     t.integer  "post_id"
+<<<<<<< .merge_file_IEchGW
     t.string   "filename",   :limit => 100, :null => false
     t.string   "fullpath",                  :null => false
     t.string   "webpath",                   :null => false
     t.string   "thumbnail"
+=======
+    t.string   "filename",   :null => false
+    t.string   "fullpath",   :null => false
+    t.string   "webpath",    :null => false
+>>>>>>> .merge_file_foEHYP
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -113,6 +123,15 @@ ActiveRecord::Schema.define(:version => 20110316084243) do
     t.datetime "updated_at"
   end
 
+  create_table "mileage_stack_datas", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "flag"
+    t.integer  "point"
+    t.integer  "from_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "notices", :force => true do |t|
     t.string   "subject",    :null => false
     t.text     "content",    :null => false
@@ -137,12 +156,21 @@ ActiveRecord::Schema.define(:version => 20110316084243) do
     t.integer  "parent_post_id"
     t.integer  "store_id"
     t.integer  "activity_id"
+<<<<<<< .merge_file_IEchGW
     t.text     "post",                                            :null => false
     t.integer  "image_count",                  :default => 0,     :null => false
     t.integer  "like_count",                   :default => 0,     :null => false
     t.float    "lat",                          :default => 0.0
     t.float    "lng",                          :default => 0.0
     t.string   "from_where",     :limit => 10, :default => "WEB", :null => false
+=======
+    t.text     "post",                            :null => false
+    t.integer  "image_count",    :default => 0,   :null => false
+    t.integer  "like_count",     :default => 0,   :null => false
+    t.float    "lat",            :default => 0.0
+    t.float    "lng",            :default => 0.0
+    t.string   "from",                            :null => false
+>>>>>>> .merge_file_foEHYP
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -239,6 +267,16 @@ ActiveRecord::Schema.define(:version => 20110316084243) do
     t.string   "intro"
     t.integer  "post_count"
     t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_mileages", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "total_point"
+    t.string   "grade"
+    t.boolean  "special_user"
+    t.boolean  "blacklist_user"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
