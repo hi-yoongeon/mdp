@@ -10,11 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-<<<<<<< .merge_file_IEchGW
-ActiveRecord::Schema.define(:version => 20110316084243) do
-=======
 ActiveRecord::Schema.define(:version => 20110316100624) do
->>>>>>> .merge_file_foEHYP
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -42,29 +38,13 @@ ActiveRecord::Schema.define(:version => 20110316100624) do
     t.datetime "updated_at"
   end
 
-  create_table "alarms", :force => true do |t|
-    t.integer  "received_user_id", :null => false
-    t.integer  "sent_user_id",     :null => false
-    t.string   "type",             :null => false
-    t.integer  "sequence"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "attach_files", :force => true do |t|
-    t.integer  "user_id",                   :null => false
+    t.integer  "user_id",    :null => false
     t.integer  "store_id"
     t.integer  "post_id"
-<<<<<<< .merge_file_IEchGW
-    t.string   "filename",   :limit => 100, :null => false
-    t.string   "fullpath",                  :null => false
-    t.string   "webpath",                   :null => false
-    t.string   "thumbnail"
-=======
     t.string   "filename",   :null => false
     t.string   "fullpath",   :null => false
     t.string   "webpath",    :null => false
->>>>>>> .merge_file_foEHYP
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -152,25 +132,16 @@ ActiveRecord::Schema.define(:version => 20110316100624) do
   end
 
   create_table "posts", :force => true do |t|
-    t.integer  "user_id",                                         :null => false
+    t.integer  "user_id",                         :null => false
     t.integer  "parent_post_id"
     t.integer  "store_id"
     t.integer  "activity_id"
-<<<<<<< .merge_file_IEchGW
-    t.text     "post",                                            :null => false
-    t.integer  "image_count",                  :default => 0,     :null => false
-    t.integer  "like_count",                   :default => 0,     :null => false
-    t.float    "lat",                          :default => 0.0
-    t.float    "lng",                          :default => 0.0
-    t.string   "from_where",     :limit => 10, :default => "WEB", :null => false
-=======
     t.text     "post",                            :null => false
     t.integer  "image_count",    :default => 0,   :null => false
     t.integer  "like_count",     :default => 0,   :null => false
     t.float    "lat",            :default => 0.0
     t.float    "lng",            :default => 0.0
     t.string   "from",                            :null => false
->>>>>>> .merge_file_foEHYP
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -187,31 +158,11 @@ ActiveRecord::Schema.define(:version => 20110316100624) do
     t.datetime "updated_at"
   end
 
-  create_table "store_detail_infos", :force => true do |t|
-    t.integer  "user_id",                   :null => false
-    t.integer  "store_id",                  :null => false
-    t.string   "note"
-    t.integer  "sequence",   :default => 0, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "store_food_logs", :force => true do |t|
-    t.integer  "store_id",                      :null => false
-    t.integer  "user_id",                       :null => false
-    t.string   "store_food_ids"
-    t.string   "status",                        :null => false
-    t.integer  "sequence",       :default => 0, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "store_foods", :force => true do |t|
-    t.integer  "user_id",                                :null => false
-    t.integer  "food_id",                                :null => false
-    t.integer  "store_id",                               :null => false
-    t.integer  "like_count",              :default => 0, :null => false
-    t.integer  "blind",      :limit => 1, :default => 1, :null => false
+    t.integer  "user_id",                   :null => false
+    t.integer  "food_id",                   :null => false
+    t.integer  "store_id",                  :null => false
+    t.integer  "like_count", :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
