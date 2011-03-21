@@ -1,6 +1,11 @@
+# -*- coding: utf-8 -*-
+require "matji_mileage_manager"
+
 class ApplicationController < ActionController::Base
   # protect_from_forgery
-  
+
+  before_filter :mileage_setting
+  after_filter :mileage_action
 
   def authentication_required
     if params[:access_token] and !params[:access_token].empty?
@@ -170,7 +175,33 @@ class ApplicationController < ActionController::Base
 
 
   def mileage_setting
+    @mmm = MatjiMileageManager.new(6)
+  end
 
+  def mileage_action
+    rule = @mmm.act(params[:controller], params[:action])
+    
+    unless rule.nil?
+
+      rule.each do |node|
+
+        user_id = (node[:to] == "me") ? @mmm.from_user_id : @mmm_user_id
+        @mmm.error if user_id.nil?
+
+        MileageStackData.create(
+                                :user_id => user_id, 
+                                :flag => node[:flag], 
+                                :point => node[:point],
+                                :from_user_id => @mmm.from_user_id
+                                )
+
+        um = UserMileage.find_by_user_id(user_id)
+        um[:total_point] += node[:point].to_i
+        um.save
+
+      end
+
+    end
   end
     
 end

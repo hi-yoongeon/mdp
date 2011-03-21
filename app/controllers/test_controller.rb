@@ -33,4 +33,12 @@ class TestController < ApplicationController
   end
 
 
+  def mileage_test
+
+#    @mmm_user_id = 2;
+    render :text => "Mileage Test"
+
+  end
+
+
 end

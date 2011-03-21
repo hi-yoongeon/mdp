@@ -2,8 +2,22 @@
 <user_mileage_rules>
   <controller name="posts">
     <action name="write">
-      <mileage flag="WRITE_POST" point="10" mode="active" />
-      <mileage flag="REPLY_MY_POST" point="10" mode="passive" />
+      <mileage flag="WRITE_POST" point="10" />
+      <mileage flag="REPLY_MY_POST" point="10" />
+    </action>
+    <action name="like">
+      <mileage flag="EVALUATE_POST" point="1" to="me" />
+      <mileage flag="IS_EVALUATED_POST" point="5" to="you" />
     </action>
   </controller>
+
+  <!-- Start Test -->
+  <controller name="test">
+    <action name="mileage_test">
+      <mileage flag="MI_A" point="1" to="me" />
+      <mileage flag="MI_B" point="10" to="you" />
+    </action>
+  </controller>
+  <!-- End Test -->
+  
 </user_mileage_rules>
