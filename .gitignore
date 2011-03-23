@@ -4,4 +4,4 @@ log/*.log
 tmp/**/*
 public/file_cache/*
 files/*.bak
-# config/database.yml
+config/database.yml
