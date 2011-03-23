@@ -1,7 +1,0 @@
-<?xml version="1.0">
-<rules>
-  <controller name="User">
-    <action name="follow" point="10" action_name="USER_FOLLOW" />
-  </controller>
-</rules>    
-

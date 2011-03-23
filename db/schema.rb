@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110316100624) do
+ActiveRecord::Schema.define(:version => 20110316141309) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -33,6 +33,15 @@ ActiveRecord::Schema.define(:version => 20110316100624) do
     t.string   "object_complement_name"
     t.string   "object_complement_id"
     t.string   "action",                                     :null => false
+    t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "alarms", :force => true do |t|
+    t.integer  "received_user_id", :null => false
+    t.integer  "sent_user_id",     :null => false
+    t.string   "type",             :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -158,12 +167,32 @@ ActiveRecord::Schema.define(:version => 20110316100624) do
     t.datetime "updated_at"
   end
 
-  create_table "store_foods", :force => true do |t|
+  create_table "store_detail_infos", :force => true do |t|
     t.integer  "user_id",                   :null => false
-    t.integer  "food_id",                   :null => false
     t.integer  "store_id",                  :null => false
-    t.integer  "like_count", :default => 0, :null => false
-    t.integer  "sequence"
+    t.string   "note"
+    t.integer  "sequence",   :default => 0, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "store_food_logs", :force => true do |t|
+    t.integer  "store_id",                      :null => false
+    t.integer  "user_id",                       :null => false
+    t.string   "store_food_ids"
+    t.string   "status",                        :null => false
+    t.integer  "sequence",       :default => 0, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "store_foods", :force => true do |t|
+    t.integer  "user_id",                       :null => false
+    t.integer  "food_id",                       :null => false
+    t.integer  "store_id",                      :null => false
+    t.integer  "like_count", :default => 0,     :null => false
+    t.boolean  "blind",      :default => false, :null => false
+    t.integer  "sequence",   :default => 0,     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -204,19 +233,19 @@ ActiveRecord::Schema.define(:version => 20110316100624) do
   end
 
   create_table "user_external_accounts", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "service"
-    t.text     "data"
+    t.integer  "user_id",    :null => false
+    t.string   "service",    :null => false
+    t.text     "data",       :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "user_extra_infos", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "user_id",                   :null => false
     t.string   "title"
     t.string   "intro"
-    t.integer  "post_count"
+    t.integer  "post_count", :default => 0, :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"

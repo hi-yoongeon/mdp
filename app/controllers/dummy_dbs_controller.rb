@@ -6,7 +6,7 @@ respond_to :html
   end
 
   def user_mileage
-    1000.times do |i|
+    100.times do |i|
       user_id = Random.new.rand(100000001..100000100)
       total_point = Random.new.rand(1..10)
 
@@ -17,13 +17,13 @@ respond_to :html
                           :user_id => user_id, 
                           :total_point => total_point, 
                           :grade => nil, 
-                          :special_user => "false", 
-                          :blacklist_user => "false"
+                          :special_user => 0, 
+                          :blacklist_user => 0
                           )
 
       else
-        um_total_point = total_point + um[:total_point];
-        um.save(:total_point => um_total_point)
+        um.total_point += total_point
+        um.save
       end
       
       sleep 1
