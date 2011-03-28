@@ -1,11 +1,11 @@
 class CreateUserExternalAccounts < ActiveRecord::Migration
   def self.up
     create_table :user_external_accounts do |t|
-      t.integer :id
-      t.integer :user_id
-      t.string :service
+      t.integer :id, :null => false
+      t.integer :user_id, :null => false
+      t.string :service, :null => false
       # facebook, twitter
-      t.text :data
+      t.text :data, :null => false
       t.integer :sequence
       t.datetime :created_at
       t.datetime :updated_at

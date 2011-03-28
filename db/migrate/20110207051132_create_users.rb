@@ -7,7 +7,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :nick, :null => false
       t.string :email, :null => false
       t.string :salt, :null => false
-      t.integer :sequence, :null => true
+      t.integer :sequence
 
       t.timestamps
     end

@@ -1,5 +1,5 @@
 class TestController < ApplicationController
-  
+
   def test
     require "user_file_cache_manager"
     mfcm = UserFileCacheManager.new(100000002)
@@ -29,6 +29,14 @@ class TestController < ApplicationController
       @img = mfcm.img_path
     end
     render
+
+  end
+
+
+  def mileage_test
+
+#    @mmm_user_id = 2;
+    render :text => "Mileage Test"
 
   end
 

@@ -1,24 +1,12 @@
-class ApplicationController < ActionController::Base
-  #protect_from_forgery
-  
-  def http_post
-    if request.post?
-      true
-    else
-      __error(:code => 0, :description => "This request requires http post method")
-      false
-    end
-  end
+# -*- coding: utf-8 -*-
+require "matji_mileage_manager"
 
-  def http_get
-    if request.get?
-      true
-    else
-      __error(:code => 0, :description => "This request requires http get method")
-      false
-    end
-  end
-  
+class ApplicationController < ActionController::Base
+  # protect_from_forgery
+
+  before_filter :mileage_setting
+  after_filter :mileage_action
+
   def authentication_required
     if params[:access_token] and !params[:access_token].empty?
       # Validate access_token whether exists and not expired
@@ -188,6 +176,37 @@ class ApplicationController < ActionController::Base
         render :template => "xmls/xml", :text => resource.as_json(options).to_xml(:root => root)
       end
       format.html { render }
+    end
+  end
+
+
+  def mileage_setting
+    @mmm = MatjiMileageManager.new(6)
+  end
+
+  def mileage_action
+    rule = @mmm.act(params[:controller], params[:action])
+    
+    unless rule.nil?
+
+      rule.each do |node|
+
+        user_id = (node[:to] == "me") ? @mmm.from_user_id : @mmm_user_id
+        @mmm.error if user_id.nil?
+
+        MileageStackData.create(
+                                :user_id => user_id, 
+                                :flag => node[:flag], 
+                                :point => node[:point],
+                                :from_user_id => @mmm.from_user_id
+                                )
+
+        um = UserMileage.find_by_user_id(user_id)
+        um[:total_point] += node[:point].to_i
+        um.save
+
+      end
+
     end
   end
     

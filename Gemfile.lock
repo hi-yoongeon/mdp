@@ -39,7 +39,7 @@ GEM
     faraday (0.5.6)
       addressable (~> 2.2.4)
       multipart-post (~> 1.1.0)
-      rack (>= 1.1.0, < 2)
+      rack (< 2, >= 1.1.0)
     faraday_middleware (0.3.2)
       faraday (~> 0.5.4)
     fb_graph (1.5.3)
@@ -86,7 +86,6 @@ GEM
     rake (0.8.7)
     rest-client (1.6.1)
       mime-types (>= 1.16)
-    rmagick (2.13.1)
     rspec (2.4.0)
       rspec-core (~> 2.4.0)
       rspec-expectations (~> 2.4.0)
@@ -131,7 +130,6 @@ DEPENDENCIES
   fb_graph
   oauth
   rails (= 3.0.3)
-  rmagick
   rspec (= 2.4.0)
   rspec-rails (= 2.4.1)
   spork (= 0.8.4)

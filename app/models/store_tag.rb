@@ -1,3 +1,17 @@
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: store_tags
+#
+#  id         :integer         not null, primary key
+#  tag_id     :integer         not null
+#  store_id   :integer         not null
+#  count      :integer         default(0), not null
+#  sequence   :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class StoreTag < ApplicationModel#ActiveRecord::Base
   belongs_to :tag, :class_name => "Tag", :foreign_key => "tag_id"
   belongs_to :store, :class_name => "Store", :foreign_key => "store_id"

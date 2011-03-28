@@ -1,3 +1,17 @@
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: bookmarks
+#
+#  id          :integer         not null, primary key
+#  user_id     :integer         not null
+#  foreign_key :integer         not null
+#  object      :string(255)     not null
+#  sequence    :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+
 class Bookmark < ApplicationModel#ActiveRecord::Base
   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
   belongs_to :store, :class_name => "Store", :foreign_key => "foreign_key"

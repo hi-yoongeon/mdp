@@ -10,7 +10,8 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110319080519) do
+
+ActiveRecord::Schema.define(:version => 20110316141309) do
 
   create_table "access_grants", :force => true do |t|
     t.integer  "user_id",                                :null => false
@@ -109,6 +110,15 @@ ActiveRecord::Schema.define(:version => 20110319080519) do
     t.integer  "received_user_id", :null => false
     t.text     "message",          :null => false
     t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "mileage_stack_datas", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "flag"
+    t.integer  "point"
+    t.integer  "from_user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -234,20 +244,30 @@ ActiveRecord::Schema.define(:version => 20110319080519) do
   end
 
   create_table "user_external_accounts", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "service"
-    t.text     "data"
+    t.integer  "user_id",    :null => false
+    t.string   "service",    :null => false
+    t.text     "data",       :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "user_extra_infos", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "user_id",                   :null => false
     t.string   "title"
     t.string   "intro"
-    t.integer  "post_count"
+    t.integer  "post_count", :default => 0, :null => false
     t.integer  "sequence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_mileages", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "total_point"
+    t.string   "grade"
+    t.boolean  "special_user"
+    t.boolean  "blacklist_user"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

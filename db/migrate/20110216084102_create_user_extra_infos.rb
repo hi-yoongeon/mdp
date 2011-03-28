@@ -1,11 +1,11 @@
 class CreateUserExtraInfos < ActiveRecord::Migration
   def self.up
     create_table :user_extra_infos do |t|
-      t.integer :id
-      t.integer :user_id
-      t.string :title
-      t.string :intro
-      t.integer :post_count
+      t.integer :id, :null => false
+      t.integer :user_id, :null => false
+      t.string :title, :null => true
+      t.string :intro, :null => true
+      t.integer :post_count, :null => false, :default => 0
       t.integer :sequence
       t.datetime :created_at
       t.datetime :updated_at

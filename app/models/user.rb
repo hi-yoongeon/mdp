@@ -1,4 +1,21 @@
-class User < ApplicationModel
+# == Schema Information
+# Schema version: 20110316100624
+#
+# Table name: users
+#
+#  id                  :integer         not null, primary key
+#  userid              :string(255)     not null
+#  hashed_password     :string(255)     not null
+#  old_hashed_password :string(255)
+#  nick                :string(255)     not null
+#  email               :string(255)     not null
+#  salt                :string(255)     not null
+#  sequence            :integer
+#  created_at          :datetime
+#  updated_at          :datetime
+#
+
+class User < ApplicationModel#ActiveRecord::Base
   
   has_one :user_extra_info, :dependent => :destroy
   has_many :clients, :dependent => :destroy
@@ -11,6 +28,8 @@ class User < ApplicationModel
   has_many :store_detail_infos, :class_name => "StoreDetailInfo", :foreign_key => "user_id", :dependent => :nullify
   
   has_many :activities, :dependent => :nullify
+  has_many :sent_alarm, :dependent => :nullify, :class_name => "Alarm", :foreign_key => "sent_user_id"
+  has_many :received_alarm, :dependent => :nullify, :class_name => "Alarm", :foreign_key => "received_user_id"
   has_many :sent_messages, :dependent => :nullify, :class_name => "Message", :foreign_key => "sent_user_id"
   has_many :received_messages, :dependent => :nullify, :class_name => "Message", :foreign_key => "received_user_id"  
   has_many :followings, :dependent => :destroy, :class_name => "Following" ,:foreign_key => "following_user_id"
