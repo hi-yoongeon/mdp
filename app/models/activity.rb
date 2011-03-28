@@ -17,10 +17,12 @@ class Activity < ApplicationModel#ActiveRecord::Base
       # create post
       data = {}
       data[:user_id] = arg[:user_id]
-      data[:post] = "activity"
+      data[:post] = "This is an activity memo"
       data[:activity_id] = activity.id
       data[:lat] = 0
       data[:lng] = 0
+      data[:from_where] = "NONE"
+      
       if arg[:object_complement_type] != "None"
         object_type = arg[:object_complement_type]
         object_id = arg[:object_complement_id]
@@ -36,10 +38,12 @@ class Activity < ApplicationModel#ActiveRecord::Base
         data[:lng] = post.lng
       when "Store"
         store = Store.find(object_id)
+        data[:store_id] = store.id
         data[:lat] = store.lat
         data[:lng] = store.lng
       when "StoreFood"
         store = StoreFood.find(object_id).store
+        data[:store_id] = store.id
         data[:lat] = store.lat
         data[:lng] = store.lng
       else

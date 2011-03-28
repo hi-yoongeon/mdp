@@ -114,7 +114,7 @@ class ApplicationController < ActionController::Base
     if params[:order]
       ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset, :order => params[:order])
     else
-      ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset)      
+      ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset, :order => "sequence ASC")      
     end
     
     return ret
@@ -159,7 +159,7 @@ class ApplicationController < ActionController::Base
     end
     
     options[:auth] = current_user
-
+    
     if options[:include].nil?
       options[:include] = nil
     end

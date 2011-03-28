@@ -12,6 +12,7 @@ class Like < ApplicationModel#ActiveRecord::Base
   validates_inclusion_of :object, :in => %w(Store Post StoreFood)
 
   after_create :increase_like_count
+  before_destroy :decrease_like_count
   
   private
   def increase_like_count
@@ -25,5 +26,21 @@ class Like < ApplicationModel#ActiveRecord::Base
     end
     
     obj.update_attribute(:like_count, obj.like_count + 1)
+  end
+
+
+  def increase_like_count
+    case object
+    when "Store"
+      obj = Store.find(foreign_key)
+    when "Post"
+      obj = Post.find(foreign_key)
+    when "StoreFood"
+      obj = StoreFood.find(foreign_key)
+    end
+    
+    if obj.like_count > 0
+      obj.update_attribute(:like_count, obj.like_count - 1)
+    end
   end
 end

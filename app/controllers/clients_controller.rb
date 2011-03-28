@@ -1,9 +1,9 @@
 class ClientsController < ApplicationController
   #before_filter :authentication_required , :only => :temp
-  before_filter :login_required , :except => [] #:temp
+  before_filter :login_required , :except => [:callback]
   before_filter :client_authentication_required , :only => [:show, :edit, :update, :destroy]
-  before_filter :http_get, :only => [:index, :show, :temp]
-  before_filter :http_post, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :http_get, :only => [:index, :show, :temp, :edit, :new]
+  before_filter :http_post, :only => [ :create, :update, :destroy]
   respond_to :html, :xml, :json
   
   def index
@@ -59,8 +59,15 @@ class ClientsController < ApplicationController
 
 
   def temp
-    @posts = Post.find(:all, :limit => 50);
+    @posts = Post.find(:all, :limit => 10)
   end
+
+
+  def callback
+    render :text => params[:access_token]
+  end
+
+
 
   protected
   def client_authentication_required
@@ -75,5 +82,9 @@ class ClientsController < ApplicationController
     render :template => 'errors/error'
     return false
   end  
+
+
+
+  
   
 end

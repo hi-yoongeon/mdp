@@ -1,4 +1,4 @@
-class StoreDetailInfo < ActiveRecord::Base
+class StoreDetailInfo < ApplicationModel
   belongs_to :store
   belongs_to :user
   

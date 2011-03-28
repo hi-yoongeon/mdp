@@ -6,6 +6,8 @@ class CreateAttachFiles < ActiveRecord::Migration
       t.integer :post_id, :null => true
       t.string :filename, :null => false
       t.string :fullpath, :null => false
+      t.string :webpath, :null => false
+      t.string :thumbnail, :null => false
       t.integer :sequence
 
       t.timestamps

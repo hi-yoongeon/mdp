@@ -16,6 +16,9 @@ class PostsController < ApplicationController
 
   def new
     if parameters_required :post
+      puts "=========="
+      puts params[:upload_file]
+      
       data = {}
       data[:post] = params[:post]
       data[:user_id] = current_user.id

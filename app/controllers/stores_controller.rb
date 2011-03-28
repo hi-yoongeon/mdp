@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 class StoresController < ApplicationController
-  before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmark, :bookmarked_list, :new_detail]
+  before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmark, :new_detail]
   before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :my_list, :detail_list]
-  before_filter :http_post, :only => [:new, :like, :bookmark]#, :new_detail]
+  before_filter :http_post, :only => [:new,:bookmark, :new_detail]
 
   respond_to :xml, :json
 
@@ -12,7 +12,7 @@ class StoresController < ApplicationController
     if parameters_required :store_id
       params[:id] = params[:store_id]
       ret = __find(Store)
-    __respond_with ret, :include => [], :except => []
+      __respond_with ret, :include => [], :except => []
     end
   end
 
@@ -43,10 +43,28 @@ class StoresController < ApplicationController
 
 
   # Store Like API
+  def unlike
+    if parameters_required :store_id
+      like = Like.find(:first, :user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
+      if like
+        like.destroy
+        __success("OK")
+        return
+      else
+        __error(:code => 0 , :description => "No result for unliking")
+      end
+
+    end
+  end
+  
   def like
     if parameters_required :store_id
-      # todo
-      # create like object
+      like = Like.find(:first, :user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
+      if like
+        __error(:code => 0, :description => "You already like this")
+        return
+      end
+      # create like object      
       like = Like.new(:user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
       if like.save
         data = {}
@@ -107,28 +125,30 @@ class StoresController < ApplicationController
     end
   end
 
+  
 
   def bookmarked_list
-    params[:id] = nil
-    conditions = {}
-    conditions[:user_id] = current_user.id
-    conditions[:object] = "Store"
-    bookmarks = __find(Bookmark, conditions)
-    bookmarked_stores = bookmarks.map { |bookmark| bookmark.store }
-    __respond_with bookmarked_stores, :include => [], :except => []
+    if parameters_required :user_id
+      params[:id] = nil
+      conditions = {}
+      conditions[:user_id] = params[:user_id]
+      conditions[:object] = "Store"
+      bookmarks = __find(Bookmark, conditions)
+      bookmarked_stores = bookmarks.map { |bookmark| bookmark.store }
+      __respond_with bookmarked_stores, :include => [], :except => []
+    end
   end
 
 
 
-
-
-  def my_list
-    params[:id] = nil
-    conditions = {}
-    conditions[:user_id] = current_user.id
-    ret = __find(Store, conditions)
-    __respond_with ret, :include => [], :except => []
-  end
+  
+  # def my_list
+  #   params[:id] = nil
+  #   conditions = {}
+  #   conditions[:user_id] = current_user.id
+  #   ret = __find(Store, conditions)
+  #   __respond_with ret, :include => [], :except => []
+  # end
 
 
 
@@ -143,6 +163,8 @@ class StoresController < ApplicationController
     end
   end
 
+
+
   def new_detail
     if parameters_required :store_id, :note   # --> 일단은 노트만.. 추후에 더 많은 필드 필요할 예정 
       detail_info = StoreDetailInfo.new(:user_id => current_user.id, :store_id => params[:store_id], :note => params[:note])
@@ -153,6 +175,7 @@ class StoresController < ApplicationController
       end
     end
   end
+  
 
 
   def rollback_detail

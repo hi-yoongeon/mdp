@@ -1,0 +1,43 @@
+class MigatesController < ApplicationController
+  
+  def index
+    render
+  end
+
+  def script
+    # run script
+    #fork{exec "php ~/migrate/attach_file_migrate.php"}
+    fork{exec "php ~/migrate/external_account_migrate.php"}
+    fork{exec "php ~/migrate/post_migrate.php"}
+    fork{exec "php ~/migrate/user_migrate.php"}
+    fork{exec "php ~/migrate/extra_info_migrate.php"}
+    fork{exec "php ~/migrate/store_migrate.php"}
+    fork{exec "php ~/migrate/user_tag_migrate.php"}
+    fork{exec "php ~/migrate/following_migrate.php"}
+    fork{exec "php ~/migrate/store_tag_migrate.php"}
+    fork{exec "php ~/migrate/like_migrate.php"}
+    fork{exec "php ~/migrate/tags_migrate.php"}
+  end
+    
+  def store_image
+    require 'net/http'
+    url = URI.parse('https://ygmaster.net/v2/')
+    
+    
+  end
+  
+  def user_image
+    require 'net/http'
+    user_id = 100000170
+    img = Net::HTTP.get(URI.parse("http://img.matji.com/profile/#{user_id}"))
+    if img
+      url = URI.parse("https://ygmaster.net/v2/attach_files/upload")
+      resp, data = Net:HTTP.post_form(url, {'upload_file' => img})
+      
+      render :text => "OK"
+    else
+      render :text => "FAILED"
+    end
+  end
+  
+end

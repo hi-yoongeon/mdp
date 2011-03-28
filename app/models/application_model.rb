@@ -1,5 +1,8 @@
 class ApplicationModel < ActiveRecord::Base
+  after_create :update_sequence   
+  
   self.abstract_class = true
+  @@like_objects = ["Store", "StoreFood", "Post"]    
 
   def self.attr_private(*attrs)
     @attr_private = attrs
@@ -66,12 +69,29 @@ class ApplicationModel < ActiveRecord::Base
             json[model.to_s] = nil
           end      
           
-        rescue Exception => e  
+        rescue Exception => e
         end
 
       end
     end
+    
+    
 
+    obj = self.class.to_s
+    if @@like_objects.include?(obj) 
+      if options[:auth]
+        user = options[:auth]
+        like = Like.find(:first, :conditions => {:user_id => user.id, :object => self.class.to_s, :foreign_key => self.id})
+        if like
+          json[:like] = true
+        else
+          json[:like] = false
+        end
+      else
+        json[:like] = false
+      end
+    end
+    
     options[:except].map!(&:to_sym)
     if !resource_owner?(self, options[:auth])
       options[:except] += self.class.get_attr_private
@@ -84,11 +104,11 @@ class ApplicationModel < ActiveRecord::Base
       json[attr] = self[attr]
     end
     
-    
-
-    
     return json
   end  
 
-  
+  private
+  def update_sequence
+    update_attribute(:sequence, id * -1)
+  end  
 end

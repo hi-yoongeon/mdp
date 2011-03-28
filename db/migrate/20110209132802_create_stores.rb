@@ -10,9 +10,9 @@ class CreateStores < ActiveRecord::Migration
       t.text :cover, :null => true
       t.float :lat, :null => false, :default => 0
       t.float :lng, :null => false, :default => 0
-      t.integer :bookmark_count, :null => false, :default => 0 
+      t.integer :tag_count, :null => false, :default => 0 
       t.integer :like_count, :null => false, :default => 0
-      t.integer :memo_count, :null => false, :default => 0
+      t.integer :post_count, :null => false, :default => 0
       t.integer :image_count, :null => false, :default => 0
       t.integer :sequence
 

@@ -29,9 +29,7 @@ class User < ApplicationModel
   attr_accessor :password, :password_confirmation
 
   # private field setting
-  #attr_private_all
   attr_private :salt, :hashed_password, :email, :old_hashed_password
-  after_create :set_sequence
 
  
   def self.authenticate(userid, pass)
@@ -42,7 +40,7 @@ class User < ApplicationModel
   end  
 
   def password=(pass)
-    @password=pass
+    @password = pass
     self.salt = AccessGrant.random_string(10) if !self.salt?
     self.hashed_password = User.encrypt(@password, self.salt)
   end
@@ -60,9 +58,5 @@ class User < ApplicationModel
     Digest::SHA1.hexdigest(pass + salt)
   end
 
-  private
-  def set_sequence
-    self.update_attribute(:sequence, self.id * -1)
-  end
 
 end

@@ -7,46 +7,37 @@ class MatjiFileCacheManager
 
   def add_img(img)
     timestamp = Time.new.to_i
-    filename = @path + "/img_original/#{timestamp}"
-    File.new(filename, "w") unless File.exist? filename
-    File.open(filename, "wb") do |f|
+    @filename = Digest::MD5.hexdigest(timestamp.to_s + @path)
+    filepath = @path + "/img_original/#{@filename}"
+    
+    while File.exist? filepath do
+      @filename = Digest::MD5.hexdigest(@filename)
+      filepath = @path + "/img_original/#{@filename}"
+    end
+    
+
+    File.open(filepath, "wb") do |f|
       f.write img.read
     end
 
     require 'RMagick'
 
-    thum_img = Magick::ImageList.new("#{@path}/img_original/#{timestamp}")
+    thum_img = Magick::ImageList.new("#{@path}/img_original/#{@filename}")
+    thum_img.resize!(128,128)
+    thum_img.write("#{@path}/img_thumbnail_m/#{@filename}")
     thum_img.resize!(48,48)
-    thum_img.write("#{@path}/img_thumbnail/#{timestamp}")
+    thum_img.write("#{@path}/img_thumbnail_s/#{@filename}")
     
   end
 
 
   def img_filename
-    Dir.chdir(@path + "/img_original")
-    img = Dir.glob("*").max
-    Dir.chdir(Rails.root.to_s)    
-    return img
+    return @filename
   end
   
 
-  def img_path(path_symbol, opt={})
-    #filename = @path #+ "/img_thumbnail"
-    img = img_filename
-    
-    if (path_symbol == :fullpath)
-      path = @path + "/"# + "/img_thumbnail/" + img
-    else
-      path = @webPath + "/" # + "/img_thumbnail/" + img
-    end
-      
-    if (opt[:thumbnail] == true)
-      path << "img_thumbnail/" << img
-    else
-      path << "img_original/" << img      
-    end
-
-    return path
+  def img_path()
+    return @path + "/"
   end
 
 
@@ -60,8 +51,10 @@ class MatjiFileCacheManager
         Dir.chdir(w)
       end
     end
+    
     Dir.mkdir("img_original") unless File.exist? "img_original"
-    Dir.mkdir("img_thumbnail") unless File.exist? "img_thumbnail"
+    Dir.mkdir("img_thumbnail_s") unless File.exist? "img_thumbnail_s"
+    Dir.mkdir("img_thumbnail_m") unless File.exist? "img_thumbnail_m"
     Dir.chdir(Rails.root.to_s)
   end
 

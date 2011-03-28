@@ -1,15 +1,18 @@
 OAuthProvider::Application.routes.draw do  resources :clients
-  
-  resources :clients
-  resources :users
-  resources :access_grants
 
   match '/authorize', :to => 'access_grants#authorize' 
   match '/login', :to => 'users#login'
   match '/logout', :to => 'users#logout'
+  match '/callback', :to => 'clients#callback' # temp api
   match '/temp', :to => 'clients#temp'
+  match '/image/:attach_file_id', :to => 'attach_files#show'
+  match '/:user_id/profile', :to => 'users#profile'
   match ':controller/:action'
   match '/v2/:controller/:action'
+
+  resources :clients
+  resources :users
+  resources :access_grants
 
   ########ygmaster's Test############
   #match '/test', :to => 'test#test'

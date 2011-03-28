@@ -1,8 +1,19 @@
 class AccessGrantsController < ApplicationController
-  before_filter :login_required, :only => [:index, :show, :new, :create, :update, :edit, :destroy]
+#  before_filter :login_required, :only => [:index, :show, :new, :create, :update, :edit, :destroy]
   before_filter :parameter_valid?, :authorization_valid? , :only => :authorize
+    
   respond_to :html, :xml, :json
   
+
+  def token_generator_for_migrate
+    if parameters_required :user_id
+      @user = User.find(params[:user_id])
+      @client = Client.find(1)
+      render :text => access_grant_generator.access_token
+    end
+  end
+
+
   def index
     @access_grants = AccessGrant.find_all_by_user_id(current_user.id)
     @access_grants = [] if @access_grants.nil?
@@ -178,9 +189,11 @@ class AccessGrantsController < ApplicationController
     
   end
     
-
+  
+  private
   def access_grant_generator
-    text = @client.client_secret + DateTime.now.to_f.to_s
+    hash = @user.hashed_password || @user.old_hashed_password
+    text = hash + @client.client_secret + DateTime.now.to_f.to_s
     token = AccessGrant.generate_token(text)
     
     # access token valids for a week
@@ -193,6 +206,7 @@ class AccessGrantsController < ApplicationController
   end
   
   
+  
   def access_token
     access_grant = AccessGrant.find(:first, :select => "access_token", :conditions => ["user_id = ? AND client_id = ?", @user.id, @client.id])
 
@@ -202,5 +216,11 @@ class AccessGrantsController < ApplicationController
       return access_grant_generator.access_token
     end
   end
+
+
+
+  
+
+
 
 end

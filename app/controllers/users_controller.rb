@@ -1,11 +1,31 @@
 class UsersController < ApplicationController
-  before_filter :login_required, :except => [:index, :login, :logout, :new, :create]
+  before_filter :login_required, :except => [:index, :login, :logout, :new, :create, :profile]
   before_filter :user_authentication_required, :only => [:show, :edit, :update, :destroy]
-  before_filter :http_get, :only => [:index, :show, :list]
-  before_filter :http_post, :only => [:create, :new, :edit, :update, :destroy, :login, :forgot_password, :change_password]
+  before_filter :http_get, :only => [:index, :show, :list, :profile]
+  before_filter :http_post, :only => [:create, :edit, :update, :destroy, :forgot_password, :change_password]
   respond_to :html, :json, :xml
 
 
+  def list
+    params[:id] = nil
+    ret = __find(User)
+    __respond_with(ret)
+  end
+
+  
+  def profile
+    params[:size] = "big" unless params[:size]
+    attach_file = AttachFile.find(:first, :conditions => ["user_id = ? AND store_id IS NULL AND post_id IS NULL", params[:user_id]], :order => "sequence ASC")
+    if attach_file
+      attach_file_id = attach_file.id
+    else
+      attach_file_id = 0 
+    end
+
+    redirect_to("/attach_files/image?attach_file_id=#{attach_file_id}&size=#{params[:size]}")
+  end
+  
+  
   def index
     @user = current_user
     __respond_with(@users = User.find(:all, :limit => 5))
@@ -61,16 +81,18 @@ class UsersController < ApplicationController
 #       redirect_to_stored
 #       return
 #     end
-    if session[:user] = User.authenticate(params[:user][:userid], params[:user][:password])
-      flash[:message]  = "Login successful"
-      if !params[:response_type].nil? && params[:response_type] == "code"
-        session[:code] = code = AccessGrant.random_string(10)
-        session[:return_to] = params[:redirect_uri] + "?code=" + code
+    if request.post?
+      if session[:user] = User.authenticate(params[:user][:userid], params[:user][:password])
+        flash[:message]  = "Login successful"
+        if !params[:response_type].nil? && params[:response_type] == "code"
+          session[:code] = code = AccessGrant.random_string(10)
+          session[:return_to] = params[:redirect_uri] + "?code=" + code
+        end
+        redirect_to_stored
+        return
+      else
+        flash[:warning] = "Login unsuccessful"
       end
-      redirect_to_stored
-      return
-    else
-      flash[:warning] = "Login unsuccessful"
     end
   end
 
@@ -99,11 +121,6 @@ class UsersController < ApplicationController
     if @user.save
       flash[:message] = "Password Changed"
     end
-  end
-
-
-  def profile_image
-    redirect_to "profile_image_path"
   end
 
 

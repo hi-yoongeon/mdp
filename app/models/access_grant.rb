@@ -2,6 +2,8 @@ class AccessGrant < ApplicationModel
   belongs_to :user
   belongs_to :client
 
+  validates_uniqueness_of  :user_id, :scope => [:client_id]
+
   attr_private_all
   
   protected
