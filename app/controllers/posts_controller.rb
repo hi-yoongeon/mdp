@@ -108,6 +108,7 @@ class PostsController < ApplicationController
   def store_list
     if parameters_required :store_id
       conditions = {:store_id => params[:store_id]}
+      conditions[:parent_post_id] = nil
       ret = __find(Post, conditions)
       __respond_with ret, :include => [], :except => []
     end
@@ -127,6 +128,7 @@ class PostsController < ApplicationController
   def user_list
     if parameters_required :user_id
       params[:id] = nil
+      conditions[:parent_post_id] = nil
       conditions = {:user_id => params[:user_id]}
       ret = __find(Post, conditions)
       __respond_with ret, :include => [], :except => []      
@@ -138,6 +140,7 @@ class PostsController < ApplicationController
   def my_list
     params[:id] = nil # remove id parameter for correct result
     conditions = {}
+    conditions[:parent_post_id] = nil
     conditions[:user_id] = current_user.id
     ret = __find(Post, conditions)
     __respond_with ret, :include => [], :except => [] 
@@ -145,11 +148,11 @@ class PostsController < ApplicationController
 
 
   def nearby_list
-    if parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
+    if parameters_required :sw_lat, :ne_lat, :sw_lng, :ne_lng
       params[:id] = nil
       conditions = {}
-      conditions[:lat] = params[:lat_sw].to_f .. params[:lat_ne].to_f
-      conditions[:lng] = params[:lng_sw].to_f .. params[:lng_ne].to_f
+      conditions[:lat] = params[:sw_lat].to_f .. params[:ne_lat].to_f
+      conditions[:lng] = params[:sw_lng].to_f .. params[:ne_lng].to_f
       conditions[:parent_post_id] = nil
       ret = __find(Post, conditions)
       __respond_with ret, :include => [], :except => []

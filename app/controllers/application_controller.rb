@@ -3,34 +3,59 @@ require "matji_mileage_manager"
 
 class ApplicationController < ActionController::Base
   # protect_from_forgery
-
+  before_filter :get_session_from_token
   before_filter :mileage_setting
   after_filter :mileage_action
+  
+  def http_get
+    request.get?
+  end
+  
+  def http_post
+    request.post?
+  end
+  
 
-  def authentication_required
+  def get_session_from_token
     if params[:access_token] and !params[:access_token].empty?
-      # Validate access_token whether exists and not expired
       if AccessGrant.access_token_exists?(params[:access_token])
-#         if AccessGrant.access_token_expired?(params[:access_token])
-#           return true
-#         else
-#           @msg = "Access token is expired"
-#         end
         session[:user] = AccessGrant.user_for_access_token(params[:access_token])
-        return true
-      else
-        msg = "The access token is invalid"
-      end
-    else
-      if current_user
-        return true
-      else
-        msg = "Access token parameter is required"
       end
     end
+    return true
+  end
+  
+
+  def authentication_required
+    if current_user.nil?
+      __error(:code => 0, :description => "The access token is invalid")
+      return false
+    else
+      return true
+    end
+#     if params[:access_token] and !params[:access_token].empty?
+#       # Validate access_token whether exists and not expired
+#       if AccessGrant.access_token_exists?(params[:access_token])
+# #         if AccessGrant.access_token_expired?(params[:access_token])
+# #           return true
+# #         else
+# #           @msg = "Access token is expired"
+# #         end
+#         session[:user] = AccessGrant.user_for_access_token(params[:access_token])
+#         return true
+#       else
+#         msg = "The access token is invalid"
+#       end
+#     else
+#       if current_user
+#         return true
+#       else
+#         msg = "Access token parameter is required"
+#       end
+#     end
     
-    __error(:code => 0, :description => msg)
-    return false
+    # __error(:code => 0, :description => msg)
+    # return false
   end
 
 

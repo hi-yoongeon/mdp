@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 class StoresController < ApplicationController
-  before_filter :authentication_required, :only => [:new, :like, :my_list, :bookmark, :new_detail]
+  before_filter :authentication_required, :only => [:new, :like, :dislike, :my_list, :bookmark, :new_detail]
   before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :my_list, :detail_list]
-  before_filter :http_post, :only => [:new,:bookmark, :new_detail]
+  before_filter :http_post, :only => [:like, :dislike, :new, :bookmark, :new_detail]
 
   respond_to :xml, :json
 
@@ -43,28 +43,30 @@ class StoresController < ApplicationController
 
 
   # Store Like API
-  def unlike
+  def dislike
     if parameters_required :store_id
-      like = Like.find(:first, :user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
+      like = Like.find(:first, :conditions => {:user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id]})
       if like
         like.destroy
         __success("OK")
         return
       else
         __error(:code => 0 , :description => "No result for unliking")
+        return
       end
-
     end
   end
+
   
   def like
     if parameters_required :store_id
-      like = Like.find(:first, :user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
+      like = Like.find(:first, :conditions => {:user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id]})
       if like
         __error(:code => 0, :description => "You already like this")
         return
       end
-      # create like object      
+      
+      # create like object
       like = Like.new(:user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id])
       if like.save
         data = {}
@@ -85,6 +87,7 @@ class StoresController < ApplicationController
         end
       else
         __error(:code => 0, :description => "Failed to save like")
+        return
       end
     end
   end

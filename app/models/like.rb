@@ -13,10 +13,7 @@
 #
 
 class Like < ApplicationModel#ActiveRecord::Base
-  has_many :activities, :dependent => :destroy
-
   belongs_to :user, :class_name => "User", :foreign_key => "user_id"
-  
   belongs_to :store, :class_name => "Store", :foreign_key => "foreign_key"
   belongs_to :store_food, :class_name => "StoreFood", :foreign_key => "foreign_key"
   belongs_to :post, :class_name => "Post", :foreign_key => "foreign_key"
@@ -43,7 +40,7 @@ class Like < ApplicationModel#ActiveRecord::Base
   end
 
 
-  def increase_like_count
+  def decrease_like_count
     case object
     when "Store"
       obj = Store.find(foreign_key)
