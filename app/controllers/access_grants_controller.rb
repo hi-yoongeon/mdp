@@ -50,6 +50,14 @@ class AccessGrantsController < ApplicationController
   end
     
 
+  def callback
+    res = {}
+    res[:access_token] = params[:access_token]
+    res[:user] = AccessGrant.find_by_access_token(params[:access_token]).user
+    render :json => res
+  end
+
+  
   def authorize
     response_type = params[:response_type]
     grant_type = params[:grant_type]

@@ -4,7 +4,6 @@ require "matji_mileage_manager"
 class ApplicationController < ActionController::Base
   # protect_from_forgery
   before_filter :get_session_from_token
-  before_filter :mileage_setting
   after_filter :mileage_action
   
   def http_get
@@ -143,15 +142,12 @@ class ApplicationController < ActionController::Base
     end
 
     ret = {:code => arg[:code], :description => arg[:description]}
-    
+    @code = arg[:code]
+    @msg = arg[:description]
     respond_with(ret) do |format|
       format.xml {render :xml => ret}
       format.json {render :json => ret}
-      format.html do 
-        @code = arg[:code]
-        @msg = arg[:description]
-        render :template => arg[:template]
-      end
+      format.html {render :template => arg[:template]}
     end
   end
 
@@ -172,25 +168,17 @@ class ApplicationController < ActionController::Base
     end
     
     options[:auth] = current_user
-    
-    if options[:include].nil?
-      options[:include] = nil
-    end
-    if options[:except].nil?
-      options[:except] = nil
-    end
-    if params[:include]
-      options[:include] += params[:include].split(",").map(&:to_sym)
-    end
-    if params[:except]
-      options[:except] += params[:except].split(",")
-    end
-      
+    options[:include] = [] if options[:include].nil?
+    options[:except] = [] if options[:except].nil?
+    options[:include] += params[:include].split(",").map(&:to_sym) if params[:include]
+    options[:except] += params[:except].split(",") if params[:except]
+    options[:except] += ["hashed_password","salt","old_hashed_password"]
+    options[:except] += ["user.hashed_password","user.salt","user.old_hashed_password"]
+    # if params[:except]
+    #    except_attrs = params[:except].split(",").map {|attr| attr.to_sym}
+    #    options[:except] += except_attrs
+    # end	
 
-    if params[:except]
-       except_attrs = params[:except].split(",").map {|attr| attr.to_sym}
-       options[:except] += except_attrs
-    end	
     respond_to do |format|
       format.json do 
         options[:json] = resource
@@ -200,38 +188,43 @@ class ApplicationController < ActionController::Base
         root = resource.is_a?(Array)? resource.first.class.to_s.downcase : resource.class.to_s.downcase
         render :template => "xmls/xml", :text => resource.as_json(options).to_xml(:root => root)
       end
-      format.html { render }
+      format.html do
+        render
+      end
     end
   end
 
 
-  def mileage_setting
-    @mmm = MatjiMileageManager.new(6)
-  end
 
   def mileage_action
-    rule = @mmm.act(params[:controller], params[:action])
+    return true if current_user.nil? 
     
-    unless rule.nil?
+    mmm = MatjiMileageManager.new(current_user.id)
+    if mmm and @code == 200
+      rule = mmm.act(params[:controller], params[:action])
+      
+      unless rule.nil?
 
-      rule.each do |node|
+        rule.each do |node|
 
-        user_id = (node[:to] == "me") ? @mmm.from_user_id : @mmm_user_id
-        @mmm.error if user_id.nil?
+          user_id = (node[:to] == "me") ? mmm.from_user_id : mmm_user_id
+          mmm.error if user_id.nil?
 
-        MileageStackData.create(
-                                :user_id => user_id, 
-                                :flag => node[:flag], 
-                                :point => node[:point],
-                                :from_user_id => @mmm.from_user_id
-                                )
+          MileageStackData.create(
+                                  :user_id => user_id,
+                                  :flag => node[:flag], 
+                                  :point => node[:point],
+                                  :from_user_id => mmm.from_user_id
+                                  )
 
-        um = UserMileage.find_by_user_id(user_id)
-        um[:total_point] += node[:point].to_i
-        um.save
+          um = UserMileage.find_by_user_id(user_id)
+          um = UserMileage.new(:user_id => current_user.id) unless um
+          um[:total_point] += node[:point].to_i
+          um.save
+
+        end
 
       end
-
     end
   end
     

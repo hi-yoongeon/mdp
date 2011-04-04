@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 class StoresController < ApplicationController
-  before_filter :authentication_required, :only => [:new, :like, :dislike, :my_list, :bookmark, :new_detail]
+  before_filter :authentication_required, :only => [:new, :like, :unlike, :my_list, :bookmark, :unbookmark, :new_detail]
   before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :my_list, :detail_list]
-  before_filter :http_post, :only => [:like, :dislike, :new, :bookmark, :new_detail]
+  before_filter :http_post, :only => [:like, :unlike, :new, :bookmark, :unbookmark, :new_detail]
 
   respond_to :xml, :json
 
@@ -43,7 +43,7 @@ class StoresController < ApplicationController
 
 
   # Store Like API
-  def dislike
+  def unlike
     if parameters_required :store_id
       like = Like.find(:first, :conditions => {:user_id => current_user.id, :object => "Store", :foreign_key => params[:store_id]})
       if like
@@ -99,10 +99,26 @@ class StoresController < ApplicationController
       # create bookmark object
       bookmark = Bookmark.new(:object => "Store", :foreign_key => params[:store_id], :user_id => current_user.id)
       if bookmark.save
+        ##############################
         # issue - generate activity??
+        ##############################        
         __success(bookmark)
       else
         __error(:code => 0, :description => "Failed to bookmark store")
+      end
+    end
+  end
+
+  
+  def unbookmark
+    if parameters_required :store_id
+      bookmark = Bookmark.find(:first , :conditions => {:object => "Store", :foreign_key => params[:store_id], :user_id => current_user.id})
+      if bookmark
+        bookmark.destroy
+        __success("OK")
+        return
+      else
+        __error(:code => 0, :description => "Not exist such a record of store bookmark")
       end
     end
   end

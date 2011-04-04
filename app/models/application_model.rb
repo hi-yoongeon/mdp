@@ -79,16 +79,24 @@ class ApplicationModel < ActiveRecord::Base
 
     obj = self.class.to_s
     if @@like_objects.include?(obj) 
+      json[:like] = false
       if options[:auth]
         user = options[:auth]
-        like = Like.find(:first, :conditions => {:user_id => user.id, :object => self.class.to_s, :foreign_key => self.id})
-        if like
+        like_count = Like.count(:conditions => {:user_id => user.id, :object => obj, :foreign_key => self.id})
+        if like_count > 0
           json[:like] = true
-        else
-          json[:like] = false
         end
-      else
-        json[:like] = false
+      end
+    end
+    
+    if obj == "Store"
+      json[:bookmark] = false
+      if options[:auth]
+        user = options[:auth]
+        bookmark_count = Bookmark.count(:conditions => {:user_id => user.id, :object => "Store", :foreign_key => self.id})
+        if bookmark_count > 0
+          json[:bookmark] = true
+        end
       end
     end
     

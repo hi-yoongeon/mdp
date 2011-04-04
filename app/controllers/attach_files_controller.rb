@@ -7,6 +7,15 @@ class AttachFilesController < ApplicationController
 
   def upload
     if parameters_required :upload_file, :post_id
+      post = Post.find(:first, :conditions => ["id = ?",params[:post_id]])
+      if post.nil?
+        __error(:code => 0, :description => "Not exist such a post id")
+        return
+      elsif post.user_id != current_user.id
+        __error(:code => 0, :description => "Non authentication about uploading an image to the post")
+        return
+      end
+        
       require "attach_file_cache_manager"
       fcm = AttachFileCacheManager.new(params[:post_id])
       fcm.add_img(params[:upload_file])
@@ -52,25 +61,31 @@ class AttachFilesController < ApplicationController
   
   
   def image
-    size = :big
-    if params[:size]
-      size = params[:size].to_sym
-    end
-    
     attach_file = AttachFile.find(:first, :conditions => ["id = ?", params[:attach_file_id]])
+    
     if attach_file
       path = Rails.root.to_s + "/" + attach_file.fullpath
-
-
+      
+      size = :l
+      size = params[:size].to_sym if params[:size]
+      
       case size
-      when :small
-        path  << 'img_thumbnail_s/'
-      when :medium
+      when :ss
+        path << 'img_thumbnail_ss/'
+      when :s
+        path << 'img_thumbnail_s/'
+      when :m
         path << 'img_thumbnail_m/'
-      when :big
+      when :l
+        path << 'img_thumbnail_l/'
+      when :xl
+        path << 'img_thumbnail_xl/'
+      when :original
         path << 'img_original/'
       end
+      
       path << attach_file.filename
+      path = Rails.root.to_s + '/public/images/profile_default_img' unless File.exist? path
     else
       # Default image
       path = Rails.root.to_s + '/public/images/profile_default_img'

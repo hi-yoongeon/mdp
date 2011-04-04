@@ -7,8 +7,7 @@ class ClientsController < ApplicationController
   respond_to :html, :xml, :json
   
   def index
-    user = current_user
-    @clients = Client.find_all_by_user_id(user.id)
+    @clients = Client.all
     @clients = [] if @clients.nil?
   end
 
@@ -60,11 +59,6 @@ class ClientsController < ApplicationController
 
   def temp
     @posts = Post.find(:all, :limit => 10)
-  end
-
-
-  def callback
-    render :text => params[:access_token]
   end
 
 

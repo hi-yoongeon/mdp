@@ -1,16 +1,4 @@
-# == Schema Information
-# Schema version: 20110316100624
-#
-# Table name: tags
-#
-#  id         :integer         not null, primary key
-#  tag        :string(255)     not null
-#  sequence   :integer
-#  created_at :datetime
-#  updated_at :datetime
-#
-
-class Tag < ApplicationModel#ActiveRecord::Base
+class Tag < ApplicationModel
   has_many :post_tags, :dependent => :destroy
   has_many :user_tags, :dependent => :destroy
   has_many :store_tags, :dependent => :destroy

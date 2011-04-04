@@ -2,12 +2,13 @@ class CreatePosts < ActiveRecord::Migration
   def self.up
     create_table :posts do |t|
       t.integer :user_id, :null => false
-      t.integer :parent_post_id, :null => true
       t.integer :store_id, :null => true
       t.integer :activity_id, :null => true
-      t.text :post, :null => false
-      t.integer :image_count, :null => false, :default => 0
-      t.integer :like_count, :null => false, :default => 0
+      t.string :post, :null => false
+      t.integer :image_count, :default => 0
+      t.integer :like_count, :default => 0
+      t.integer :comment_count, :default => 0
+      t.integer :tag_count, :default => 0
       t.float :lat, :default => 0
       t.float :lng, :default => 0
       t.string :from_where, :null => false

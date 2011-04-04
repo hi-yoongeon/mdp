@@ -1,23 +1,4 @@
-# == Schema Information
-# Schema version: 20110316100624
-#
-# Table name: users
-#
-#  id                  :integer         not null, primary key
-#  userid              :string(255)     not null
-#  hashed_password     :string(255)     not null
-#  old_hashed_password :string(255)
-#  nick                :string(255)     not null
-#  email               :string(255)     not null
-#  salt                :string(255)     not null
-#  sequence            :integer
-#  created_at          :datetime
-#  updated_at          :datetime
-#
-
-class User < ApplicationModel#ActiveRecord::Base
-  
-  has_one :user_extra_info, :dependent => :destroy
+class User < ApplicationModel
   has_many :clients, :dependent => :destroy
   has_many :access_grants, :dependent => :destroy
   has_many :likes, :dependent => :destroy

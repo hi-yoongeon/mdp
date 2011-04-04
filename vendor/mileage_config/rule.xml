@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <user_mileage_rules>
   <controller name="posts">
-    <action name="write">
+    <action name="new">
       <mileage flag="WRITE_POST" point="10" />
-      <mileage flag="REPLY_MY_POST" point="10" />
     </action>
     <action name="like">
       <mileage flag="EVALUATE_POST" point="1" to="me" />

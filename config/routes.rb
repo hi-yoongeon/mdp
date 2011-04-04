@@ -1,9 +1,10 @@
 OAuthProvider::Application.routes.draw do  resources :clients
 
+  match '/me', :to => 'users#me'
   match '/authorize', :to => 'access_grants#authorize' 
   match '/login', :to => 'users#login'
   match '/logout', :to => 'users#logout'
-  match '/callback', :to => 'clients#callback' # temp api
+  match '/callback', :to => 'access_grants#callback' # temp api
   match '/temp', :to => 'clients#temp'
   match '/image/:attach_file_id', :to => 'attach_files#show'
   match '/:user_id/profile', :to => 'users#profile'

@@ -10,8 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-
-ActiveRecord::Schema.define(:version => 20110316141309) do
+ActiveRecord::Schema.define(:version => 20110404080450) do
 
   create_table "access_grants", :force => true do |t|
     t.integer  "user_id",                                :null => false
@@ -80,6 +79,15 @@ ActiveRecord::Schema.define(:version => 20110316141309) do
     t.datetime "updated_at"
   end
 
+  create_table "comments", :force => true do |t|
+    t.integer  "post_id",                   :null => false
+    t.integer  "user_id",                   :null => false
+    t.string   "comment",                   :null => false
+    t.integer  "sequence",   :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "followings", :force => true do |t|
     t.integer  "following_user_id", :null => false
     t.integer  "followed_user_id",  :null => false
@@ -143,16 +151,17 @@ ActiveRecord::Schema.define(:version => 20110316141309) do
   end
 
   create_table "posts", :force => true do |t|
-    t.integer  "user_id",                         :null => false
-    t.integer  "parent_post_id"
+    t.integer  "user_id",                        :null => false
     t.integer  "store_id"
     t.integer  "activity_id"
-    t.text     "post",                            :null => false
-    t.integer  "image_count",    :default => 0,   :null => false
-    t.integer  "like_count",     :default => 0,   :null => false
-    t.float    "lat",            :default => 0.0
-    t.float    "lng",            :default => 0.0
-    t.string   "from_where",                      :null => false
+    t.string   "post",                           :null => false
+    t.integer  "image_count",   :default => 0
+    t.integer  "like_count",    :default => 0
+    t.integer  "comment_count", :default => 0
+    t.integer  "tag_count",     :default => 0
+    t.float    "lat",           :default => 0.0
+    t.float    "lng",           :default => 0.0
+    t.string   "from_where",                     :null => false
     t.integer  "sequence"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -217,21 +226,31 @@ ActiveRecord::Schema.define(:version => 20110316141309) do
     t.datetime "updated_at"
   end
 
+  create_table "store_urls", :force => true do |t|
+    t.integer  "user_id",                   :null => false
+    t.integer  "store_id",                  :null => false
+    t.string   "url",                       :null => false
+    t.integer  "sequence",   :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "stores", :force => true do |t|
-    t.string   "name",                         :null => false
+    t.string   "name",                            :null => false
     t.integer  "reg_user_id"
     t.string   "tel"
-    t.string   "address",                      :null => false
+    t.string   "address",                         :null => false
     t.string   "add_address"
     t.string   "website"
     t.text     "cover"
-    t.float    "lat",         :default => 0.0, :null => false
-    t.float    "lng",         :default => 0.0, :null => false
-    t.integer  "tag_count",   :default => 0,   :null => false
-    t.integer  "like_count",  :default => 0,   :null => false
-    t.integer  "post_count",  :default => 0,   :null => false
-    t.integer  "image_count", :default => 0,   :null => false
-    t.integer  "sequence"
+    t.float    "lat",            :default => 0.0
+    t.float    "lng",            :default => 0.0
+    t.integer  "tag_count",      :default => 0
+    t.integer  "post_count",     :default => 0
+    t.integer  "image_count",    :default => 0
+    t.integer  "like_count",     :default => 0
+    t.integer  "bookmark_count", :default => 0
+    t.integer  "sequence",       :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -252,19 +271,9 @@ ActiveRecord::Schema.define(:version => 20110316141309) do
     t.datetime "updated_at"
   end
 
-  create_table "user_extra_infos", :force => true do |t|
-    t.integer  "user_id",                   :null => false
-    t.string   "title"
-    t.string   "intro"
-    t.integer  "post_count", :default => 0, :null => false
-    t.integer  "sequence"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "user_mileages", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "total_point"
+    t.integer  "user_id",                       :null => false
+    t.integer  "total_point",    :default => 0
     t.string   "grade"
     t.boolean  "special_user"
     t.boolean  "blacklist_user"
@@ -282,13 +291,20 @@ ActiveRecord::Schema.define(:version => 20110316141309) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "userid",              :null => false
-    t.string   "hashed_password",     :null => false
+    t.string   "userid",                             :null => false
+    t.string   "hashed_password"
     t.string   "old_hashed_password"
-    t.string   "nick",                :null => false
-    t.string   "email",               :null => false
-    t.string   "salt",                :null => false
-    t.integer  "sequence"
+    t.string   "salt",                               :null => false
+    t.string   "nick",                               :null => false
+    t.string   "email",                              :null => false
+    t.string   "title"
+    t.string   "intro"
+    t.integer  "post_count",          :default => 0, :null => false
+    t.integer  "tag_count",           :default => 0
+    t.integer  "store_count",         :default => 0
+    t.integer  "following_count",     :default => 0
+    t.integer  "follower_count",      :default => 0
+    t.integer  "sequence",            :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

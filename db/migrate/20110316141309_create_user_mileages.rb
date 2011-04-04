@@ -1,8 +1,8 @@
 class CreateUserMileages < ActiveRecord::Migration
   def self.up
     create_table :user_mileages do |t|
-      t.integer :user_id, :null => 
-      t.integer :total_point
+      t.integer :user_id, :null => false
+      t.integer :total_point, :default => 0
       t.string :grade
       t.boolean :special_user
       t.boolean :blacklist_user

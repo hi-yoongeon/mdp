@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
   before_filter :login_required, :except => [:index, :login, :logout, :new, :create, :profile]
+  
   before_filter :user_authentication_required, :only => [:show, :edit, :update, :destroy]
+  before_filter :authentication_required, :only => [:me]
+  
   before_filter :http_get, :only => [:index, :show, :list, :profile]
   before_filter :http_post, :only => [:create, :edit, :update, :destroy, :forgot_password, :change_password]
   respond_to :html, :json, :xml
@@ -13,13 +16,18 @@ class UsersController < ApplicationController
   end
 
   
+  def me
+    __respond_with(current_user)
+  end
+
+  
   def profile
-    params[:size] = "big" unless params[:size]
+    params[:size] = "ss" unless params[:size]
     attach_file = AttachFile.find(:first, :conditions => ["user_id = ? AND store_id IS NULL AND post_id IS NULL", params[:user_id]], :order => "sequence ASC")
     if attach_file
       attach_file_id = attach_file.id
     else
-      attach_file_id = 0 
+      attach_file_id = 0
     end
 
     redirect_to("/attach_files/image?attach_file_id=#{attach_file_id}&size=#{params[:size]}")

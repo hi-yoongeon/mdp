@@ -1,34 +1,15 @@
-# == Schema Information
-# Schema version: 20110316100624
-#
-# Table name: posts
-#
-#  id             :integer         not null, primary key
-#  user_id        :integer         not null
-#  parent_post_id :integer
-#  store_id       :integer
-#  activity_id    :integer
-#  post           :text            not null
-#  image_count    :integer         default(0), not null
-#  like_count     :integer         default(0), not null
-#  lat            :float           default(0.0)
-#  lng            :float           default(0.0)
-#  from           :string(255)     not null
-#  sequence       :integer
-#  created_at     :datetime
-#  updated_at     :datetime
-#
-
-class Post < ApplicationModel#ActiveRecord::Base
+class Post < ApplicationModel
   has_one :activity, :class_name => "Activity", :foreign_key => "id", :primary_key => "activity_id"
   has_many :likes, :conditions => {:object => "Post"}, :foreign_key => "foreign_key"
   has_many :attach_files, :dependent => :destroy
-  #has_many :tags, :class_name => "PostTag", :foreign_key => "post_id", :dependent => :destroy
   has_many :post_tags
   has_many :tags, :through => :post_tags
+  has_many :comments
+  
   belongs_to :user, :class_name => "User", :foreign_key => 'user_id'
   belongs_to :store, :class_name => "Store", :foreign_key => 'store_id'
-  belongs_to :parent_post, :class_name => "Post", :foreign_key => 'parent_post_id'
+
+  #belongs_to :comments, :class_name => "Post", :primary_key => "parent_post_id", :foreign_key => "id"
   
   validates_inclusion_of :from_where, :in => %w(WEB ANDROID IPHONE NONE)
   validates_length_of :post, :within => 1..300
@@ -36,4 +17,27 @@ class Post < ApplicationModel#ActiveRecord::Base
   
   ## private field setting
   #  attr_private :some_fields
+  
+  after_create :increase_post_count
+  before_destroy :decrease_post_count
+
+
+  private
+  def increase_post_count
+    if self.parent_post_id
+      
+    else
+      if self.store_id
+        Store.update_all("post_count = post_count + 1", "id = #{self.store_id}")
+      end
+      User.update_all("post_count = post_count + 1", "id = #{self.user_id}")
+    end
+  end
+  
+
+  def decrease_post_count
+    
+  end
+  
+
 end
