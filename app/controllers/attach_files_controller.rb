@@ -25,7 +25,9 @@ class AttachFilesController < ApplicationController
         :filename => fcm.img_filename,
         :fullpath => fcm.img_path
       }
-      attach_file_data[:store_id] = params[:store_id] if params[:store_id]
+      
+      
+      attach_file_data[:store_id] = post.store_id
       
       attach_file = AttachFile.new(attach_file_data)
       if attach_file.save

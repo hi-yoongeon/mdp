@@ -10,6 +10,7 @@ OAuthProvider::Application.routes.draw do  resources :clients
   match '/:user_id/profile', :to => 'users#profile'
   match ':controller/:action'
   match '/v2/:controller/:action'
+  # match '/v2/comments/:action', :to => 'post_comments'
 
   resources :clients
   resources :users

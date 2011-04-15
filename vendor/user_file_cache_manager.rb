@@ -86,7 +86,7 @@ class UserFileCacheManager < MatjiFileCacheManager
 
   
   def user_dir(user_id)
-    user_id = user_id.to_s
+    user_id = user_id.to_i.to_s
     return "file_cache/user/" + user_id[0..1]+"/"+user_id[2..3]+"/"+user_id[4..5]+"/"+user_id[6..7]+"/"+user_id[8..9]
   end
 

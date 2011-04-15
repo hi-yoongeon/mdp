@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   before_filter :get_session_from_token
   after_filter :mileage_action
   
+  respond_to :json, :xml
+  
   def http_get
     request.get?
   end
@@ -152,7 +154,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def __success(object)
+  def __success(object = nil)
     ret = {:code => 200}
     ret[:result] = object if object
     respond_with(ret) do |format|

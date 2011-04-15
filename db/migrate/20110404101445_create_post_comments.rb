@@ -4,6 +4,7 @@ class CreatePostComments < ActiveRecord::Migration
       t.integer :user_id, :null => false
       t.integer :post_id, :null => false
       t.string :comment, :null => false
+      t.string :from_where, :null => false, :default => "IPHONE"
       t.integer :sequence, :default => 0
       t.timestamps
     end

@@ -11,7 +11,7 @@ class CreatePosts < ActiveRecord::Migration
       t.integer :tag_count, :default => 0
       t.float :lat, :default => 0
       t.float :lng, :default => 0
-      t.string :from_where, :null => false
+      t.string :from_where, :null => false, :default => "IPHONE"
       t.integer :sequence
 
       t.timestamps

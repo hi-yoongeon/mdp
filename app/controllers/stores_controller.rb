@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class StoresController < ApplicationController
-  before_filter :authentication_required, :only => [:new, :like, :unlike, :my_list, :bookmark, :unbookmark, :new_detail]
-  before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :my_list, :detail_list]
+  before_filter :authentication_required, :only => [:new, :like, :unlike, :bookmark, :unbookmark, :new_detail]
+  before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :detail_list]
   before_filter :http_post, :only => [:like, :unlike, :new, :bookmark, :unbookmark, :new_detail]
 
   respond_to :xml, :json
@@ -147,11 +147,15 @@ class StoresController < ApplicationController
   
 
   def bookmarked_list
+    if params[:user_id].nil? and current_user
+      params[:user_id] = current_user.id
+    end
+    
     if parameters_required :user_id
       params[:id] = nil
       conditions = {}
-      conditions[:user_id] = params[:user_id]
       conditions[:object] = "Store"
+      conditions[:user_id] = params[:user_id]
       bookmarks = __find(Bookmark, conditions)
       bookmarked_stores = bookmarks.map { |bookmark| bookmark.store }
       __respond_with bookmarked_stores, :include => [], :except => []
@@ -199,10 +203,10 @@ class StoresController < ApplicationController
 
   def rollback_detail
     if parameters_required :store_detail_info_id
-      detail_info = StoreDetailInfo.find(params[:store_detail_info_id])
+      detail_info = StoreDetailInfo.find(:first, :conditions => ["id =? ", params[:store_detail_info_id]])
       if detail_info
         time = Time.new
-        detail_info.update_attribute(:update_at, time)
+        detail_info.update_attribute(:updated_at, time)
       else
         
       end

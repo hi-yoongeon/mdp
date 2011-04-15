@@ -54,11 +54,27 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
-      session[:user] = User.authenticate(@user.userid, @user.password)
-      flash[:message] = "Signup successful"
-      redirect_to :action => "index"
+      respond_with do |format|
+        format.json { __success(@user) }
+        format.xml  { __success(@user) }
+        format.html do
+          session[:user] = User.authenticate(@user.userid, @user.password)
+          flash[:message] = "Signup successful"
+          redirect_to :action => "index" 
+        end
+      end
+      
     else
-      flash[:warning] = "Signup unsuccessful"
+      
+      respond_with do |format|
+        format.json { __error(:code => 0, :descriptions => "") }
+        format.xml  { __error(:code => 0, :descriptions => "") }
+        format.html do
+          flash[:warning] = "Signup unsuccessful"
+          redirect_to :action => "index" 
+        end
+      end
+      
     end
   end
 

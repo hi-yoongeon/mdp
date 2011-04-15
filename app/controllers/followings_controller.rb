@@ -4,19 +4,31 @@ class FollowingsController < ApplicationController
   before_filter :http_post, :only => [:new, :delete]
 
 
+  
+
   def new
     if parameters_required :followed_user_id
       following_user_id = current_user.id
       followed_user_id = params[:followed_user_id]
       
-      require "user_file_cache_manager"
-      ufcm = UserFileCacheManager.new(followed_user_id)
-      ufcm.add_follower(following_user_id)
-      ufcm = UserFileCacheManager.new(following_user_id)
-      ufcm.add_following(followed_user_id)
+      if following_user_id == followed_user_id.to_i
+        __error(:code => 0, :description => "")
+        return
+      end
+      
+      count = Following.count(:conditions => {:following_user_id => following_user_id, :followed_user_id => followed_user_id})
+      if count > 0 
+        __error(:code => 0, :description => "")
+        return
+      end
       
       follow = Following.new(:following_user_id => following_user_id, :followed_user_id => followed_user_id)
       if follow.save
+        require "user_file_cache_manager"
+        ufcm = UserFileCacheManager.new(followed_user_id)
+        ufcm.add_follower(following_user_id)
+        ufcm = UserFileCacheManager.new(following_user_id)
+        ufcm.add_following(followed_user_id)
         __success(follow)
       else
         __error(:code => 0, :description => "Failed to follow")
@@ -29,17 +41,16 @@ class FollowingsController < ApplicationController
     if parameters_required :followed_user_id
       following_user_id = current_user.id
       followed_user_id = params[:followed_user_id]
-      
-      require "user_file_cache_manager"
-      ufcm = UserFileCacheManager.new(following_user_id)
-      ufcm.remove_following(followed_user_id) 
-      ufcm = UserFileCacheManager.new(followed_user_id)
-      ufcm.remove_followed(following_user_id) 
-      
+
       follow = Following.find(:first, :conditions => ["following_user_id = ? AND followed_user_id =?", following_user_id, followed_user_id])
       if follow
+        require "user_file_cache_manager"
+        ufcm = UserFileCacheManager.new(following_user_id)
+        ufcm.remove_following(followed_user_id) 
+        ufcm = UserFileCacheManager.new(followed_user_id)
+        ufcm.remove_follower(following_user_id) 
         follow.destroy
-        __success()
+        __success("OK")
         return
       else
         __error(:code => 0, :description => "The Following isn't exist")

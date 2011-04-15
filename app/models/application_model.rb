@@ -1,8 +1,12 @@
 class ApplicationModel < ActiveRecord::Base
   after_create :update_sequence   
+  before_save :change_timezone_to_seoul
+  after_save :change_timezone_to_utc
+
+  
   
   self.abstract_class = true
-  @@like_objects = ["Store", "StoreFood", "Post"]    
+  @@like_objects = ["Store", "StoreFood", "Post"]
 
   def self.attr_private(*attrs)
     @attr_private = attrs
@@ -16,6 +20,23 @@ class ApplicationModel < ActiveRecord::Base
     return [] if @attr_private.nil?
     @attr_private
   end
+
+
+  def change_timezone_to_seoul
+    ActiveRecord::Base.default_timezone = :seoul
+  end
+
+  def change_timezone_to_utc
+    ActiveRecord::Base.default_timezone = :utc
+  end
+
+  
+  def self.has_many(association, options = {})
+    options[:limit] = 5 if options[:limit].nil?
+    options[:order] = "sequence ASC" if options[:order].nil?
+    super(association, options)
+  end
+  
 
   def resource_owner?(resource, current_user)
     return false if current_user.nil?

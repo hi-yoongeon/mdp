@@ -12,7 +12,7 @@ class AttachFileCacheManager < MatjiFileCacheManager
 
 
   def file_dir(id)
-    id = id.to_s
+    id = id.to_i.to_s
     dir = "file_cache/file/"
     
     id.split("").each do |d|

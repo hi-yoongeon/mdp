@@ -8,6 +8,7 @@ class Following < ApplicationModel#ActiveRecord::Base
   after_create :increase_follow_count
   before_destroy :decrease_follow_count
   
+
   private
   def increase_follow_count
     User.update_all("following_count = following_count + 1", "id = #{self.following_user_id}")
