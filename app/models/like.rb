@@ -16,6 +16,7 @@ class Like < ApplicationModel
     case object
     when "Store"
       obj = Store.find(foreign_key)
+      obj.user_id = self.user_id
     when "Post"
       obj = Post.find(foreign_key)
     when "StoreFood"

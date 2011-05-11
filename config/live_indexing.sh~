@@ -1,0 +1,4 @@
+#!/bin/bash
+
+indexer store_delta --rotate
+indexer --merge store_core store_delta --merge-dst-range deleted 0 0 --rotate

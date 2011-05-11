@@ -21,9 +21,9 @@
 class Activity < ApplicationModel#ActiveRecord::Base
   
   validates_presence_of :user_id, :user_name, :object_type, :object_name, :object_id, :action
-  validates_inclusion_of :action, :in => %w(Store Like Bookmark)
-  validates_inclusion_of :object_type, :in => %w(User Post Store StoreFood)
-  validates_inclusion_of :object_complement_type, :in => %w(Post Store StoreFood None)
+  validates_inclusion_of :action, :in => %w(Register Like Bookmark)
+  validates_inclusion_of :object_type, :in => %w(Store StoreFood)
+  validates_inclusion_of :object_complement_type, :in => %w(StoreFood None)
   
   
   protected
@@ -52,10 +52,10 @@ class Activity < ApplicationModel#ActiveRecord::Base
       end
       
       case object_type
-      when "Post"
-        post = Post.find(object_id)
-        data[:lat] = post.lat
-        data[:lng] = post.lng
+      # when "Post"
+      #   post = Post.find(object_id)
+      #   data[:lat] = post.lat
+      #   data[:lng] = post.lng
       when "Store"
         store = Store.find(object_id)
         data[:store_id] = store.id

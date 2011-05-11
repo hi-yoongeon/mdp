@@ -19,4 +19,18 @@
   </controller>
   <!-- End Test -->
   
+
+  <controller name="stores">
+    <action name="register">
+      <mileage flag="REGISTER_STORE" point="10" to="me" />
+    </action>
+  </controller>
+
+  <!--controller name="posts">
+    <action name="create">
+    </action>
+  </controoler-->
+
 </user_mileage_rules>
+
+

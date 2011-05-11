@@ -11,14 +11,20 @@ class FollowingsController < ApplicationController
       following_user_id = current_user.id
       followed_user_id = params[:followed_user_id]
       
+      user = User.find(:first, :conditions => {:id => followed_user_id})
+      if user.nil?
+        __error(:code => 0, :description => "Invalid followed user id")
+        return
+      end
+      
       if following_user_id == followed_user_id.to_i
-        __error(:code => 0, :description => "")
+        __error(:code => 0, :description => "Can't follow yourself")
         return
       end
       
       count = Following.count(:conditions => {:following_user_id => following_user_id, :followed_user_id => followed_user_id})
       if count > 0 
-        __error(:code => 0, :description => "")
+        __error(:code => 0, :description => "You're already following that user")
         return
       end
       
@@ -29,6 +35,10 @@ class FollowingsController < ApplicationController
         ufcm.add_follower(following_user_id)
         ufcm = UserFileCacheManager.new(following_user_id)
         ufcm.add_following(followed_user_id)
+
+        # Generate an alarm
+        Alarm.new(:sent_user_id => current_user.id, :received_user_id => followed_user_id, :alarm_type => "Following").save
+        
         __success(follow)
       else
         __error(:code => 0, :description => "Failed to follow")

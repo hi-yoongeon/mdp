@@ -20,12 +20,31 @@ class Post < ApplicationModel
   before_destroy :decrease_post_count
 
 
+  define_index do
+    # fields
+    indexes post
+    indexes user.userid, :as => :userid
+    indexes user.nick, :as => :user_nick
+    indexes tags.tag, :as => :tag_name
+    indexes store.name, :as => :store_name
+    
+    set_property :min_infix_len => 2
+    
+    # attributes
+    has sequence
+
+    where "activity_id IS NULL"
+  end
+
+
   private
   def increase_post_count
     if self.store_id
       Store.update_all("post_count = post_count + 1", "id = #{self.store_id}")
     end
-    User.update_all("post_count = post_count + 1", "id = #{self.user_id}")
+    if self.activity_id.nil?
+      User.update_all("post_count = post_count + 1", "id = #{self.user_id}")
+    end
   end
   
 
@@ -33,7 +52,10 @@ class Post < ApplicationModel
     if self.store_id
       Store.update_all("post_count = post_count - 1", "id = #{self.store_id}")
     end
-    User.update_all("post_count = post_count - 1", "id = #{self.user_id}")     
+    
+    if self.activity_id.nil?
+      User.update_all("post_count = post_count - 1", "id = #{self.user_id}")     
+    end
   end
 
 end

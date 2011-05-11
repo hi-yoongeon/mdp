@@ -1,13 +1,16 @@
 OAuthProvider::Application.routes.draw do  resources :clients
 
-  match '/me', :to => 'users#me'
-  match '/authorize', :to => 'access_grants#authorize' 
+  match '/v2/badge', :to => 'notices#badge'
+  match '/v2/me', :to => 'access_grants#me'
+  match '/v2/authorize', :to => 'access_grants#authorize' 
+  match '/v2/:user_id/profile', :to => 'users#profile'
+  
   match '/login', :to => 'users#login'
   match '/logout', :to => 'users#logout'
   match '/callback', :to => 'access_grants#callback' # temp api
   match '/temp', :to => 'clients#temp'
-  match '/image/:attach_file_id', :to => 'attach_files#show'
-  match '/:user_id/profile', :to => 'users#profile'
+
+  
   match ':controller/:action'
   match '/v2/:controller/:action'
   # match '/v2/comments/:action', :to => 'post_comments'

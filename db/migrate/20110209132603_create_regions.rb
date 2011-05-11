@@ -6,6 +6,7 @@ class CreateRegions < ActiveRecord::Migration
       t.float :lng_sw, :null => false, :default => 0
       t.float :lat_ne, :null => false, :default => 0
       t.float :lng_ne, :null => false, :default => 0
+      t.string :description, :null => false
       t.integer :sequence
 
       t.timestamps

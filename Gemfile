@@ -5,7 +5,9 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'will_paginate', '3.0.pre2'
 gem 'twitter'
 gem 'oauth'
-gem 'fb_graph'
+gem 'fb_graph', '1.7.1'
+gem 'thinking-sphinx', '2.0.3'
+
 # gem 'rmagick'
 
 group :development do

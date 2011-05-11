@@ -1,12 +1,11 @@
+# -*- coding: utf-8 -*-
 class ApplicationModel < ActiveRecord::Base
   after_create :update_sequence   
-  before_save :change_timezone_to_seoul
-  after_save :change_timezone_to_utc
-
-  
   
   self.abstract_class = true
+  
   @@like_objects = ["Store", "StoreFood", "Post"]
+  @@bookmark_objects = ["Store"]  
 
   def self.attr_private(*attrs)
     @attr_private = attrs
@@ -19,15 +18,6 @@ class ApplicationModel < ActiveRecord::Base
   def self.get_attr_private
     return [] if @attr_private.nil?
     @attr_private
-  end
-
-
-  def change_timezone_to_seoul
-    ActiveRecord::Base.default_timezone = :seoul
-  end
-
-  def change_timezone_to_utc
-    ActiveRecord::Base.default_timezone = :utc
   end
 
   
@@ -44,6 +34,8 @@ class ApplicationModel < ActiveRecord::Base
     case resource.class.to_s
     when "User"
       return resource[:id] == current_user.id
+    when "Message"
+      return (resource[:received_user_id] == current_user.id) || (resource[:sent_user_id] == current_user.id)
     else 
       return resource[:user_id] == current_user.id
     end
@@ -79,10 +71,11 @@ class ApplicationModel < ActiveRecord::Base
             opt[:except] += [temp.second]
           end
         end
-
+        
         options[:except] -= opt[:except]
         
         begin
+          opt[:include] = [:attach_file] if model == :store
           ret = self.method(model).call.as_json(opt)
           if !ret.empty? and !ret.first.empty?
             json[model.to_s] = ret
@@ -104,23 +97,32 @@ class ApplicationModel < ActiveRecord::Base
       if options[:auth]
         user = options[:auth]
         like_count = Like.count(:conditions => {:user_id => user.id, :object => obj, :foreign_key => self.id})
-        if like_count > 0
-          json[:like] = true
-        end
+        json[:like] = true if like_count > 0
       end
     end
     
-    if obj == "Store"
+    
+    if @@bookmark_objects.include?(obj)
       json[:bookmark] = false
       if options[:auth]
         user = options[:auth]
-        bookmark_count = Bookmark.count(:conditions => {:user_id => user.id, :object => "Store", :foreign_key => self.id})
-        if bookmark_count > 0
-          json[:bookmark] = true
-        end
+        bookmark_count = Bookmark.count(:conditions => {:user_id => user.id, :object => obj, :foreign_key => self.id})
+        json[:bookmark] = true if bookmark_count > 0
       end
     end
-    
+
+    if obj == "User"
+      json[:following] = false
+      json[:followed] = false
+      if options[:auth]
+        user = options[:auth]
+        is_following = Following.count(:conditions => {:following_user_id => user.id, :followed_user_id => self.id})
+        is_followed = Following.count(:conditions => {:following_user_id => self.id, :followed_user_id => user.id})
+        json[:following] = true if is_following > 0
+        json[:followed] = true if is_followed > 0
+      end
+    end
+
     options[:except].map!(&:to_sym)
     if !resource_owner?(self, options[:auth])
       options[:except] += self.class.get_attr_private
@@ -129,8 +131,21 @@ class ApplicationModel < ActiveRecord::Base
     end
     
     attributes -= options[:except]
+    keys = self.attributes.keys
+    
     for attr in attributes
-      json[attr] = self[attr]
+      if keys.include?(attr.to_s)
+        json[attr] = self[attr]
+      end
+    end
+
+
+    # 전화번호 규칙성이 없어서 임시로 만들어놨음..
+    if json[:tel] and json[:tel].length > 0
+      if json[:tel] != /[0-9]/
+        json[:tel].gsub!(/[,\.].*/, '')
+        json[:tel].gsub!(/[^0-9]/, '')
+      end
     end
     
     return json

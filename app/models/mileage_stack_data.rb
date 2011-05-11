@@ -1,2 +1,2 @@
-class MileageStackData < ActiveRecord::Base
+class MileageStackData < ApplicationModel
 end

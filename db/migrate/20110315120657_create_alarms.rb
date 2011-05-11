@@ -3,7 +3,7 @@ class CreateAlarms < ActiveRecord::Migration
     create_table :alarms do |t|
       t.integer :received_user_id, :null => false
       t.integer :sent_user_id, :null => false
-      t.string :type, :null => false
+      t.string :alarm_type, :null => false
       t.integer :sequence
 
       t.timestamps

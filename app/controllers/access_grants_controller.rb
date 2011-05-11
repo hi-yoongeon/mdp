@@ -1,10 +1,15 @@
+# -*- coding: utf-8 -*-
 class AccessGrantsController < ApplicationController
 #  before_filter :login_required, :only => [:index, :show, :new, :create, :update, :edit, :destroy]
   before_filter :parameter_valid?, :authorization_valid? , :only => :authorize
-    
+  before_filter :authentication_required, :only => [:me]  
+  
   respond_to :html, :xml, :json
   
 
+  ####################################################################################
+  # !!! Below method should be removed after migration !!!
+  ####################################################################################
   def token_generator_for_migrate
     if parameters_required :user_id
       @user = User.find(params[:user_id])
@@ -12,6 +17,30 @@ class AccessGrantsController < ApplicationController
       render :text => access_grant_generator.access_token
     end
   end
+
+
+  def me
+    user = {}
+    if current_user
+      likes = Like.find(:all, :conditions => {:user_id => current_user.id} , :select => "object, foreign_key")
+      bookmarks = Bookmark.find(:all, :conditions => {:user_id => current_user.id} , :select => "object, foreign_key")
+      
+      user[:user] = current_user
+      
+      user[:likes] = likes
+      user[:bookmarks] = bookmarks
+      
+      require "user_file_cache_manager"
+      mfcm = UserFileCacheManager.new(current_user.id)
+      
+      following_ids = mfcm.following
+      follower_ids = mfcm.follower
+      user[:followings] = following_ids
+      user[:followers] = follower_ids
+    end
+    __respond_with(user)
+  end
+
 
 
   def index
@@ -54,7 +83,24 @@ class AccessGrantsController < ApplicationController
     res = {}
     res[:access_token] = params[:access_token]
     res[:user] = AccessGrant.find_by_access_token(params[:access_token]).user
-    render :json => res
+    likes = Like.find(:all, :conditions => {:user_id => current_user.id}, :select => "object, foreign_key")
+    bookmarks = Bookmark.find(:all, :conditions => {:user_id => current_user.id}, :select => "object, foreign_key")
+    res[:likes] = likes
+    res[:bookmarks] = bookmarks
+
+    require "user_file_cache_manager"
+    mfcm = UserFileCacheManager.new(res[:user].id)
+      
+    following_ids = mfcm.following
+    follower_ids = mfcm.follower
+    res[:followings] = following_ids
+    res[:followers] = follower_ids
+    
+    ret = {}
+    ret[:code] = 200
+    ret[:result] = res
+    
+    render :json => ret
   end
 
   
@@ -164,8 +210,28 @@ class AccessGrantsController < ApplicationController
       
       @user = User.authenticate(params[:userid], params[:password])
       if @user.nil?
-        invalid = true
-        @msg = "userid or password is incorrect"
+        # 구 api 요청
+        require 'net/http'
+        jsonString = Net::HTTP.get(URI.parse("http://mapi.ygmaster.net/members/login?userid=#{params[:userid]}&passwd=#{params[:password]}"))
+        response = ActiveSupport::JSON.decode(jsonString)
+        
+        if response and response['code'] and response['code'].to_i == 200
+          @user = User.find(:first, :conditions => {:userid => params[:userid]})
+          if @user
+            @user.password = params[:password]
+            @user.password_confirmation = params[:password]
+            unless @user.save
+              invalid = true 
+              @msg = "user save failed"
+            end
+          else
+            invalid = true
+            @msg = "user not found"
+          end
+        else
+          invalid = true
+          @msg = "userid or password is incorrect"
+        end
       end
 
 
@@ -191,7 +257,7 @@ class AccessGrantsController < ApplicationController
 
     if invalid
       @code = 0
-      render :template => 'errors/error'
+      __error(:code => @code, :description => @msg)
       return
     end
     
@@ -226,8 +292,6 @@ class AccessGrantsController < ApplicationController
   end
 
 
-
-  
 
 
 

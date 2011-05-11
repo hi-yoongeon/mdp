@@ -1,0 +1,1 @@
+<input id="code" type="hidden" value="<%=@code%>"/>

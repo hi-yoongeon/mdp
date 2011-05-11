@@ -9,8 +9,8 @@ class CreatePosts < ActiveRecord::Migration
       t.integer :like_count, :default => 0
       t.integer :comment_count, :default => 0
       t.integer :tag_count, :default => 0
-      t.float :lat, :default => 0
-      t.float :lng, :default => 0
+      t.double :lat, :default => -1
+      t.double :lng, :default => -1
       t.string :from_where, :null => false, :default => "IPHONE"
       t.integer :sequence
 

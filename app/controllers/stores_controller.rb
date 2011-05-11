@@ -1,11 +1,64 @@
 # -*- coding: utf-8 -*-
 class StoresController < ApplicationController
-  before_filter :authentication_required, :only => [:new, :like, :unlike, :bookmark, :unbookmark, :new_detail]
+  before_filter :authentication_required, :only => [:new, :like, :unlike, :bookmark, :unbookmark, :detail_new]
   before_filter :http_get, :only => [:show, :list, :nearby_list, :bookmarked_list, :food_list, :detail_list]
-  before_filter :http_post, :only => [:like, :unlike, :new, :bookmark, :unbookmark, :new_detail]
+  before_filter :http_post, :only => [:like, :unlike, :new, :bookmark, :unbookmark, :detai_newl]
 
   respond_to :xml, :json
 
+
+  def search
+    if parameters_required :q
+      text = params[:q]
+      words = text.split(" ")
+      query_text = ""
+      word_size = words.size
+      for i in 0 .. word_size - 1
+        query_text << "("
+        chars = words[i].split(//)
+        char_size = chars.size
+        for j in 0 .. char_size - 1
+          query_text << " #{chars[j].to_s + chars[j+1].to_s} "
+          if j >= char_size - 2
+            break
+          end
+          query_text << "|"
+        end
+        
+        query_text << ") "
+        
+        if i == word_size - 1
+          break;
+        end
+
+      end
+
+      options = {}
+      options[:page] = params[:page] if params[:page]
+      options[:per_page] = params[:limit] if params[:limit]
+      options[:match_mode] = :extend
+      options[:order] = "like_count DESC, @relevance DESC"
+      options[:sort_mode] = :extended
+      
+      query_text = "#{text} | #{query_text}"
+      
+      ret = Store.search query_text,  options
+      __respond_with ret
+    end
+  end  
+
+
+  def count
+    if parameters_required :lat_ne, :lat_sw, :lng_ne, :lng_sw, :type
+      conditions = ["lat <= ? AND lat >= ? AND lng <= ? AND lng >= ?", params[:lat_ne], params[:lat_sw], params[:lng_ne], params[:lng_sw]]
+      conditions[0] << "AND reg_user_id IS NOT NULL" if params[:type] == "reg"
+      conditions[0] << "AND reg_user_id IS NULL" if params[:type] == "unreg"
+
+      count = Store.count(:conditions => conditions) 
+      ret = {:count => count}
+      __respond_with ret
+    end
+  end
 
   # Store show API
   def show
@@ -20,9 +73,9 @@ class StoresController < ApplicationController
 
   # New Store API
   def new
-    if parameters_required :store_name, :address, :lat, :lng
+    if parameters_required :name, :address, :lat, :lng
       data = {}
-      data[:name] = params[:store_name]
+      data[:name] = params[:name]
       data[:reg_user_id] = current_user.id
       data[:address] = params[:address]
       data[:lat] = params[:lat]
@@ -33,14 +86,23 @@ class StoresController < ApplicationController
       data[:cover] = params[:cover] if params[:cover]
       store = Store.new(data)
       if store.save
-        __success(store)
+        __respond_with store, :include => [:attach_file, :user]
       else
         __error(:code => 0, :description => "Failed to save")
       end
     end
   end
 
-
+  
+  def modify
+    if parameters_required :name, :address, :lat, :lng, :store_id
+      store_count = Store.count(:conditions => {:id => params[:store_id]})
+      if store_count > 0
+        store = ModifyRequestedStore.save(params)
+        __respond_with store
+      end
+    end
+  end
 
   # Store Like API
   def unlike
@@ -128,7 +190,7 @@ class StoresController < ApplicationController
   # Store List API
   def list
     params[:id] = nil
-    ret = __find(Store)
+    ret = __find(Store, nil)
     __respond_with ret, :include => [], :except => []
   end
 
@@ -136,9 +198,14 @@ class StoresController < ApplicationController
   def nearby_list
     if parameters_required :lat_sw, :lat_ne, :lng_sw, :lng_ne
       params[:id] = nil
-      conditions = {}
-      conditions[:lat] = params[:lat_sw].to_f .. params[:lat_ne].to_f
-      conditions[:lng] = params[:lng_sw].to_f .. params[:lng_ne].to_f
+
+      conditions = ["lat <= ? AND lat >= ? AND lng <= ? AND lng >= ?", params[:lat_ne].to_f, params[:lat_sw].to_f, params[:lng_ne].to_f, params[:lng_sw].to_f]
+      conditions[0] << " AND reg_user_id IS NOT NULL" if params[:type] == "reg"
+      conditions[0] << " AND reg_user_id IS NULL" if params[:type] == "unreg"
+      
+      # conditions = {}
+      # conditions[:lat] = params[:lat_sw].to_f .. params[:lat_ne].to_f
+      # conditions[:lng] = params[:lng_sw].to_f .. params[:lng_ne].to_f
       ret = __find(Store, conditions)
       __respond_with ret, :include => [], :except => []
     end
@@ -188,7 +255,7 @@ class StoresController < ApplicationController
 
 
 
-  def new_detail
+  def detail_new
     if parameters_required :store_id, :note   # --> 일단은 노트만.. 추후에 더 많은 필드 필요할 예정 
       detail_info = StoreDetailInfo.new(:user_id => current_user.id, :store_id => params[:store_id], :note => params[:note])
       if detail_info.save

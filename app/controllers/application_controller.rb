@@ -111,12 +111,24 @@ class ApplicationController < ActionController::Base
 
   
 
-  def __find(model, conditions = {})
+  def __find(model, conditions = nil, except = [:created_at, :updated_at, :sequence])
     offset = 0
     limit = 20
     
+    if conditions.nil?
+      conditions = {}
+    end
+
+    cols = Array.new(model.column_names)
+    if except
+      except = [except] if except.class != Array
+      except = except.map { |i| i.to_s }
+      cols -= except
+    end
+    
     if params[:id]
-      conditions[:id] = params[:id].split(",")
+      conditions[:id] = params[:id].split(",") if conditions.class == Hash
+      conditions[0] << "AND id = #{params[:id].split(",")}" if conditions.class == Array
     end
     if params[:limit]
       limit = params[:limit].to_i
@@ -125,10 +137,11 @@ class ApplicationController < ActionController::Base
       offset = (params[:page].to_i - 1) * limit
     end
     
+
     if params[:order]
-      ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset, :order => params[:order])
+      ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset, :order => params[:order], :select => cols)
     else
-      ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset, :order => "sequence ASC")      
+      ret = model.find(:all, :conditions => conditions, :limit => limit, :offset => offset, :order => "sequence ASC", :select => cols)      
     end
     
     return ret
@@ -154,14 +167,15 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def __success(object = nil)
-    ret = {:code => 200}
-    ret[:result] = object if object
-    respond_with(ret) do |format|
-      format.xml {render :xml => ret}
-      format.json {render :json => ret}
-      format.html {render :template => 'xmls/xml'}
-    end
+  def __success(object = "OK")
+    __respond_with object
+    # ret = {:code => 200}
+    # ret[:result] = object if object
+    # respond_with(ret) do |format|
+    #   format.xml {render :xml => ret}
+    #   format.json {render :json => ret}
+    #   format.html {render :template => 'xmls/xml'}
+    # end
   end
   
   def __respond_with(resource, options={})
@@ -176,18 +190,22 @@ class ApplicationController < ActionController::Base
     options[:except] += params[:except].split(",") if params[:except]
     options[:except] += ["hashed_password","salt","old_hashed_password"]
     options[:except] += ["user.hashed_password","user.salt","user.old_hashed_password"]
+    
     # if params[:except]
     #    except_attrs = params[:except].split(",").map {|attr| attr.to_sym}
     #    options[:except] += except_attrs
-    # end	
-
+    # end
+    
+    resource = {:code => 200, :result => resource}
+   
     respond_to do |format|
       format.json do 
         options[:json] = resource
         render options
       end
       format.xml do 
-        root = resource.is_a?(Array)? resource.first.class.to_s.downcase : resource.class.to_s.downcase
+        root = ( resource.is_a?(Array) || resource.is_a?(ThinkingSphinx::Search) ) ? resource.first.class.to_s.downcase : resource.class.to_s.downcase
+        
         render :template => "xmls/xml", :text => resource.as_json(options).to_xml(:root => root)
       end
       format.html do
@@ -195,12 +213,18 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
+  
 
 
   def mileage_action
     return true if current_user.nil? 
     
+    # if @code == 200
+    #   mmm = MatjiMileageManager.new(user_id, controller, action)
+    #   mmm.check
+    # end
+    
+
     mmm = MatjiMileageManager.new(current_user.id)
     if mmm and @code == 200
       rule = mmm.act(params[:controller], params[:action])
@@ -209,12 +233,14 @@ class ApplicationController < ActionController::Base
 
         rule.each do |node|
 
-          user_id = (node[:to] == "me") ? mmm.from_user_id : mmm_user_id
-          mmm.error if user_id.nil?
+          user_id = (node[:to] == "me") ? mmm.from_user_id : @mmm_user_id
+          
+          # Exception Catch
+          return mmm.error if user_id.nil?
 
           MileageStackData.create(
                                   :user_id => user_id,
-                                  :flag => node[:flag], 
+                                  :flag => node[:flag],
                                   :point => node[:point],
                                   :from_user_id => mmm.from_user_id
                                   )

@@ -1,2 +1,2 @@
-class UserMileage < ActiveRecord::Base
+class UserMileage < ApplicationModel
 end

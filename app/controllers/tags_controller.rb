@@ -9,14 +9,14 @@ class TagsController < ApplicationController
     if parameters_required :tag_id
       params[:id] = params[:tag_id]
       ret = __find(Tag)
-      respond_with ret, :include => [], :except => []
+      __respond_with ret, :include => [], :except => []
     end
   end
   
   def list
     params[:id] = nil
     ret = __find(Tag)
-    respond_with ret, :include => [], :except => []
+    __respond_with ret, :include => [], :except => []
   end
   
 
@@ -26,7 +26,7 @@ class TagsController < ApplicationController
       conditions = {:store_id => params[:store_id]}
       storeTags = __find(StoreTag,conditions)
       tags = storeTags.map { |storeTag| storeTag.tag }
-      respond_with tags, :include => [], :except => []
+      __respond_with tags, :include => [], :except => []
     end
   end
 
@@ -37,7 +37,7 @@ class TagsController < ApplicationController
       conditions = {:user_id => params[:user_id]}
       userTags = __find(UserTag,conditions)
       tags = userTags.map { |userTag| userTag.tag }
-      respond_with tags, :include => [], :except => []
+      __respond_with tags, :include => [], :except => []
     end
   end
   
@@ -47,7 +47,7 @@ class TagsController < ApplicationController
       conditions = {:post_id => params[:post_id]}
       postTags = __find(PostTag,conditions)
       tags = postTags.map { |postTag| postTag.tag }
-      respond_with tags, :include => [], :except => []
+      __respond_with tags, :include => [], :except => []
     end
   end
   

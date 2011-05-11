@@ -19,5 +19,5 @@ class Message < ApplicationModel#ActiveRecord::Base
   validates_presence_of :sent_user_id, :received_user_id, :message
   #  validates_length_of :message, :within => 1..500
 
-  attr_private :sent_user_id, :received_user_id, :message
+  attr_private :message
 end

@@ -1,2 +1,0 @@
-class StoreUrl < ActiveRecord::Base
-end

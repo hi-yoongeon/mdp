@@ -1,0 +1,29 @@
+development:
+  bin_path : "/usr/local/sphinx/bin"
+  searchd_binary_name : "searchd"
+  indexer_binary_name : "indexer"
+  min_infix_len : 2
+  charset_type: utf-8
+  charset_table: 0..9, A..Z->a..z, _, a..z, U+AC00..U+D7A3, U+1100..U+1159, U+1161..U+11A2, U+11A8..U+11F9
+  ngram_len: 1
+  ngram_chars: U+AC00..U+D7A3
+  
+production:
+  bin_path : "/usr/local/sphinx/bin"
+  searchd_binary_name : "searchd"
+  indexer_binary_name : "indexer"
+  min_infix_len : 2
+  charset_type: utf-8
+  charset_table: 0..9, A..Z->a..z, _, a..z, U+AC00..U+D7A3, U+1100..U+1159, U+1161..U+11A2, U+11A8..U+11F9
+  ngram_len: 1
+  ngram_chars: U+AC00..U+D7A3
+
+test:
+  bin_path : "/usr/local/sphinx/bin"
+  searchd_binary_name : "searchd"
+  indexer_binary_name : "indexer"
+  min_infix_len : 2
+  charset_type: utf-8
+  charset_table: 0..9, A..Z->a..z, _, a..z, U+AC00..U+D7A3, U+1100..U+1159, U+1161..U+11A2, U+11A8..U+11F9
+  ngram_len: 1
+  ngram_chars: U+AC00..U+D7A3

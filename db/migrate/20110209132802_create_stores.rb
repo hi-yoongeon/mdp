@@ -8,8 +8,8 @@ class CreateStores < ActiveRecord::Migration
       t.string :add_address, :null => true
       t.string :website, :null => true
       t.text :cover, :null => true
-      t.float :lat, :default => 0
-      t.float :lng, :default => 0
+      t.double :lat, :default => -1
+      t.double :lng, :default => -1
       t.integer :tag_count, :default => 0 
       t.integer :post_count, :default => 0
       t.integer :image_count, :default => 0

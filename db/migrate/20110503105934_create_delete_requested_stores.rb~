@@ -1,0 +1,12 @@
+class CreateDeleteRequestedStores < ActiveRecord::Migration
+  def self.up
+    create_table :delete_requested_stores do |t|
+
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :delete_requested_stores
+  end
+end

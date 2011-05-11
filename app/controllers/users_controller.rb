@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
-  before_filter :login_required, :except => [:index, :login, :logout, :new, :create, :profile]
+  before_filter :login_required, :except => [:login, :logout, :new, :create, :show, :profile]
   
-  before_filter :user_authentication_required, :only => [:show, :edit, :update, :destroy]
-  before_filter :authentication_required, :only => [:me]
+  before_filter :user_authentication_required, :only => [:edit, :destroy]
+  
+  before_filter :authentication_required, :only => [:update]
   
   before_filter :http_get, :only => [:index, :show, :list, :profile]
   before_filter :http_post, :only => [:create, :edit, :update, :destroy, :forgot_password, :change_password]
@@ -16,14 +17,13 @@ class UsersController < ApplicationController
   end
 
   
-  def me
-    __respond_with(current_user)
-  end
 
-  
+
+
   def profile
+    puts "#{params[:user_id]} =========="
     params[:size] = "ss" unless params[:size]
-    attach_file = AttachFile.find(:first, :conditions => ["user_id = ? AND store_id IS NULL AND post_id IS NULL", params[:user_id]], :order => "sequence ASC")
+    attach_file = AttachFile.find(:first, :conditions => ["user_id = ? AND store_id IS NULL AND post_id IS NULL", params[:user_id] ], :order => "sequence ASC")
     if attach_file
       attach_file_id = attach_file.id
     else
@@ -41,8 +41,13 @@ class UsersController < ApplicationController
 
   
   def show
-    @user = User.find(params[:id])
-    __respond_with(@user)
+    if parameters_required :user_id
+      conditions = {}
+      params[:id] = nil
+      conditions[:id] = params[:user_id]
+      @user = __find(User, conditions)
+      __respond_with(@user)
+    end
   end
 
 
@@ -59,22 +64,19 @@ class UsersController < ApplicationController
         format.xml  { __success(@user) }
         format.html do
           session[:user] = User.authenticate(@user.userid, @user.password)
-          flash[:message] = "Signup successful"
+          # flash[:message] = "Signup successful"
           redirect_to :action => "index" 
         end
       end
-      
     else
-      
       respond_with do |format|
         format.json { __error(:code => 0, :descriptions => "") }
         format.xml  { __error(:code => 0, :descriptions => "") }
         format.html do
-          flash[:warning] = "Signup unsuccessful"
-          redirect_to :action => "index" 
+          # flash[:warning] = "Signup unsuccessful"
+          # redirect_to :action => "index" 
         end
       end
-      
     end
   end
 
@@ -85,10 +87,45 @@ class UsersController < ApplicationController
 
 
   def update
-    @user = User.find(params[:id])
+    user = User.find(:first, :conditions => ["id = ?", current_user.id])
+    if user
+      # nick, email, title, intro
+      data = {}
+
+      data[:email] = params[:email] if params[:email]
+      data[:title] = params[:title] if params[:title]
+      data[:intro] = params[:intro] if params[:intro]
+      
+      success = true
+      if params[:nick]
+        success = false unless user.update_attribute(:nick, params[:nick])
+      end
+      
+      if params[:email]
+        success = false unless user.update_attribute(:email, params[:email])
+      end
+      
+      if params[:title]
+        success = false unless user.update_attribute(:title, params[:title])        
+      end
+      
+      if params[:intro]
+        success = false unless user.update_attribute(:intro, params[:intro])        
+      end
+
+      if success
+        __success("OK")
+        return
+      else
+        __error(:code => 0, :description => "Failed to update")
+        return
+      end
+    end
+    __error(:code => 0, :description => "User not found")
+    return
   end
 
-  
+
   def destroy
     @user = User.find(params[:id])
     @user.destroy
@@ -141,7 +178,7 @@ class UsersController < ApplicationController
 
   def change_password
     @user=session[:user]
-    @user.update_attributes(:password=>params[:user][:password], :password_confirmation => params[:user][:password_confirmation])
+    @user.update_attributes(:password => params[:user][:password], :password_confirmation => params[:user][:password_confirmation])
     if @user.save
       flash[:message] = "Password Changed"
     end

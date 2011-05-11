@@ -7,8 +7,18 @@ class CommentsController < ApplicationController
   
   def new
     if parameters_required :post_id, :comment, :from_where
+      post = Post.find(:first, :conditions => {:id => params[:post_id]})
+      if post.nil?
+        __error(:code => 0, :description => "Invalid post id")
+        return
+      end
+      
       comment = PostComment.new(:user_id => current_user.id, :comment => params[:comment], :post_id => params[:post_id], :from_where => params[:from_where])
       if comment.save
+
+        # Generate an alarm
+        Alarm.new(:sent_user_id => current_user.id, :received_user_id => post.user_id, :alarm_type => "Comment").save
+        
         __success(comment)
         return
       else
@@ -23,7 +33,7 @@ class CommentsController < ApplicationController
     if parameters_required :post_id
       params[:id] = nil
       conditions = {:post_id => params[:post_id]}
-      ret = __find(PostComment, conditions)
+      ret = __find(PostComment, conditions, nil)
       __respond_with(ret, :include => [:user])
     end
   end
